@@ -1,0 +1,717 @@
+Container(
+    width: 410,
+    height: 844,
+    child: Stack(
+        children:[Positioned.fill(
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                    width: 390,
+                    height: 307,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50), bottomLeft: Radius.circular(0), bottomRight: Radius.circular(0), ),
+                    ),
+                    padding: const EdgeInsets.only(left: 170, right: 165, top: 252, bottom: 54, ),
+                    child: Stack(
+                        children: [
+                            Positioned.fill(
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children:[
+                                        Container(
+                                            width: 57,
+                                            height: 3,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(color: Color(0xffa7a7a7), width: 2, ),
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                            Positioned.fill(
+                                child: FlutterLogo(size: 307),
+                            ),
+                        ],
+                    ),
+                ),
+            ),
+        ),
+        Positioned.fill(
+            child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                    width: 390,
+                    height: 612,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                            BoxShadow(
+                                color: Color(0x3f000000),
+                                blurRadius: 4,
+                                offset: Offset(0, 4),
+                            ),
+                        ],
+                        color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.only(left: 25, right: 8, top: 54, bottom: 31, ),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                            Container(
+                                height: 27,
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children:[
+                                        Text(
+                                            "Your next activity",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w600,
+                                            ),
+                                        ),
+                                        SizedBox(width: 128),
+                                        Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children:[
+                                                Text(
+                                                    "See All",
+                                                    style: TextStyle(
+                                                        color: Color(0xff333333),
+                                                        fontSize: 16,
+                                                    ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Container(
+                                                    width: 7.06,
+                                                    height: 14.03,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        color: Color(0xff2f80ed),
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                                    ],
+                                ),
+                            ),
+                            SizedBox(height: 21.50),
+                            Container(
+                                width: 185,
+                                height: 195,
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children:[
+                                        Container(
+                                            width: 185,
+                                            height: 195,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(20),
+                                            ),
+                                            padding: const EdgeInsets.only(top: 125, bottom: 15, ),
+                                            child: Stack(
+                                                children: [
+                                                    Positioned.fill(
+                                                        child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                            children:[
+                                                                Container(
+                                                                    width: 155,
+                                                                    height: 55,
+                                                                    child: Row(
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children:[
+                                                                            Container(
+                                                                                width: 155,
+                                                                                height: 55,
+                                                                                decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(7),
+                                                                                    color: Color(0x99ffffff),
+                                                                                ),
+                                                                                padding: const EdgeInsets.only(left: 5, right: 12, ),
+                                                                                child: Column(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children:[
+                                                                                        SizedBox(
+                                                                                            width: 138,
+                                                                                            height: 18,
+                                                                                            child: Text(
+                                                                                                "Camping",
+                                                                                                style: TextStyle(
+                                                                                                    color: Colors.black,
+                                                                                                    fontSize: 12,
+                                                                                                    fontFamily: "Inter",
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                ),
+                                                                                            ),
+                                                                                        ),
+                                                                                        SizedBox(height: 3),
+                                                                                        Container(
+                                                                                            height: 14,
+                                                                                            child: Row(
+                                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                children:[
+                                                                                                    Row(
+                                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                        children:[
+                                                                                                            Container(
+                                                                                                                width: 6,
+                                                                                                                height: 8.77,
+                                                                                                                decoration: BoxDecoration(
+                                                                                                                    borderRadius: BorderRadius.circular(8),
+                                                                                                                ),
+                                                                                                                child: FlutterLogo(size: 6),
+                                                                                                            ),
+                                                                                                            SizedBox(width: 5),
+                                                                                                            Text(
+                                                                                                                "Zur Mühle",
+                                                                                                                style: TextStyle(
+                                                                                                                    color: Color(0xff333333),
+                                                                                                                    fontSize: 9,
+                                                                                                                    fontFamily: "Inter",
+                                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                                ),
+                                                                                                            ),
+                                                                                                        ],
+                                                                                                    ),
+                                                                                                    SizedBox(width: 25),
+                                                                                                    Row(
+                                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                        children:[
+                                                                                                            Container(
+                                                                                                                width: 8,
+                                                                                                                height: 8.89,
+                                                                                                                decoration: BoxDecoration(
+                                                                                                                    borderRadius: BorderRadius.circular(8),
+                                                                                                                ),
+                                                                                                                child: FlutterLogo(size: 8),
+                                                                                                            ),
+                                                                                                            SizedBox(width: 5),
+                                                                                                            Text(
+                                                                                                                "July 18",
+                                                                                                                style: TextStyle(
+                                                                                                                    color: Color(0xff333333),
+                                                                                                                    fontSize: 9,
+                                                                                                                    fontFamily: "Inter",
+                                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                                ),
+                                                                                                            ),
+                                                                                                        ],
+                                                                                                    ),
+                                                                                                ],
+                                                                                            ),
+                                                                                        ),
+                                                                                    ],
+                                                                                ),
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ),
+                                                    Positioned.fill(
+                                                        child: FlutterLogo(size: 185),
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                            SizedBox(height: 21.50),
+                            Container(
+                                height: 27,
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children:[
+                                        Text(
+                                            "My Trips",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                                fontFamily: "Inter",
+                                                fontWeight: FontWeight.w600,
+                                            ),
+                                        ),
+                                        SizedBox(width: 153),
+                                        Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children:[
+                                                Text(
+                                                    "See All",
+                                                    style: TextStyle(
+                                                        color: Color(0xff333333),
+                                                        fontSize: 16,
+                                                    ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Container(
+                                                    width: 7.06,
+                                                    height: 14.03,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        color: Color(0xff2f80ed),
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                                    ],
+                                ),
+                            ),
+                            SizedBox(height: 21.50),
+                            Container(
+                                width: 340,
+                                height: 102,
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children:[
+                                        Container(
+                                            width: 340,
+                                            height: 102,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(20),
+                                                color: Color(0xffe6eefa),
+                                            ),
+                                            padding: const EdgeInsets.only(left: 15, right: 17, ),
+                                            child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children:[
+                                                    Container(
+                                                        width: 72,
+                                                        height: 72,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(15),
+                                                        ),
+                                                        child: FlutterLogo(size: 72),
+                                                    ),
+                                                    SizedBox(width: 12),
+                                                    Container(
+                                                        width: 149,
+                                                        height: 32,
+                                                        child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.end,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children:[
+                                                                SizedBox(
+                                                                    width: 77,
+                                                                    height: 18,
+                                                                    child: Text(
+                                                                        "Friends tour",
+                                                                        style: TextStyle(
+                                                                            color: Colors.black,
+                                                                            fontSize: 12,
+                                                                            fontFamily: "Poppins",
+                                                                            fontWeight: FontWeight.w500,
+                                                                        ),
+                                                                    ),
+                                                                ),
+                                                                SizedBox(height: 3),
+                                                                Row(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    children:[
+                                                                        Row(
+                                                                            mainAxisSize: MainAxisSize.min,
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children:[
+                                                                                Container(
+                                                                                    width: 6,
+                                                                                    height: 8.77,
+                                                                                    decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(8),
+                                                                                    ),
+                                                                                    child: FlutterLogo(size: 6),
+                                                                                ),
+                                                                                SizedBox(width: 5),
+                                                                                Text(
+                                                                                    "Germany",
+                                                                                    style: TextStyle(
+                                                                                        color: Color(0xff333333),
+                                                                                        fontSize: 9,
+                                                                                        fontFamily: "Inter",
+                                                                                        fontWeight: FontWeight.w500,
+                                                                                    ),
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                        SizedBox(width: 15),
+                                                                        Row(
+                                                                            mainAxisSize: MainAxisSize.min,
+                                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children:[
+                                                                                Container(
+                                                                                    width: 8,
+                                                                                    height: 8.89,
+                                                                                    decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(8),
+                                                                                    ),
+                                                                                    child: FlutterLogo(size: 8),
+                                                                                ),
+                                                                                SizedBox(width: 5),
+                                                                                Text(
+                                                                                    "July 16 - July 22",
+                                                                                    style: TextStyle(
+                                                                                        color: Color(0xff333333),
+                                                                                        fontSize: 9,
+                                                                                        fontFamily: "Inter",
+                                                                                        fontWeight: FontWeight.w500,
+                                                                                    ),
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ),
+                                                    SizedBox(width: 12),
+                                                    Container(
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(20),
+                                                            color: Color(0xff2f80ed),
+                                                        ),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 8, ),
+                                                        child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children:[
+                                                                Text(
+                                                                    "Joined",
+                                                                    style: TextStyle(
+                                                                        color: Colors.white,
+                                                                        fontSize: 9,
+                                                                        fontFamily: "Inter",
+                                                                        fontWeight: FontWeight.w500,
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                            SizedBox(height: 21.50),
+                            Container(
+                                width: 335,
+                                height: 90.29,
+                                child: Stack(
+                                    children:[Positioned.fill(
+                                        child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Container(
+                                                width: 335,
+                                                height: 80.29,
+                                                child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children:[
+                                                        Container(
+                                                            width: 335,
+                                                            height: 80.29,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(8),
+                                                                color: Color(0xccffffff),
+                                                            ),
+                                                            padding: const EdgeInsets.only(left: 29, right: 24, bottom: 29, ),
+                                                            child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children:[
+                                                                    Container(
+                                                                        width: 26,
+                                                                        height: 12,
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(8),
+                                                                            color: Color(0xff2f80ed),
+                                                                        ),
+                                                                    ),
+                                                                    SizedBox(height: 12.65),
+                                                                    Container(
+                                                                        width: 282,
+                                                                        child: Row(
+                                                                            mainAxisSize: MainAxisSize.min,
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                                            children:[
+                                                                                Row(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children:[
+                                                                                        Container(
+                                                                                            width: 27,
+                                                                                            height: 27,
+                                                                                            decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                            ),
+                                                                                            child: FlutterLogo(size: 27),
+                                                                                        ),
+                                                                                        SizedBox(width: 40),
+                                                                                        Container(
+                                                                                            width: 27,
+                                                                                            height: 27,
+                                                                                            decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                            ),
+                                                                                            child: FlutterLogo(size: 27),
+                                                                                        ),
+                                                                                    ],
+                                                                                ),
+                                                                                SizedBox(width: 31),
+                                                                                Row(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children:[
+                                                                                        Container(
+                                                                                            width: 27,
+                                                                                            height: 27,
+                                                                                            decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                            ),
+                                                                                            child: FlutterLogo(size: 27),
+                                                                                        ),
+                                                                                        SizedBox(width: 40),
+                                                                                        Container(
+                                                                                            width: 26,
+                                                                                            height: 27,
+                                                                                            decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                                color: Color(0xff4f4f4f),
+                                                                                            ),
+                                                                                        ),
+                                                                                    ],
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ),
+                                        ),
+                                    ),
+                                    Positioned.fill(
+                                        child: Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                                width: 40,
+                                                height: 40,
+                                                child: Stack(
+                                                    children:[Container(
+                                                        width: 40,
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            color: Color(0xffff7029),
+                                                        ),
+                                                    ),
+                                                    Positioned.fill(
+                                                        child: Align(
+                                                            alignment: Alignment.center,
+                                                            child: Container(
+                                                                width: 20.58,
+                                                                height: 20.58,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                    color: Colors.white,
+                                                                ),
+                                                            ),
+                                                        ),
+                                                    ),],
+                                                ),
+                                            ),
+                                        ),
+                                    ),],
+                                ),
+                            ),
+                        ],
+                    ),
+                ),
+            ),
+        ),
+        Positioned.fill(
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                    width: 185,
+                    height: 195,
+                    child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                            Container(
+                                width: 185,
+                                height: 195,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.only(top: 125, bottom: 15, ),
+                                child: Stack(
+                                    children: [
+                                        Positioned.fill(
+                                            child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children:[
+                                                    Container(
+                                                        width: 155,
+                                                        height: 55,
+                                                        child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children:[
+                                                                Container(
+                                                                    width: 155,
+                                                                    height: 55,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(7),
+                                                                        color: Color(0x99ffffff),
+                                                                    ),
+                                                                    padding: const EdgeInsets.only(left: 10, right: 3, top: 10, bottom: 13, ),
+                                                                    child: Column(
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children:[
+                                                                            SizedBox(
+                                                                                width: 97,
+                                                                                height: 18,
+                                                                                child: Text(
+                                                                                    "Football Match",
+                                                                                    style: TextStyle(
+                                                                                        color: Colors.black,
+                                                                                        fontSize: 12,
+                                                                                        fontFamily: "Inter",
+                                                                                        fontWeight: FontWeight.w500,
+                                                                                    ),
+                                                                                ),
+                                                                            ),
+                                                                            SizedBox(height: 3),
+                                                                            Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children:[
+                                                                                    Row(
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                        children:[
+                                                                                            Container(
+                                                                                                width: 6,
+                                                                                                height: 8.77,
+                                                                                                decoration: BoxDecoration(
+                                                                                                    borderRadius: BorderRadius.circular(8),
+                                                                                                ),
+                                                                                                child: FlutterLogo(size: 6),
+                                                                                            ),
+                                                                                            SizedBox(width: 5),
+                                                                                            Text(
+                                                                                                "München",
+                                                                                                style: TextStyle(
+                                                                                                    color: Color(0xff333333),
+                                                                                                    fontSize: 9,
+                                                                                                    fontFamily: "Inter",
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                ),
+                                                                                            ),
+                                                                                        ],
+                                                                                    ),
+                                                                                    SizedBox(width: 25),
+                                                                                    Row(
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                        children:[
+                                                                                            Container(
+                                                                                                width: 8,
+                                                                                                height: 8.89,
+                                                                                                decoration: BoxDecoration(
+                                                                                                    borderRadius: BorderRadius.circular(8),
+                                                                                                ),
+                                                                                                child: FlutterLogo(size: 8),
+                                                                                            ),
+                                                                                            SizedBox(width: 5),
+                                                                                            Text(
+                                                                                                "July 20 ,Sun",
+                                                                                                style: TextStyle(
+                                                                                                    color: Color(0xff333333),
+                                                                                                    fontSize: 9,
+                                                                                                    fontFamily: "Inter",
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                ),
+                                                                                            ),
+                                                                                        ],
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                        Positioned.fill(
+                                            child: FlutterLogo(size: 185),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                        ],
+                    ),
+                ),
+            ),
+        ),],
+    ),
+)
