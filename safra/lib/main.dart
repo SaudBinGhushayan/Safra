@@ -14,7 +14,11 @@ void main() async {
 
 class Safra extends StatelessWidget {
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
     return MaterialApp(
+=======
+    return const MaterialApp(
+>>>>>>> Stashed changes
       title: "Safra",
       home: homePage(),
     );

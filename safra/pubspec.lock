@@ -85,6 +85,30 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+<<<<<<< Updated upstream
+=======
+  firebase_auth:
+    dependency: "direct main"
+    description:
+      name: firebase_auth
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.6.2"
+  firebase_auth_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_auth_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.5.2"
+  firebase_auth_web:
+    dependency: transitive
+    description:
+      name: firebase_auth_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.2"
+>>>>>>> Stashed changes
   firebase_core:
     dependency: "direct main"
     description:
@@ -128,6 +152,23 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+<<<<<<< Updated upstream
+=======
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.1"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.0"
+>>>>>>> Stashed changes
   js:
     dependency: transitive
     description:
@@ -224,6 +265,16 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.9"
+<<<<<<< Updated upstream
+=======
+  typed_data:
+    dependency: transitive
+    description:
+      name: typed_data
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.3.1"
+>>>>>>> Stashed changes
   vector_math:
     dependency: transitive
     description:
