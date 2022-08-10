@@ -1,7 +1,13 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safra/backend/flutterfire.dart';
 import 'package:safra/ui/authentication.dart';
 
+import '../main.dart';
+import '../objects/user.dart';
 import 'dashboard.dart';
 import 'homePage.dart';
 
@@ -13,12 +19,17 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-  TextEditingController name = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController ConfirmPassword = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController PhoneNumber = TextEditingController();
-  TextEditingController dob = TextEditingController();
+  final name = TextEditingController();
+  final password = TextEditingController();
+  final ConfirmPassword = TextEditingController();
+  final email = TextEditingController();
+  final phoneNumber = TextEditingController();
+
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +77,6 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               TextFormField(
                   controller: email,
-                  obscureText: true,
                   decoration: const InputDecoration(
                       hintText: 'example@email.com',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -81,7 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       labelText: "Password",
                       labelStyle: TextStyle(color: Colors.grey))),
               TextFormField(
-                  controller: password,
+                  controller: ConfirmPassword,
                   obscureText: true,
                   decoration: const InputDecoration(
                       hintText: 'Password',
@@ -89,39 +99,22 @@ class _CreateAccountState extends State<CreateAccount> {
                       labelText: "Confirm Password",
                       labelStyle: TextStyle(color: Colors.grey))),
               TextFormField(
-                  controller: PhoneNumber,
-                  obscureText: true,
+                  controller: phoneNumber,
                   decoration: const InputDecoration(
                       hintText: 'use your country key e.g. +966',
                       hintStyle: TextStyle(color: Colors.grey),
                       labelText: "PhoneNumber",
                       labelStyle: TextStyle(color: Colors.grey))),
-              TextFormField(
-                  controller: dob,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                      hintText: 'Password',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      labelText: "Confirm Password",
-                      labelStyle: TextStyle(color: Colors.grey))),
               SizedBox(height: MediaQuery.of(context).size.height / 90),
               ElevatedButton(
-                  onPressed: () async {
-                    bool rnv = await register(email.text, password.text);
-                    if (rnv) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const authentication()));
-                    }
-                  },
+                  onPressed: signUp,
                   style: ElevatedButton.styleFrom(
                       primary: const Color.fromARGB(232, 9, 114, 199),
                       textStyle: const TextStyle(fontSize: 20),
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width - 250,
                           vertical: 9)),
-                  child: const Text("Sign in")),
+                  child: const Text("Register")),
               Container(
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -142,11 +135,35 @@ class _CreateAccountState extends State<CreateAccount> {
                           'Sign in',
                           style: TextStyle(fontStyle: FontStyle.italic),
                         ))
-                  ]))
+                  ])),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future signUp() async {
+    //to show the loading screen
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
+    try {
+      // signing in authentication
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.text.trim(), password: password.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+    }
+    createUser(
+        uid: Random().nextInt(100),
+        name: name.text,
+        phoneNumber: phoneNumber.text,
+        email: email.text);
+
+    //to remove the loading screen
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

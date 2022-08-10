@@ -1,12 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
-=======
 import 'package:safra/backend/flutterfire.dart';
 import 'package:safra/ui/CreateAccount.dart';
 import 'package:safra/ui/dashboard.dart';
 import 'package:safra/ui/forgetPassword.dart';
 import 'package:safra/ui/homePage.dart';
->>>>>>> Stashed changes
+
+import '../main.dart';
 
 class authentication extends StatefulWidget {
   const authentication({super.key});
@@ -16,58 +16,18 @@ class authentication extends StatefulWidget {
 }
 
 class authenticationState extends State<authentication> {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
+
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< Updated upstream
-        body: Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.blueAccent,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          TextFormField(
-            controller: email,
-            decoration: InputDecoration(
-                hintText: 'example@email.com',
-                hintStyle: TextStyle(color: Colors.white),
-                labelText: "Email",
-                labelStyle: TextStyle(color: Colors.white)),
-          ),
-          TextFormField(
-              controller: password,
-              obscureText: true,
-              decoration: InputDecoration(
-                  hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.white),
-                  labelText: "Password",
-                  labelStyle: TextStyle(color: Colors.white))),
-          Container(
-              width: MediaQuery.of(context).size.width / 1.4,
-              height: 45,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                color: Colors.white,
-              ),
-              child: MaterialButton(onPressed: () {}, child: Text('Register'))),
-          Container(
-              width: MediaQuery.of(context).size.width / 1.4,
-              height: 45,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                color: Colors.white,
-              ),
-              child: MaterialButton(onPressed: () {}, child: Text('Login'))),
-        ],
-      ),
-    ));
-=======
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -127,15 +87,7 @@ class authenticationState extends State<authentication> {
                         style: TextStyle(fontStyle: FontStyle.italic)))),
             SizedBox(height: MediaQuery.of(context).size.height / 50),
             ElevatedButton(
-                onPressed: () async {
-                  bool nv = await signIn(email.text, password.text);
-                  if (nv) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const dashboard()));
-                  }
-                },
+                onPressed: signIn,
                 style: ElevatedButton.styleFrom(
                     primary: const Color.fromARGB(232, 9, 114, 199),
                     textStyle: const TextStyle(fontSize: 20),
@@ -155,7 +107,7 @@ class authenticationState extends State<authentication> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CreateAccount()));
+                            builder: (context) => const homePage()));
                   },
                   child: const Text('Create account'))
             ]))
@@ -163,6 +115,23 @@ class authenticationState extends State<authentication> {
         ),
       ),
     );
->>>>>>> Stashed changes
+  }
+
+  Future signIn() async {
+    //to show the loading screen
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
+    try {
+      // signing in authentication
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email.text.trim(), password: password.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+    //to remove the loading screen
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
