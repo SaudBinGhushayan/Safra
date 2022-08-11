@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:safra/backend/flutterfire.dart';
 import 'package:safra/ui/authentication.dart';
@@ -24,6 +26,8 @@ class _CreateAccountState extends State<CreateAccount> {
   final ConfirmPassword = TextEditingController();
   final email = TextEditingController();
   final phoneNumber = TextEditingController();
+  final username = TextEditingController();
+  final validatorKey = GlobalKey<FormState>();
 
   void dispose() {
     email.dispose();
@@ -34,10 +38,12 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Center(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        // width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height,
+        child: Form(
+          key: validatorKey,
           child: Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height / 15),
@@ -69,6 +75,10 @@ class _CreateAccountState extends State<CreateAccount> {
               SizedBox(height: MediaQuery.of(context).size.height / 100),
               TextFormField(
                 controller: name,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (name) => name != null && name.length < 11
+                    ? 'Enter 6 characters atleast'
+                    : null,
                 decoration: const InputDecoration(
                     hintText: 'Enter your name',
                     hintStyle: TextStyle(color: Colors.grey),
@@ -76,7 +86,19 @@ class _CreateAccountState extends State<CreateAccount> {
                     labelStyle: TextStyle(color: Colors.grey)),
               ),
               TextFormField(
+                  controller: username,
+                  decoration: const InputDecoration(
+                      hintText: 'Enter your username',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      labelText: "Username",
+                      labelStyle: TextStyle(color: Colors.grey))),
+              TextFormField(
                   controller: email,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (email) =>
+                      email != null && !EmailValidator.validate(email)
+                          ? 'enter a valid email'
+                          : null,
                   decoration: const InputDecoration(
                       hintText: 'example@email.com',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -85,6 +107,11 @@ class _CreateAccountState extends State<CreateAccount> {
               TextFormField(
                   controller: password,
                   obscureText: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (password) =>
+                      password != null && password.length < 6
+                          ? 'Enter 6 characters atleast'
+                          : null,
                   decoration: const InputDecoration(
                       hintText: 'Password',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -144,6 +171,8 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   Future signUp() async {
+    final isValid = validatorKey.currentState!.validate();
+    if (!isValid) return;
     //to show the loading screen
     showDialog(
       context: context,
@@ -156,12 +185,17 @@ class _CreateAccountState extends State<CreateAccount> {
           email: email.text.trim(), password: password.text.trim());
     } on FirebaseAuthException catch (e) {
       print(e.message);
+
+      // Utils.showSnackBar(e.message);
     }
+
+    final user = FirebaseAuth.instance.currentUser!;
     createUser(
-        uid: Random().nextInt(100),
+        uid: user.uid,
         name: name.text,
         phoneNumber: phoneNumber.text,
-        email: email.text);
+        email: email.text,
+        username: username.text);
 
     //to remove the loading screen
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
