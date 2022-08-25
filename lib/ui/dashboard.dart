@@ -27,41 +27,38 @@ class _dashboardState extends State<dashboard> {
                         child: Padding(
                             padding: const EdgeInsets.all(32),
                             child: Center(
-                              child: Column(
-                                children: [
-                                  users == null
-                                      ? Center(
-                                          child: Text(
-                                              'No data for the given user'))
-                                      : buildUser(users),
-                                  SizedBox(height: 8),
-                                  const Text(
-                                    'Signed In as',
-                                    style: TextStyle(fontSize: 16),
+                              child: Column(children: [
+                                users == null
+                                    ? Center(
+                                        child:
+                                            Text('No data for the given user'))
+                                    : buildUser(users),
+                                SizedBox(height: 8),
+                                const Text(
+                                  'Signed In as',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  users.email,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 8),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size.fromHeight(50),
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    users.email,
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
+                                  icon: const Icon(Icons.arrow_back, size: 32),
+                                  label: const Text(
+                                    'signOut',
+                                    style: TextStyle(fontSize: 24),
                                   ),
-                                  const SizedBox(height: 8),
-                                  ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: const Size.fromHeight(50),
-                                    ),
-                                    icon:
-                                        const Icon(Icons.arrow_back, size: 32),
-                                    label: const Text(
-                                      'signOut',
-                                      style: TextStyle(fontSize: 24),
-                                    ),
-                                    onPressed: () =>
-                                        FirebaseAuth.instance.signOut(),
-                                  )
-                                ],
-                              ),
+                                  onPressed: () =>
+                                      FirebaseAuth.instance.signOut(),
+                                ),
+                              ]),
                             ))));
               } else {
                 return Center(child: CircularProgressIndicator());

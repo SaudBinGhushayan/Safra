@@ -78,6 +78,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  curved_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: curved_navigation_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  dot_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: dot_navigation_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+4"
   email_validator:
     dependency: "direct main"
     description:
@@ -245,6 +259,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliding_up_panel:
+    dependency: "direct main"
+    description:
+      name: sliding_up_panel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0+1"
   source_span:
     dependency: transitive
     description:

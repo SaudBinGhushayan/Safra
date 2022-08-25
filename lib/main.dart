@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,6 +8,7 @@ import 'package:safra/models/authError.dart';
 import 'package:safra/ui/dashboard.dart';
 import 'package:safra/ui/homePage.dart';
 import 'backend/firebase_options.dart';
+import 'objects/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

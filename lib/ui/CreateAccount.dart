@@ -1,16 +1,11 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:safra/models/authError.dart';
 import 'package:safra/ui/login.dart';
 
 import '../main.dart';
 import '../objects/user.dart';
-import 'dashboard.dart';
 import 'homePage.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -33,6 +28,16 @@ class _CreateAccountState extends State<CreateAccount> {
     email.dispose();
     password.dispose();
     super.dispose();
+  }
+
+  String phoneNumberValidation(String number) {
+    if (number == null &&
+        number.length < 11 &&
+        number.length > 14 &&
+        number.characters.first != '+') {
+      return "Phone number isn't valid";
+    } else
+      return '';
   }
 
   @override
@@ -119,6 +124,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       labelStyle: TextStyle(color: Colors.grey))),
               TextFormField(
                   controller: ConfirmPassword,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (conPass) =>
                       conPass != password.text ? 'Password unmatched' : null,
                   obscureText: true,
@@ -136,7 +142,14 @@ class _CreateAccountState extends State<CreateAccount> {
                       labelStyle: TextStyle(color: Colors.grey))),
               SizedBox(height: MediaQuery.of(context).size.height / 90),
               ElevatedButton(
-                  onPressed: signUp,
+                  onPressed: () async {
+                    final valid = await Users.availableUsername(username.text);
+                    if (!valid) {
+                      authError.showSnackBar('User already registered');
+                    } else {
+                      signUp();
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       primary: const Color.fromARGB(232, 9, 114, 199),
                       textStyle: const TextStyle(fontSize: 20),
@@ -185,8 +198,6 @@ class _CreateAccountState extends State<CreateAccount> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email.text.trim(), password: password.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e);
-
       authError.showSnackBar(e.message);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const CreateAccount()));

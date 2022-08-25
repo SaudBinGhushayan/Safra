@@ -129,7 +129,7 @@ class loginState extends State<login> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email.text.trim(), password: password.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e);
+      // print(e);
 
       authError.showSnackBar(e.message);
       Navigator.push(

@@ -81,12 +81,12 @@ class _forgetPasswordState extends State<forgetPassword> {
   }
 
   Future verifyEmail() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
     try {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()),
-      );
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email.text);
       dialog.informatino(context, "Succeded !",
           "Your new password has been sent to your email.");

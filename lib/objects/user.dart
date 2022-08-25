@@ -34,6 +34,18 @@ class Users {
       phoneNumber: json['phoneNumber'],
       email: json['email'],
       username: json['username']);
+
+  static Future<bool> availableUsername(String username) async {
+    final result = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('username', isEqualTo: username)
+        .get();
+    if (result.docs.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 Future createUser(
