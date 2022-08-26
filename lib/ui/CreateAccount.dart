@@ -138,7 +138,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   decoration: const InputDecoration(
                       hintText: 'use your country key e.g. +966',
                       hintStyle: TextStyle(color: Colors.grey),
-                      labelText: "PhoneNumber",
+                      labelText: "Number",
                       labelStyle: TextStyle(color: Colors.grey))),
               SizedBox(height: MediaQuery.of(context).size.height / 90),
               ElevatedButton(
