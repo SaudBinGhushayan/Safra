@@ -5,8 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:safra/models/authError.dart';
+import 'package:safra/ui/create.dart';
 import 'package:safra/ui/dashboard.dart';
+import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
+import 'package:safra/ui/schedule1.dart';
 import 'backend/firebase_options.dart';
 import 'objects/user.dart';
 
@@ -27,7 +30,7 @@ class Safra extends StatelessWidget {
       scaffoldMessengerKey: authError.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',
-      home: mainPage(),
+      home: create(),
     );
   }
 }

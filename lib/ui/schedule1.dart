@@ -9,15 +9,13 @@ class schedule1 extends StatefulWidget {
 class _schedule1 extends State<schedule1> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: Drawer(),
       body: Container(
         //////1st column
         decoration: const BoxDecoration(
             image: DecorationImage(
-          image: AssetImage('images/backgroundimage.png'),
+          image: AssetImage('images/background.jpg'),
           fit: BoxFit.cover,
         )),
 
@@ -27,7 +25,7 @@ class _schedule1 extends State<schedule1> {
               Container(
                   width: 33,
                   height: 33,
-                  margin: EdgeInsets.fromLTRB(5, 69.4, 1, 1),
+                  margin: EdgeInsets.fromLTRB(5, 40.5, 1, 1),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.circular(40),
@@ -42,7 +40,7 @@ class _schedule1 extends State<schedule1> {
               Container(
                 height: 50,
                 width: 132,
-                margin: EdgeInsets.fromLTRB(202, 70, 3, 1),
+                margin: EdgeInsets.fromLTRB(228, 47.8, 1, 1),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(40),
@@ -64,6 +62,7 @@ class _schedule1 extends State<schedule1> {
               )
             ],
           ),
+
           Container(
             width: 290,
             height: 69,

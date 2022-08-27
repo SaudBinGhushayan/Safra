@@ -1,41 +1,36 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
-
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 
 class dashboardn extends StatefulWidget {
-  const dashboardn({super.key});
+  const dashboardn({Key? key}) : super(key: key);
+
   @override
-  State<dashboardn> createState() => _dashboardn();
+  State<dashboardn> createState() => _dashboardnState();
 }
 
-class _dashboardn extends State<dashboardn> {
+
+class _dashboardnState extends State<dashboardn> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.width;
     return Scaffold(
-      drawer: Drawer(),
-      body: Container(
-        //////1st column
-        width: 900,
+        body: Container(
+      //////1st column
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage('images/background.jpg'),
+        fit: BoxFit.cover,
+      )),
 
-        height: 870,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage(
-              'images/Desktop Screenshot 2022.08.24 - 05.25.43.34 (2).png'),
-          fit: BoxFit.cover,
-        )),
-
-        child: Column(children: [
+      child: Column(
+        children: [
           Row(
+            //menu icon
             children: [
               Container(
                   width: 33,
                   height: 33,
-                  margin: EdgeInsets.fromLTRB(5, 69.4, 1, 1),
+                  margin: EdgeInsets.fromLTRB(5, 40.5, 1, 1),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.circular(40),
@@ -48,89 +43,131 @@ class _dashboardn extends State<dashboardn> {
                 height: 90,
               ),
               Container(
+                //profile icon
                 height: 50,
-                width: 132,
-                margin: EdgeInsets.fromLTRB(202, 70, 3, 1),
+                width: 140,
+                margin: EdgeInsets.fromLTRB(228, 47.8, 1, 1),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(40),
                 ),
                 child: Row(
                   children: [
-//IconButton(onPressed: (){}, icon:Image.asset('images/9b2924c63e033aa31efbca99d02622de3f15f501.png'),
-//iconSize: 24,
-
                     Container(
                       height: 55,
                       width: 55,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(
-                                'images/9b2924c63e033aa31efbca99d02622de3f15f501.png')),
+                            image: AssetImage('images/Arabian guy.jpg')),
                         borderRadius: BorderRadius.circular(40),
                       ),
                     ),
-
                     Expanded(child: Text("abdulmalik "))
                   ],
                 ),
               )
+            ], //end1st row
+          ),
+          Row(
+            //2ndrow
+            children: [
+              Container(
+                  //Your next activity
+                  width: 210,
+                  height: 30,
+                  margin: EdgeInsets.only(left: 14, top: 150),
+                  decoration: BoxDecoration(),
+                  child: Text(
+                    "Your next activity",
+                    style: TextStyle(fontSize: 22),
+                  ),
+                  alignment: Alignment.center),
+              Container(
+                //See all
+                width: 50,
+                margin: EdgeInsets.only(left: 60, top: 150, right: 1),
+                //  decoration:
+                //   BoxDecoration(border: Border.all(color: Colors.red)),
+                child: Text(
+                  "See all",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              Container(
+                //arrowbutton
+                //  decoration:
+                // BoxDecoration(border: Border.all(color: Colors.red)),
+
+                margin: EdgeInsets.only(
+                  left: 7,
+                  top: 150,
+                ),
+                child: IconButton(
+                  iconSize: 10,
+                  onPressed: () {},
+                  icon: Image.asset("images/see all arrow.png"),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            //3rdrow
+            children: [
+              Container(
+                  //My Trips
+                  width: 170,
+                  height: 30,
+                  margin: EdgeInsets.only(left: 14, top: 242),
+                  // decoration:
+                  //   BoxDecoration(border: Border.all(color: Colors.blue)),
+                  child: Text(
+                    "My trips",
+                    style: TextStyle(fontSize: 22),
+                  ),
+                  alignment: Alignment.center),
+              Container(
+                //See all
+                width: 50,
+                margin: EdgeInsets.only(left: 93, top: 241, right: 1),
+                //  decoration:
+                //  BoxDecoration(border: Border.all(color: Colors.red)),
+                child: Text(
+                  "See all",
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              Container(
+                //arrowbutton
+                // decoration:
+                //   BoxDecoration(border: Border.all(color: Colors.red)),
+
+                margin: EdgeInsets.only(
+                  left: 7,
+                  top: 241,
+                ),
+                child: IconButton(
+                  iconSize: 10,
+                  onPressed: () {},
+                  icon: Image.asset("images/see all arrow.png"),
+                ),
+              ),
             ],
           ),
           Container(
-            width: 290,
-            height: 69,
-            margin: EdgeInsets.fromLTRB(5, 217, 1, 5),
-            decoration: BoxDecoration(
-              color: Color.fromARGB(206, 6, 39, 116),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Text(
-              'Join',
-              style: TextStyle(
-                fontFamily: 'Curisve',
-                fontSize: 44,
-                color: Colors.white,
-              ),
-            ),
-            alignment: Alignment.center,
-          ),
-          Container(
-            width: 290,
-            height: 69,
-            margin: EdgeInsets.fromLTRB(5, 90, 1, 5),
-            decoration: BoxDecoration(
-              color: Color.fromARGB(206, 6, 39, 116),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Text(
-              'Create',
-              style: TextStyle(
-                fontFamily: 'Curisve',
-                fontSize: 44,
-                color: Colors.white,
-              ),
-            ),
-            alignment: Alignment.center,
-          ),
-
-          //bottomnavigationbar
-          Container(
-            margin: EdgeInsets.only(top: 83),
+            margin: EdgeInsets.only(top: 132),
             height: 90,
             width: 360,
             decoration: BoxDecoration(
-                border: Border.all(color: Color.fromARGB(255, 150, 111, 108)),
                 image: DecorationImage(
-                    image:
-                        AssetImage("images/Screenshot 2022-08-26 190849.jpg"))),
+                    image: AssetImage("images/bottomnavigatiobar.jpg"))),
             child: Row(
               children: [
                 IconButton(
+                  alignment: Alignment.topCenter,
                   onPressed: () {},
-                  icon: Image.asset('images/homebutton.jpg'),
-                  iconSize: 35,
-                  padding: EdgeInsets.only(left: 24, bottom: 8),
+                  icon: Image.asset('images/dashboradbutton .jpg'),
+                  iconSize: 45,
+                  padding: EdgeInsets.only(top: 9, left: 14),
                 ),
                 IconButton(
                   onPressed: () {},
@@ -138,17 +175,23 @@ class _dashboardn extends State<dashboardn> {
                   iconSize: 39,
                   padding: EdgeInsets.only(left: 32),
                 ),
+                Container(
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(33, 0.2, 22, 34),
+                        child: CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Color.fromARGB(255, 250, 101, 2),
+                            child: IconButton(
+                              icon: Icon(Icons.search, color: Colors.white),
+                              iconSize: 35,
+                              onPressed: () {},
+                            )))),
                 IconButton(
                   onPressed: () {},
-                  icon: Image.asset('images/Search button.png'),
-                  iconSize: 43,
-                  padding: EdgeInsets.fromLTRB(33, 0.2, 22, 34),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Image.asset('images/Schedu.jpg'),
+                  icon: Image.asset('images/greyschedule.jpg'),
                   iconSize: 39,
                   padding: EdgeInsets.only(left: 0.2, right: 17),
+                  highlightColor: Colors.white,
                 ),
                 IconButton(
                   onPressed: () {},
@@ -159,42 +202,8 @@ class _dashboardn extends State<dashboardn> {
               ],
             ),
           )
-        ]),
-
-        //End White container
+        ],
       ),
-
-      // extendBody: true,
-      // bottomNavigationBar: Padding(
-      //   padding: EdgeInsets.only(bottom: 10),
-      //   child: DotNavigationBar(
-      //       margin: EdgeInsets.only(left: 10, right: 10),
-      //       currentIndex: _SelectedTab.values.indexOf(_selectedTab),
-      //       dotIndicatorColor: Colors.black,
-      //       unselectedItemColor: Color.fromARGB(255, 136, 127, 127),
-      //       onTap: handleIndexChanged,
-      //       items: [
-      //         DotNavigationBarItem(
-      //           icon: Icon(Icons.home),
-      //           selectedColor: Color.fromARGB(255, 0, 0, 0),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: Icon(Icons.favorite),
-      //           selectedColor: Color.fromARGB(255, 0, 0, 0),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: Icon(Icons.shopping_bag),
-      //           selectedColor: Color.fromARGB(255, 0, 0, 0),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: Icon(Icons.person),
-      //           selectedColor: Color.fromARGB(255, 0, 0, 0),
-      //         ),
-      //       ]),
-      // )
-      //
-      //
-      //
-    );
+    ));
   }
 }
