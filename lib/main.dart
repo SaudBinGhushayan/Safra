@@ -12,6 +12,8 @@ import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'backend/firebase_options.dart';
 import 'objects/user.dart';
+import 'package:safra/ui/join.dart';
+import 'package:safra/ui/mention.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +32,7 @@ class Safra extends StatelessWidget {
       scaffoldMessengerKey: authError.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',
-      home: mainPage(),
+      home:mainPage()
     );
   }
 }
