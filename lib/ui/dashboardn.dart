@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/objects/user.dart';
+import 'package:safra/ui/profile.dart';
+import 'package:safra/ui/schedule1.dart';
 
 class dashboardn extends StatefulWidget {
   const dashboardn({Key? key}) : super(key: key);
@@ -7,203 +12,239 @@ class dashboardn extends StatefulWidget {
   State<dashboardn> createState() => _dashboardnState();
 }
 
-
 class _dashboardnState extends State<dashboardn> {
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: Container(
-      //////1st column
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage('images/background.jpg'),
-        fit: BoxFit.cover,
-      )),
-
-      child: Column(
-        children: [
-          Row(
-            //menu icon
-            children: [
-              Container(
-                  width: 33,
-                  height: 33,
-                  margin: EdgeInsets.fromLTRB(5, 40.5, 1, 1),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: Icon(
-                    Icons.menu,
-                    size: 20,
+        body: FutureBuilder<Users?>(
+            future: Users.readUser(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              } else if (snapshot.hasData) {
+                final users = snapshot.data!;
+                return Scaffold(
+                    body: Container(
+                  //////1st column
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                    image: AssetImage('images/BackgroundPics/background.jpg'),
+                    fit: BoxFit.cover,
                   )),
-              SizedBox(
-                height: 90,
-              ),
-              Container(
-                //profile icon
-                height: 50,
-                width: 140,
-                margin: EdgeInsets.fromLTRB(228, 47.8, 1, 1),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 55,
-                      width: 55,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('images/Arabian guy.jpg')),
-                        borderRadius: BorderRadius.circular(40),
+
+                  child: Column(
+                    children: [
+                      Row(
+                        //menu icon
+                        children: [
+                          Container(
+                              width: 33,
+                              height: 33,
+                              margin: const EdgeInsets.fromLTRB(5, 40.5, 1, 1),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(40),
+                              ),
+                              child: const Icon(
+                                Icons.menu,
+                                size: 20,
+                              )),
+                          const SizedBox(
+                            height: 90,
+                          ),
+                          Container(
+                            //profile icon
+                            height: 50,
+                            width: 140,
+                            margin: const EdgeInsets.fromLTRB(228, 47.8, 1, 1),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 55,
+                                  width: 55,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                ),
+                                Expanded(child: Text(users.username))
+                              ],
+                            ),
+                          )
+                        ], //end1st row
                       ),
-                    ),
-                    Expanded(child: Text("abdulmalik "))
-                  ],
-                ),
-              )
-            ], //end1st row
-          ),
-          Row(
-            //2ndrow
-            children: [
-              Container(
-                  //Your next activity
-                  width: 210,
-                  height: 30,
-                  margin: EdgeInsets.only(left: 14, top: 150),
-                  decoration: BoxDecoration(),
-                  child: Text(
-                    "Your next activity",
-                    style: TextStyle(fontSize: 22),
-                  ),
-                  alignment: Alignment.center),
-              Container(
-                //See all
-                width: 50,
-                margin: EdgeInsets.only(left: 60, top: 150, right: 1),
-                //  decoration:
-                //   BoxDecoration(border: Border.all(color: Colors.red)),
-                child: Text(
-                  "See all",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              Container(
-                //arrowbutton
-                //  decoration:
-                // BoxDecoration(border: Border.all(color: Colors.red)),
-
-                margin: EdgeInsets.only(
-                  left: 7,
-                  top: 150,
-                ),
-                child: IconButton(
-                  iconSize: 10,
-                  onPressed: () {},
-                  icon: Image.asset("images/see all arrow.png"),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            //3rdrow
-            children: [
-              Container(
-                  //My Trips
-                  width: 170,
-                  height: 30,
-                  margin: EdgeInsets.only(left: 14, top: 242),
-                  // decoration:
-                  //   BoxDecoration(border: Border.all(color: Colors.blue)),
-                  child: Text(
-                    "My trips",
-                    style: TextStyle(fontSize: 22),
-                  ),
-                  alignment: Alignment.center),
-              Container(
-                //See all
-                width: 50,
-                margin: EdgeInsets.only(left: 93, top: 241, right: 1),
-                //  decoration:
-                //  BoxDecoration(border: Border.all(color: Colors.red)),
-                child: Text(
-                  "See all",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              Container(
-                //arrowbutton
-                // decoration:
-                //   BoxDecoration(border: Border.all(color: Colors.red)),
-
-                margin: EdgeInsets.only(
-                  left: 7,
-                  top: 241,
-                ),
-                child: IconButton(
-                  iconSize: 10,
-                  onPressed: () {},
-                  icon: Image.asset("images/see all arrow.png"),
-                ),
-              ),
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 132),
-            height: 90,
-            width: 360,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images/bottomnavigatiobar.jpg"))),
-            child: Row(
-              children: [
-                IconButton(
-                  alignment: Alignment.topCenter,
-                  onPressed: () {},
-                  icon: Image.asset('images/dashboradbutton .jpg'),
-                  iconSize: 45,
-                  padding: EdgeInsets.only(top: 9, left: 14),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Image.asset('images/mention iccon.jpg'),
-                  iconSize: 39,
-                  padding: EdgeInsets.only(left: 32),
-                ),
-                Container(
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(33, 0.2, 22, 34),
-                        child: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Color.fromARGB(255, 250, 101, 2),
-                            child: IconButton(
-                              icon: Icon(Icons.search, color: Colors.white),
-                              iconSize: 35,
+                      Row(
+                        //2ndrow
+                        children: [
+                          Container(
+                              //Your next activity
+                              margin: const EdgeInsets.only(left: 30, top: 150),
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: 'Your Next Activity',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Verdana',
+                                        fontSize: 19,
+                                      ),
+                                      children: [
+                                    const WidgetSpan(
+                                        child: const SizedBox(
+                                      width: 110,
+                                    )),
+                                    const TextSpan(
+                                      text: 'See all',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontFamily: 'Verdana'),
+                                    ),
+                                    WidgetSpan(
+                                        child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.arrow_forward_ios),
+                                      padding: const EdgeInsets.only(
+                                          left: 0, top: 23),
+                                      iconSize: 21,
+                                      color: Color.fromARGB(255, 70, 127, 226),
+                                    ))
+                                  ]))),
+                        ],
+                      ),
+                      Row(
+                        //2ndrow
+                        children: [
+                          Container(
+                              //Your next activity
+                              margin: const EdgeInsets.only(left: 30, top: 210),
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: 'My Trips',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Verdana',
+                                          fontSize: 19),
+                                      children: [
+                                    const WidgetSpan(
+                                        child: const SizedBox(
+                                      width: 193,
+                                    )),
+                                    const TextSpan(
+                                      text: 'See all',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontFamily: 'Verdana'),
+                                    ),
+                                    WidgetSpan(
+                                        child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.arrow_forward_ios),
+                                      padding: const EdgeInsets.only(
+                                          left: 0, top: 23),
+                                      iconSize: 21,
+                                      color: Color.fromARGB(255, 70, 127, 226),
+                                    ))
+                                  ]))),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 95),
+                        height: 200,
+                        width: 500,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "images/NavigationBar/Navigator.jpg"))),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              alignment: Alignment.topCenter,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const dashboardn()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/DashboardActive.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 29, bottom: 29),
+                            ),
+                            IconButton(
                               onPressed: () {},
-                            )))),
-                IconButton(
-                  onPressed: () {},
-                  icon: Image.asset('images/greyschedule.jpg'),
-                  iconSize: 39,
-                  padding: EdgeInsets.only(left: 0.2, right: 17),
-                  highlightColor: Colors.white,
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Image.asset('images/profile button.jpg'),
-                  iconSize: 39,
-                  padding: EdgeInsets.only(right: 1, left: 18),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+                              icon: Image.asset(
+                                  'images/NavigationBar/Mention.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 14, bottom: 29),
+                            ),
+                            Container(
+                                child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        27.5, 0.2, 30, 70),
+                                    child: CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 250, 101, 2),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.search,
+                                              color: Colors.white),
+                                          iconSize: 31,
+                                          padding: const EdgeInsets.all(0.2),
+                                          onPressed: () {},
+                                        )))),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const schedule1()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/Schedule.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 1, bottom: 29),
+                              highlightColor: Colors.white,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const profile()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/Profile.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 26),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ));
+              } else {
+                return Center(
+                    child: SpinKitCircle(
+                  size: 140,
+                  itemBuilder: (context, index) {
+                    final colors = [Colors.blue, Colors.cyan];
+                    final color = colors[index % colors.length];
+                    return DecoratedBox(
+                        decoration: BoxDecoration(color: color));
+                  },
+                ));
+              }
+            }));
   }
 }

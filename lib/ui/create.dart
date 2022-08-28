@@ -1,8 +1,10 @@
-import 'dart:ui';
-
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/objects/user.dart';
+import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/profile.dart';
+import 'package:safra/ui/schedule1.dart';
 
 class create extends StatefulWidget {
   const create({Key? key}) : super(key: key);
@@ -12,191 +14,235 @@ class create extends StatefulWidget {
 }
 
 class _createState extends State<create> {
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: Container(
-      //////1st column
-      decoration: const BoxDecoration(
-          image: DecorationImage(
-        image: AssetImage('images/background.jpg'),
-        fit: BoxFit.cover,
-      )),
-
-      child: Column(children: [
-        Row(
-          children: [
-            Container(
-                width: 33,
-                height: 33,
-                margin: EdgeInsets.fromLTRB(5, 40.5, 1, 1),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Icon(
-                  Icons.menu,
-                  size: 20,
-                )),
-            SizedBox(
-              height: 90,
-            ),
-            Container(
-              height: 50,
-              width: 140,
-              margin: EdgeInsets.fromLTRB(228, 47.8, 1, 1),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 55,
-                    width: 55,
-                    decoration: BoxDecoration(
+        body: FutureBuilder<Users?>(
+            future: Users.readUser(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              } else if (snapshot.hasData) {
+                final users = snapshot.data!;
+                return Scaffold(
+                    body: Container(
+                  //////1st column
+                  decoration: const BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('images/Arabian guy.jpg')),
-                      borderRadius: BorderRadius.circular(40),
+                    image: AssetImage('images/BackgroundPics/background.jpg'),
+                    fit: BoxFit.cover,
+                  )),
+
+                  child: Column(children: [
+                    Row(
+                      children: [
+                        Container(
+                            width: 33,
+                            height: 33,
+                            margin: const EdgeInsets.fromLTRB(5, 40.5, 1, 1),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: const Icon(
+                              Icons.menu,
+                              size: 20,
+                            )),
+                        const SizedBox(
+                          height: 90,
+                        ),
+                        Container(
+                          height: 50,
+                          width: 140,
+                          margin: const EdgeInsets.fromLTRB(228, 47.8, 1, 1),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 55,
+                                width: 55,
+                                decoration: BoxDecoration(
+                                  image: const DecorationImage(
+                                      image:
+                                          AssetImage('images/Arabian guy.jpg')),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              const Expanded(child: Text("abdulmalik "))
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                  Expanded(child: Text("abdulmalik "))
-                ],
-              ),
-            )
-          ],
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  "Where To Go?",
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 49, 47, 47),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
-                )
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(40),
-                  ),
-                  color: Colors.white),
-              child: TextField(
-                style: TextStyle(),
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(40),
-                      ),
-                    ),
-                    hintText: 'dubai',
-                    prefixIcon: Icon(Icons.search, color: Colors.black)),
-              ),
-            ),
-            Row(
-              children: [
-                Container(
-                  width: 140,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red),
-                  ),
-                  margin: EdgeInsets.only(top: 100, left: 20),
-                  child: Text(
-                    'categories',
-                    style: TextStyle(fontSize: 27),
-                  ),
-                )
-              ],
-            ),
-            Row(children: [
-              Container(
-                  width: 96,
-                  height: 41,
-                  margin: EdgeInsets.only(left: 60, top: 47),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16),
-                      ),
-                      color: Colors.grey),
-                  child: Text(
-                    "Activites",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                  alignment: Alignment.center),
-              Container(
-                  width: 96,
-                  height: 41,
-                  margin: EdgeInsets.only(left: 60, top: 47),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(16),
-                      ),
-                      color: Colors.grey),
-                  child: Text(
-                    "Places",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                  alignment: Alignment.center)
-            ]),
-            Container(
-              margin: EdgeInsets.only(top: 290),
-              height: 90,
-              width: 360,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("images/bottomnavigatiobar.jpg"))),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset('images/homebutton.jpg'),
-                    iconSize: 35,
-                    padding: EdgeInsets.only(left: 24, bottom: 8),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset('images/mention iccon.jpg'),
-                    iconSize: 39,
-                    padding: EdgeInsets.only(left: 32),
-                  ),
-                  Container(
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(33, 0.2, 22, 34),
-                          child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Color.fromARGB(255, 250, 101, 2),
-                              child: IconButton(
-                                icon: Icon(Icons.search, color: Colors.white),
-                                iconSize: 35,
+                    const SizedBox(height: 45),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(40),
+                              ),
+                              color: Colors.white),
+                          child: const TextField(
+                            style: TextStyle(),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(40),
+                                  ),
+                                ),
+                                hintText: 'Intrested in ?',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                prefixIcon: const Icon(Icons.search,
+                                    color: Color.fromARGB(255, 102, 101, 101))),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(0, 60, 250, 0),
+                          child: const Text(
+                            'Categories',
+                            style:
+                                TextStyle(fontSize: 21, fontFamily: 'Verdana'),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Row(children: [
+                          Container(
+                              padding: const EdgeInsets.all(15),
+                              margin: const EdgeInsets.only(left: 20),
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(25),
+                                  ),
+                                  color: Colors.grey),
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "Activites",
+                                style: TextStyle(
+                                    fontSize: 21,
+                                    color: Colors.white,
+                                    fontFamily: 'Verdana'),
+                              )),
+                          Container(
+                              padding: const EdgeInsets.all(16),
+                              margin: const EdgeInsets.only(left: 20),
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(25),
+                                  ),
+                                  color: Colors.grey),
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "Places",
+                                style: TextStyle(
+                                    fontSize: 21,
+                                    color: Colors.white,
+                                    fontFamily: 'Verdana'),
+                              )),
+                        ]),
+                        SizedBox(height: 260),
+                        Container(
+                          margin: const EdgeInsets.only(top: 26),
+                          height: 200,
+                          width: 500,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      "images/NavigationBar/Navigator.jpg"))),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                alignment: Alignment.topCenter,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const dashboardn()));
+                                },
+                                icon: Image.asset(
+                                    'images/NavigationBar/Dashboard.jpg'),
+                                iconSize: 55,
+                                padding:
+                                    const EdgeInsets.only(left: 29, bottom: 29),
+                              ),
+                              IconButton(
                                 onPressed: () {},
-                              )))),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset('images/Schedu.jpg'),
-                    iconSize: 39,
-                    padding: EdgeInsets.only(left: 0.2, right: 17),
-                    highlightColor: Colors.white,
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset('images/profile button.jpg'),
-                    iconSize: 39,
-                    padding: EdgeInsets.only(right: 1, left: 18),
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
-      ]),
-    ));
+                                icon: Image.asset(
+                                    'images/NavigationBar/Mention.jpg'),
+                                iconSize: 55,
+                                padding:
+                                    const EdgeInsets.only(left: 14, bottom: 29),
+                              ),
+                              Container(
+                                  child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          27.5, 0.2, 30, 70),
+                                      child: CircleAvatar(
+                                          radius: 24,
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 250, 101, 2),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.search,
+                                                color: Colors.white),
+                                            iconSize: 31,
+                                            padding: const EdgeInsets.all(0.2),
+                                            onPressed: () {},
+                                          )))),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const schedule1()));
+                                },
+                                icon: Image.asset(
+                                    'images/NavigationBar/ScheduleActive.jpg'),
+                                iconSize: 55,
+                                padding:
+                                    const EdgeInsets.only(left: 1, bottom: 29),
+                                highlightColor: Colors.white,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const profile()));
+                                },
+                                icon: Image.asset(
+                                    'images/NavigationBar/Profile.jpg'),
+                                iconSize: 55,
+                                padding:
+                                    const EdgeInsets.only(left: 10, bottom: 26),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                  ]),
+                ));
+              } else {
+                return Center(
+                    child: SpinKitCircle(
+                  size: 140,
+                  itemBuilder: (context, index) {
+                    final colors = [Colors.blue, Colors.cyan];
+                    final color = colors[index % colors.length];
+                    return DecoratedBox(
+                        decoration: BoxDecoration(color: color));
+                  },
+                ));
+              }
+            }));
   }
 }

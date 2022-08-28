@@ -30,7 +30,7 @@ class Safra extends StatelessWidget {
       scaffoldMessengerKey: authError.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',
-      home: create(),
+      home: mainPage(),
     );
   }
 }
@@ -46,7 +46,7 @@ class mainPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong'));
           } else if (snapshot.hasData) {
-            return const dashboard();
+            return const dashboardn();
           } else {
             return const homePage();
           }

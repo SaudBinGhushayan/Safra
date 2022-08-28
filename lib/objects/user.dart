@@ -46,6 +46,15 @@ class Users {
       return false;
     }
   }
+
+  static Future<Users?> readUser(String id) async {
+    final docUser = FirebaseFirestore.instance.collection('Users').doc(id);
+    final snapshot = await docUser.get();
+
+    if (snapshot.exists) {
+      return Users.readFromJson(snapshot.data()!);
+    }
+  }
 }
 
 Future createUser(
