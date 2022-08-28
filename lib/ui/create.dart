@@ -67,13 +67,10 @@ class _createState extends State<create> {
                                 height: 55,
                                 width: 55,
                                 decoration: BoxDecoration(
-                                  image: const DecorationImage(
-                                      image:
-                                          AssetImage('images/Arabian guy.jpg')),
                                   borderRadius: BorderRadius.circular(40),
                                 ),
                               ),
-                              const Expanded(child: Text("abdulmalik "))
+                              Expanded(child: Text(users.username))
                             ],
                           ),
                         )
