@@ -1,7 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
+import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/schedule1.dart';
 
@@ -14,6 +18,7 @@ class dashboardn extends StatefulWidget {
 
 class _dashboardnState extends State<dashboardn> {
   final user = FirebaseAuth.instance.currentUser!;
+  OverlayEntry? entry;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +26,7 @@ class _dashboardnState extends State<dashboardn> {
         body: FutureBuilder<Users?>(
             future: Users.readUser(user.uid),
             builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return const Text('Something went wrong');
-              } else if (snapshot.hasData) {
+              if (snapshot.hasData) {
                 final users = snapshot.data!;
                 return Scaffold(
                     body: Container(
@@ -47,9 +50,10 @@ class _dashboardnState extends State<dashboardn> {
                                 color: const Color.fromARGB(255, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(40),
                               ),
-                              child: const Icon(
-                                Icons.menu,
-                                size: 20,
+                              child: IconButton(
+                                icon: const Icon(Icons.menu),
+                                iconSize: 20,
+                                onPressed: menu,
                               )),
                           const SizedBox(
                             height: 90,
@@ -66,11 +70,51 @@ class _dashboardnState extends State<dashboardn> {
                             child: Row(
                               children: [
                                 Container(
-                                  height: 55,
+                                  height: 550,
                                   width: 55,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(40),
                                   ),
+                                  child: FutureBuilder(
+                                      future: Storage.readImage(user.uid),
+                                      builder:
+                                          (BuildContext context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData) {
+                                          return ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            child: Image.network(
+                                              snapshot.data!.toString(),
+                                              fit: BoxFit.contain,
+                                              width: 300,
+                                              height: 300,
+                                            ),
+                                          );
+                                        } else if (!snapshot.hasData) {
+                                          return const Icon(
+                                            Icons.person,
+                                            size: 20,
+                                          );
+                                        } else {
+                                          return Center(
+                                              child: SpinKitCircle(
+                                            size: 140,
+                                            itemBuilder: (context, index) {
+                                              final colors = [
+                                                Colors.blue,
+                                                Colors.cyan
+                                              ];
+                                              final color =
+                                                  colors[index % colors.length];
+                                              return DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                      color: color));
+                                            },
+                                          ));
+                                        }
+                                      }),
                                 ),
                                 Expanded(child: Text(users.username))
                               ],
@@ -110,7 +154,8 @@ class _dashboardnState extends State<dashboardn> {
                                       padding: const EdgeInsets.only(
                                           left: 0, top: 23),
                                       iconSize: 21,
-                                      color: Color.fromARGB(255, 70, 127, 226),
+                                      color: const Color.fromARGB(
+                                          255, 70, 127, 226),
                                     ))
                                   ]))),
                         ],
@@ -146,7 +191,8 @@ class _dashboardnState extends State<dashboardn> {
                                       padding: const EdgeInsets.only(
                                           left: 0, top: 23),
                                       iconSize: 21,
-                                      color: Color.fromARGB(255, 70, 127, 226),
+                                      color: const Color.fromARGB(
+                                          255, 70, 127, 226),
                                     ))
                                   ]))),
                         ],
@@ -246,5 +292,83 @@ class _dashboardnState extends State<dashboardn> {
                 ));
               }
             }));
+  }
+
+  void menu() {
+    entry = OverlayEntry(
+        builder: (context) => Card(
+              margin: EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.8),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 30),
+                    child: Text('Menu',
+                        style: TextStyle(color: Colors.grey, fontSize: 21))),
+                SizedBox(height: 40),
+                Container(
+                    color: Colors.black12.withOpacity(0.5),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(top: 10, left: 30),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Settings',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 21),
+                              ),
+                              SizedBox(height: 25),
+                              Text(
+                                'FAQ',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 21),
+                              ),
+                              SizedBox(height: 25),
+                              Text(
+                                'Contact Us',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 21),
+                                textAlign: TextAlign.left,
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const homePage())),
+                                  FirebaseAuth.instance.signOut(),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Sign out',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              )
+                            ]))),
+                SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: Icon(Icons.visibility_off),
+                  label: Text('back'),
+                )
+              ]),
+            ));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void hideMenu() {
+    entry?.remove();
+    entry = null;
   }
 }

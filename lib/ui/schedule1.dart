@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/storage.dart';
 import 'package:safra/ui/create.dart';
 import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/join.dart';
 import 'package:safra/ui/profile.dart';
+import 'package:safra/ui/search.dart';
 
 import '../objects/user.dart';
 
@@ -16,6 +19,7 @@ class schedule1 extends StatefulWidget {
 
 class _schedule1 extends State<schedule1> {
   final user = FirebaseAuth.instance.currentUser!;
+  OverlayEntry? entry;
 
   @override
   Widget build(BuildContext context) {
@@ -43,34 +47,75 @@ class _schedule1 extends State<schedule1> {
                           Container(
                               width: 33,
                               height: 33,
-                              margin: EdgeInsets.fromLTRB(5, 69.4, 1, 1),
+                              margin: const EdgeInsets.fromLTRB(5, 40.5, 1, 1),
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
+                                color: const Color.fromARGB(255, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(40),
                               ),
-                              child: Icon(
-                                Icons.menu,
-                                size: 20,
-                              )),
+                              child: IconButton(
+                                  icon: const Icon(Icons.menu),
+                                  iconSize: 20,
+                                  onPressed: menu)),
                           SizedBox(
                             height: 90,
                           ),
                           Container(
+                            //profile icon
                             height: 50,
-                            width: 132,
-                            margin: EdgeInsets.fromLTRB(202, 70, 3, 1),
+                            width: 140,
+                            margin: const EdgeInsets.fromLTRB(228, 47.8, 1, 1),
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 255, 255, 255),
+                              color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Row(
                               children: [
                                 Container(
-                                  height: 55,
+                                  height: 550,
                                   width: 55,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(40),
                                   ),
+                                  child: FutureBuilder(
+                                      future: Storage.readImage(user.uid),
+                                      builder:
+                                          (BuildContext context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData) {
+                                          return ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            child: Image.network(
+                                              snapshot.data!.toString(),
+                                              fit: BoxFit.contain,
+                                              width: 300,
+                                              height: 300,
+                                            ),
+                                          );
+                                        } else if (!snapshot.hasData) {
+                                          return const Icon(
+                                            Icons.person,
+                                            size: 20,
+                                          );
+                                        } else {
+                                          return Center(
+                                              child: SpinKitCircle(
+                                            size: 140,
+                                            itemBuilder: (context, index) {
+                                              final colors = [
+                                                Colors.blue,
+                                                Colors.cyan
+                                              ];
+                                              final color =
+                                                  colors[index % colors.length];
+                                              return DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                      color: color));
+                                            },
+                                          ));
+                                        }
+                                      }),
                                 ),
                                 Expanded(child: Text(users.username))
                               ],
@@ -162,7 +207,13 @@ class _schedule1 extends State<schedule1> {
                                               color: Colors.white),
                                           iconSize: 31,
                                           padding: const EdgeInsets.all(0.2),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const search()));
+                                          },
                                         )))),
                             IconButton(
                               onPressed: () {
@@ -211,5 +262,83 @@ class _schedule1 extends State<schedule1> {
                 ));
               }
             }));
+  }
+
+  void menu() {
+    entry = OverlayEntry(
+        builder: (context) => Card(
+              margin: EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.8),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 30),
+                    child: Text('Menu',
+                        style: TextStyle(color: Colors.grey, fontSize: 21))),
+                SizedBox(height: 40),
+                Container(
+                    color: Colors.black12.withOpacity(0.5),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(top: 10, left: 30),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Settings',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 21),
+                              ),
+                              SizedBox(height: 25),
+                              Text(
+                                'FAQ',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 21),
+                              ),
+                              SizedBox(height: 25),
+                              Text(
+                                'Contact Us',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 21),
+                                textAlign: TextAlign.left,
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const homePage())),
+                                  FirebaseAuth.instance.signOut(),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Sign out',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              )
+                            ]))),
+                SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: Icon(Icons.visibility_off),
+                  label: Text('back'),
+                )
+              ]),
+            ));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void hideMenu() {
+    entry?.remove();
+    entry = null;
   }
 }
