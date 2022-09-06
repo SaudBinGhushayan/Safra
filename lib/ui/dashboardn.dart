@@ -1,13 +1,18 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
+import 'package:safra/ui/ContactUs.dart';
+import 'package:safra/ui/FAQ.dart';
+import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/schedule1.dart';
+import 'package:safra/ui/stngs.dart';
 
 class dashboardn extends StatefulWidget {
   const dashboardn({Key? key}) : super(key: key);
@@ -316,23 +321,56 @@ class _dashboardnState extends State<dashboardn> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Settings',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const stngs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
-                              Text(
-                                'FAQ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const FAQ())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'FAQ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
-                              Text(
-                                'Contact Us',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
-                                textAlign: TextAlign.left,
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const contactUs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
                               TextButton(

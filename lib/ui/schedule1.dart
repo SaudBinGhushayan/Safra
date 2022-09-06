@@ -130,7 +130,7 @@ class _schedule1 extends State<schedule1> {
                             style:
                                 TextStyle(fontSize: 21, fontFamily: 'Verdana'),
                           )),
-                      SizedBox(height: 150),
+                      Spacer(),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.push(

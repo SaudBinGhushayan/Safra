@@ -315,44 +315,45 @@ class _joinState extends State<join> {
   void menu() {
     entry = OverlayEntry(
         builder: (context) => Card(
-              margin: EdgeInsets.all(0),
+              margin: const EdgeInsets.all(0),
               color: Colors.black54.withOpacity(0.8),
               child: Column(children: [
                 const SizedBox(height: 200),
                 Container(
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 30),
-                    child: Text('Menu',
-                        style: TextStyle(color: Colors.grey, fontSize: 21))),
-                SizedBox(height: 40),
+                    margin: const EdgeInsets.only(left: 30),
+                    child: const Text('Menu',
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 21))),
+                const SizedBox(height: 40),
                 Container(
                     color: Colors.black12.withOpacity(0.5),
                     child: Container(
                         alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(top: 10, left: 30),
+                        margin: const EdgeInsets.only(top: 10, left: 30),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 'Settings',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 21),
                               ),
-                              SizedBox(height: 25),
-                              Text(
+                              const SizedBox(height: 25),
+                              const Text(
                                 'FAQ',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 21),
                               ),
-                              SizedBox(height: 25),
-                              Text(
+                              const SizedBox(height: 25),
+                              const Text(
                                 'Contact Us',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 21),
                                 textAlign: TextAlign.left,
                               ),
-                              SizedBox(height: 25),
+                              const SizedBox(height: 25),
                               TextButton(
                                 onPressed: () => {
                                   Navigator.push(
@@ -372,11 +373,11 @@ class _joinState extends State<join> {
                                 ),
                               )
                             ]))),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 ElevatedButton.icon(
                   onPressed: hideMenu,
-                  icon: Icon(Icons.visibility_off),
-                  label: Text('back'),
+                  icon: const Icon(Icons.visibility_off),
+                  label: const Text('back'),
                 )
               ]),
             ));
