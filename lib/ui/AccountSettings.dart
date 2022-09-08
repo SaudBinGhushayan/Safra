@@ -8,6 +8,7 @@ import 'package:safra/backend/authError.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/stngs.dart';
 
 class AccountSettings extends StatefulWidget {
@@ -242,7 +243,8 @@ class _AccountSettingsState extends State<AccountSettings> {
 
   void changeName() {
     entry = OverlayEntry(
-        builder: (context) => Card(
+        builder: (context) => Scaffold(
+                body: Card(
               margin: const EdgeInsets.all(0),
               color: Colors.black54.withOpacity(0.1),
               child: Column(children: [
@@ -376,7 +378,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                   label: const Text('back'),
                 )
               ]),
-            ));
+            )));
 
     final overlay = Overlay.of(context);
     overlay?.insert(entry!);
@@ -648,20 +650,19 @@ class _AccountSettingsState extends State<AccountSettings> {
                                             const SizedBox(height: 60),
                                             ElevatedButton(
                                                 onPressed: () {
-                                                  bool isValid = validatorKey
-                                                      .currentState!
-                                                      .validate();
-                                                  hideMenu();
-                                                  if (!isValid) {
+                                                  if (password.text.length >=
+                                                          6 &&
+                                                      confirmPassword.text ==
+                                                          password.text) {
                                                     hideMenu();
-                                                    authError.showSnackBar(
-                                                        'Invalid Input');
-                                                  } else {
                                                     user.updatePassword(
                                                         password.text);
-                                                    hideMenu();
+
                                                     authError.showSnackBar(
                                                         'Password Updated');
+                                                  } else {
+                                                    authError.showSnackBar(
+                                                        'Invalid Input');
                                                   }
                                                 },
                                                 style: ElevatedButton.styleFrom(
@@ -797,24 +798,26 @@ class _AccountSettingsState extends State<AccountSettings> {
                                             const SizedBox(height: 60),
                                             ElevatedButton(
                                                 onPressed: () {
-                                                  bool isValid = validatorKey
-                                                      .currentState!
-                                                      .validate();
-                                                  hideMenu();
                                                   final docUser =
                                                       FirebaseFirestore.instance
                                                           .collection('Users')
                                                           .doc(user.uid);
-                                                  if (!isValid) {
-                                                    hideMenu();
-                                                    authError.showSnackBar(
-                                                        'Invalid Input');
-                                                  } else {
+                                                  if (username.text ==
+                                                      users.username) {
                                                     user.delete();
                                                     docUser.delete();
                                                     hideMenu();
                                                     authError.showSnackBar(
-                                                        'Password Updated');
+                                                        'Account Deleted');
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                homePage()));
+                                                  } else {
+                                                    hideMenu();
+                                                    authError.showSnackBar(
+                                                        'Invalid Input');
                                                   }
                                                 },
                                                 style: ElevatedButton.styleFrom(
