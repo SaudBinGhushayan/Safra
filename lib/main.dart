@@ -20,6 +20,7 @@ class Safra extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: authError.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',

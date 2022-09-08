@@ -1,6 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/authError.dart';
+import 'package:safra/objects/user.dart';
+import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/stngs.dart';
 
@@ -12,6 +18,16 @@ class AccountSettings extends StatefulWidget {
 }
 
 class _AccountSettingsState extends State<AccountSettings> {
+  final user = FirebaseAuth.instance.currentUser!;
+  final name = TextEditingController();
+  final username = TextEditingController();
+  final password = TextEditingController();
+  final confirmPassword = TextEditingController();
+
+  final validatorKey = GlobalKey<FormState>();
+
+  OverlayEntry? entry;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,22 +60,22 @@ class _AccountSettingsState extends State<AccountSettings> {
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.pin_drop),
+                      onPressed: changeName,
+                      icon: const Icon(Icons.supervised_user_circle),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
-                        child: const Text('Location',
+                        onPressed: changeName,
+                        child: const Text('Change Name',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
                                 fontSize: 21,
                                 fontWeight: FontWeight.normal))),
-                    const Padding(padding: EdgeInsets.only(left: 183)),
+                    const Padding(padding: EdgeInsets.only(left: 135)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: changeName,
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -77,14 +93,14 @@ class _AccountSettingsState extends State<AccountSettings> {
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: changeUserName,
                       icon: new Icon(Icons.change_circle),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: changeUserName,
                         child: const Text('Change Username',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
@@ -92,7 +108,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 95)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: changeUserName,
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -110,14 +126,14 @@ class _AccountSettingsState extends State<AccountSettings> {
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: changePassword,
                       icon: const Icon(Icons.key),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: changePassword,
                         child: const Text('Change Password',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
@@ -125,7 +141,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 100)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: changePassword,
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -143,14 +159,24 @@ class _AccountSettingsState extends State<AccountSettings> {
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => accountInformation()));
+                      },
                       icon: const Icon(Icons.info),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => accountInformation()));
+                        },
                         child: const Text('Account Info',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
@@ -158,7 +184,12 @@ class _AccountSettingsState extends State<AccountSettings> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 150)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => accountInformation()));
+                      },
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -176,14 +207,14 @@ class _AccountSettingsState extends State<AccountSettings> {
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: deleteAccount,
                       icon: const Icon(Icons.delete),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: deleteAccount,
                         child: const Text('Delete Account',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
@@ -191,7 +222,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 125)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: deleteAccount,
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -207,5 +238,644 @@ class _AccountSettingsState extends State<AccountSettings> {
                 ),
               ],
             )));
+  }
+
+  void changeName() {
+    entry = OverlayEntry(
+        builder: (context) => Card(
+              margin: const EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.1),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(left: 30),
+                ),
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    color:
+                        const Color.fromARGB(31, 95, 95, 95).withOpacity(0.8),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<Users?>(
+                                  future: Users.readUser(user.uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      final users = snapshot.data!;
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                                'Your Current Name is ' +
+                                                    users.name,
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 21)),
+                                            const SizedBox(height: 50),
+                                            TextFormField(
+                                              controller: name,
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              validator: (name) => name !=
+                                                          null &&
+                                                      name.length < 3
+                                                  ? 'Enter 3 characters atleast'
+                                                  : null,
+                                              decoration: InputDecoration(
+                                                hintText: 'Enter your new name',
+                                                fillColor: Colors.white,
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Colors
+                                                                    .blue)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    Colors.red,
+                                                                width: 2)),
+                                                hintStyle: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 60),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  final docUser =
+                                                      FirebaseFirestore.instance
+                                                          .collection('Users')
+                                                          .doc(user.uid);
+                                                  docUser.update(
+                                                      {'name': name.text});
+                                                  hideMenu();
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: const Color.fromARGB(
+                                                      232, 147, 160, 172),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 150,
+                                                          right: 150),
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  "ok",
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 0, 94, 170),
+                                                      fontSize: 21),
+                                                )),
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: SpinKitCircle(
+                                        size: 140,
+                                        itemBuilder: (context, index) {
+                                          final colors = [
+                                            Colors.blue,
+                                            Colors.cyan
+                                          ];
+                                          final color =
+                                              colors[index % colors.length];
+                                          return DecoratedBox(
+                                              decoration:
+                                                  BoxDecoration(color: color));
+                                        },
+                                      ));
+                                    }
+                                  })
+                            ]))),
+                const SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: const Icon(Icons.visibility_off),
+                  label: const Text('back'),
+                )
+              ]),
+            ));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void changeUserName() {
+    entry = OverlayEntry(
+        builder: (context) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Card(
+              margin: const EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.1),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(left: 30),
+                ),
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    color:
+                        const Color.fromARGB(31, 95, 95, 95).withOpacity(0.8),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<Users?>(
+                                  future: Users.readUser(user.uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      final users = snapshot.data!;
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                                'Your Current Username is ' +
+                                                    users.username,
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 21)),
+                                            const SizedBox(height: 50),
+                                            TextFormField(
+                                              controller: username,
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter your new username',
+                                                fillColor: Colors.white,
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Colors
+                                                                    .blue)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    Colors.red,
+                                                                width: 2)),
+                                                hintStyle: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 60),
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                  final valid = await Users
+                                                      .availableUsername(
+                                                          username.text);
+                                                  if (!valid) {
+                                                    authError.showSnackBar(
+                                                        'User already registered');
+                                                  } else {
+                                                    final docUser =
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection('Users')
+                                                            .doc(user.uid);
+                                                    docUser.update({
+                                                      'username': username.text
+                                                    });
+                                                    hideMenu();
+                                                  }
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: const Color.fromARGB(
+                                                      232, 147, 160, 172),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 150,
+                                                          right: 150),
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  "ok",
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 0, 94, 170),
+                                                      fontSize: 21),
+                                                )),
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: SpinKitCircle(
+                                        size: 140,
+                                        itemBuilder: (context, index) {
+                                          final colors = [
+                                            Colors.blue,
+                                            Colors.cyan
+                                          ];
+                                          final color =
+                                              colors[index % colors.length];
+                                          return DecoratedBox(
+                                              decoration:
+                                                  BoxDecoration(color: color));
+                                        },
+                                      ));
+                                    }
+                                  })
+                            ]))),
+                const SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: const Icon(Icons.visibility_off),
+                  label: const Text('back'),
+                )
+              ]),
+            )));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void changePassword() {
+    entry = OverlayEntry(
+        builder: (context) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Card(
+              margin: const EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.1),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(left: 30),
+                ),
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    color:
+                        const Color.fromARGB(31, 95, 95, 95).withOpacity(0.8),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<Users?>(
+                                  future: Users.readUser(user.uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      final users = snapshot.data!;
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            const Text('Change Password',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 21)),
+                                            const SizedBox(height: 50),
+                                            TextFormField(
+                                              controller: password,
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              obscureText: true,
+                                              validator: (password) => password !=
+                                                          null &&
+                                                      password.length < 6
+                                                  ? 'Enter 6 characters atleast'
+                                                  : null,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter your new password',
+                                                fillColor: Colors.white,
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Colors
+                                                                    .blue)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    Colors.red,
+                                                                width: 2)),
+                                                hintStyle: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                            TextFormField(
+                                              controller: confirmPassword,
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              obscureText: true,
+                                              validator: (conPass) =>
+                                                  conPass != password.text
+                                                      ? 'Password unmatched'
+                                                      : null,
+                                              decoration: InputDecoration(
+                                                hintText: 'Confirm password',
+                                                fillColor: Colors.white,
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Colors
+                                                                    .blue)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    Colors.red,
+                                                                width: 2)),
+                                                hintStyle: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 60),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  bool isValid = validatorKey
+                                                      .currentState!
+                                                      .validate();
+                                                  hideMenu();
+                                                  if (!isValid) {
+                                                    hideMenu();
+                                                    authError.showSnackBar(
+                                                        'Invalid Input');
+                                                  } else {
+                                                    user.updatePassword(
+                                                        password.text);
+                                                    hideMenu();
+                                                    authError.showSnackBar(
+                                                        'Password Updated');
+                                                  }
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: const Color.fromARGB(
+                                                      232, 147, 160, 172),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 150,
+                                                          right: 150),
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  "ok",
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 0, 94, 170),
+                                                      fontSize: 21),
+                                                )),
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: SpinKitCircle(
+                                        size: 140,
+                                        itemBuilder: (context, index) {
+                                          final colors = [
+                                            Colors.blue,
+                                            Colors.cyan
+                                          ];
+                                          final color =
+                                              colors[index % colors.length];
+                                          return DecoratedBox(
+                                              decoration:
+                                                  BoxDecoration(color: color));
+                                        },
+                                      ));
+                                    }
+                                  })
+                            ]))),
+                const SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: const Icon(Icons.visibility_off),
+                  label: const Text('back'),
+                )
+              ]),
+            )));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void deleteAccount() {
+    entry = OverlayEntry(
+        builder: (context) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Card(
+              margin: const EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.1),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(left: 30),
+                ),
+                Container(
+                    padding: const EdgeInsets.all(10),
+                    color:
+                        const Color.fromARGB(31, 95, 95, 95).withOpacity(0.8),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(top: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FutureBuilder<Users?>(
+                                  future: Users.readUser(user.uid),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      final users = snapshot.data!;
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                                ''' Are you sure you want to delete your account ?
+
+  if yes please enter your username "${users.username}"''',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 21)),
+                                            const SizedBox(height: 50),
+                                            TextFormField(
+                                              controller: username,
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Enter your new username',
+                                                fillColor: Colors.white,
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color: Colors
+                                                                    .blue)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    Colors.red,
+                                                                width: 2)),
+                                                hintStyle: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 60),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  bool isValid = validatorKey
+                                                      .currentState!
+                                                      .validate();
+                                                  hideMenu();
+                                                  final docUser =
+                                                      FirebaseFirestore.instance
+                                                          .collection('Users')
+                                                          .doc(user.uid);
+                                                  if (!isValid) {
+                                                    hideMenu();
+                                                    authError.showSnackBar(
+                                                        'Invalid Input');
+                                                  } else {
+                                                    user.delete();
+                                                    docUser.delete();
+                                                    hideMenu();
+                                                    authError.showSnackBar(
+                                                        'Password Updated');
+                                                  }
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: const Color.fromARGB(
+                                                      232, 147, 160, 172),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 150,
+                                                          right: 150),
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  "ok",
+                                                  style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 0, 94, 170),
+                                                      fontSize: 21),
+                                                )),
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: SpinKitCircle(
+                                        size: 140,
+                                        itemBuilder: (context, index) {
+                                          final colors = [
+                                            Colors.blue,
+                                            Colors.cyan
+                                          ];
+                                          final color =
+                                              colors[index % colors.length];
+                                          return DecoratedBox(
+                                              decoration:
+                                                  BoxDecoration(color: color));
+                                        },
+                                      ));
+                                    }
+                                  })
+                            ]))),
+                const SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: const Icon(Icons.visibility_off),
+                  label: const Text('back'),
+                )
+              ]),
+            )));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void hideMenu() {
+    entry?.remove();
+    entry = null;
   }
 }

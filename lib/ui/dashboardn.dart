@@ -8,6 +8,8 @@ import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
+import 'package:safra/ui/accountInformation.dart';
+import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/profile.dart';
@@ -248,7 +250,13 @@ class _dashboardnState extends State<dashboardn> {
                                               color: Colors.white),
                                           iconSize: 31,
                                           padding: const EdgeInsets.all(0.2),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const search()));
+                                          },
                                         )))),
                             IconButton(
                               onPressed: () {
@@ -270,7 +278,8 @@ class _dashboardnState extends State<dashboardn> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const profile()));
+                                        builder: (context) =>
+                                            accountInformation()));
                               },
                               icon: Image.asset(
                                   'images/NavigationBar/Profile.jpg'),

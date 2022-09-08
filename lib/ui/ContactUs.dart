@@ -62,7 +62,7 @@ class _contactUsState extends State<contactUs> {
                   const Padding(padding: EdgeInsets.all(10)),
                   const Icon(Icons.email, size: 30),
                   const Padding(padding: EdgeInsets.only(left: 20)),
-                  Text(
+                  const Text(
                     '439102666@student.ksu.edu.sa',
                     style: TextStyle(
                         color: Color.fromARGB(255, 75, 74, 74),
@@ -71,7 +71,7 @@ class _contactUsState extends State<contactUs> {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Row(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
@@ -91,7 +91,7 @@ class _contactUsState extends State<contactUs> {
                   const Padding(padding: EdgeInsets.all(10)),
                   const Icon(Icons.email, size: 30),
                   const Padding(padding: EdgeInsets.only(left: 20)),
-                  Text(
+                  const Text(
                     '439101707@student.ksu.edu.sa',
                     style: TextStyle(
                         color: Color.fromARGB(255, 75, 74, 74),
@@ -100,7 +100,7 @@ class _contactUsState extends State<contactUs> {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Row(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
@@ -120,7 +120,7 @@ class _contactUsState extends State<contactUs> {
                   const Padding(padding: EdgeInsets.all(10)),
                   const Icon(Icons.email, size: 30),
                   const Padding(padding: EdgeInsets.only(left: 20)),
-                  Text(
+                  const Text(
                     '439101946@student.ksu.edu.sa',
                     style: TextStyle(
                         color: Color.fromARGB(255, 75, 74, 74),

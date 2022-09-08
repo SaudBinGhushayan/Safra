@@ -2,12 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/ui/ContactUs.dart';
+import 'package:safra/ui/FAQ.dart';
+import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/create.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/join.dart';
 import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/search.dart';
+import 'package:safra/ui/stngs.dart';
 
 import '../objects/user.dart';
 
@@ -235,7 +239,8 @@ class _schedule1 extends State<schedule1> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const profile()));
+                                        builder: (context) =>
+                                            accountInformation()));
                               },
                               icon: Image.asset(
                                   'images/NavigationBar/Profile.jpg'),
@@ -286,23 +291,56 @@ class _schedule1 extends State<schedule1> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Settings',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const stngs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
-                              Text(
-                                'FAQ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const FAQ())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'FAQ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
-                              Text(
-                                'Contact Us',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
-                                textAlign: TextAlign.left,
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const contactUs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
                               TextButton(
