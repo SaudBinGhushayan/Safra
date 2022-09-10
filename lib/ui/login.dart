@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:safra/backend/authError.dart';
+import 'package:safra/backend/snackBar.dart';
 import 'package:safra/ui/CreateAccount.dart';
 import 'package:safra/ui/forgetPassword.dart';
 import 'package:safra/ui/homePage.dart';
@@ -130,7 +130,7 @@ class loginState extends State<login> {
     } on FirebaseAuthException catch (e) {
       // print(e);
 
-      authError.showSnackBar(e.message);
+      snackBar.showSnackBarRed(e.message);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const login()));
       return;

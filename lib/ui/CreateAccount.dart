@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:safra/backend/authError.dart';
+import 'package:safra/backend/snackBar.dart';
 import 'package:safra/ui/login.dart';
 
 import '../main.dart';
@@ -145,7 +145,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   onPressed: () async {
                     final valid = await Users.availableUsername(username.text);
                     if (!valid) {
-                      authError.showSnackBar('User already registered');
+                      snackBar.showSnackBarRed('User already registered');
                     } else {
                       signUp();
                     }
@@ -198,7 +198,7 @@ class _CreateAccountState extends State<CreateAccount> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email.text.trim(), password: password.text.trim());
     } on FirebaseAuthException catch (e) {
-      authError.showSnackBar(e.message);
+      snackBar.showSnackBarRed(e.message);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const CreateAccount()));
       return;

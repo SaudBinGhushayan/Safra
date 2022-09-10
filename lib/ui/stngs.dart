@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:safra/ui/AccountSettings.dart';
+import 'package:safra/ui/about.dart';
 import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/sendFeedback.dart';
 
 class stngs extends StatefulWidget {
   const stngs({Key? key}) : super(key: key);
@@ -35,17 +37,21 @@ class _stngsState extends State<stngs> {
                               MaterialPageRoute(
                                   builder: (context) => const dashboardn()));
                         })),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text('Settings',
-                    style: TextStyle(
-                        fontSize: 33,
-                        color: const Color.fromARGB(255, 75, 74, 74))),
+                    style: const TextStyle(
+                        fontSize: 33, color: Color.fromARGB(255, 75, 74, 74))),
                 const SizedBox(height: 80),
                 Row(
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AccountSettings()));
+                      },
                       icon: const Icon(Icons.person),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
@@ -66,7 +72,12 @@ class _stngsState extends State<stngs> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 110)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AccountSettings()));
+                      },
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -74,8 +85,8 @@ class _stngsState extends State<stngs> {
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                  decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
                               color: Color.fromARGB(255, 75, 74, 74)))),
@@ -107,8 +118,8 @@ class _stngsState extends State<stngs> {
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                  decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
                               color: Color.fromARGB(255, 75, 74, 74)))),
@@ -117,47 +128,24 @@ class _stngsState extends State<stngs> {
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.remove_red_eye),
-                      iconSize: 33,
-                      color: const Color.fromARGB(255, 75, 74, 74),
-                    ),
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Text('Appearance',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 75, 74, 74),
-                                fontSize: 21,
-                                fontWeight: FontWeight.normal))),
-                    const Padding(padding: EdgeInsets.only(left: 160)),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      color: const Color.fromARGB(255, 75, 74, 74),
-                      iconSize: 22,
-                    )
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              color: Color.fromARGB(255, 75, 74, 74)))),
-                ),
-                Row(
-                  children: [
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const sendFeedback()));
+                      },
                       icon: const Icon(Icons.feedback),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const sendFeedback()));
+                        },
                         child: const Text('Send Feedback',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
@@ -165,7 +153,12 @@ class _stngsState extends State<stngs> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 130)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const sendFeedback()));
+                      },
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -173,24 +166,34 @@ class _stngsState extends State<stngs> {
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                  decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
-                              color: Color.fromARGB(255, 75, 74, 74)))),
+                              color: const Color.fromARGB(255, 75, 74, 74)))),
                 ),
                 Row(
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const about()));
+                      },
                       icon: const Icon(Icons.question_mark_sharp),
                       iconSize: 33,
                       color: const Color.fromARGB(255, 75, 74, 74),
                     ),
                     const Padding(padding: EdgeInsets.only(left: 10)),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const about()));
+                        },
                         child: const Text('About',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 75, 74, 74),
@@ -198,7 +201,12 @@ class _stngsState extends State<stngs> {
                                 fontWeight: FontWeight.normal))),
                     const Padding(padding: EdgeInsets.only(left: 217)),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const about()));
+                      },
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color.fromARGB(255, 75, 74, 74),
                       iconSize: 22,
@@ -206,8 +214,8 @@ class _stngsState extends State<stngs> {
                   ],
                 ),
                 Container(
-                  margin: EdgeInsets.fromLTRB(20, 8, 20, 20),
-                  decoration: BoxDecoration(
+                  margin: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                  decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
                               color: Color.fromARGB(255, 75, 74, 74)))),

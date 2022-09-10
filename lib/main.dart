@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:safra/backend/authError.dart';
+import 'package:safra/backend/snackBar.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
 import 'backend/firebase_options.dart';
@@ -21,7 +21,7 @@ class Safra extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: authError.globalKey,
+      scaffoldMessengerKey: snackBar.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',
       home: mainPage(),

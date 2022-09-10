@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:safra/backend/authError.dart';
+import 'package:safra/backend/snackBar.dart';
 
 class Storage {
   static final FirebaseStorage storage = FirebaseStorage.instance;
@@ -13,7 +13,7 @@ class Storage {
       await storage.ref('profile_images/$imgName').putFile(file);
     } on FirebaseException catch (e) {
       print(e);
-      authError.showSnackBar(e.message);
+      snackBar.showSnackBarRed(e.message);
     }
   }
 

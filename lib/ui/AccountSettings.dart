@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:safra/backend/authError.dart';
+import 'package:safra/backend/snackBar.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
@@ -463,7 +463,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                                       .availableUsername(
                                                           username.text);
                                                   if (!valid) {
-                                                    authError.showSnackBar(
+                                                    snackBar.showSnackBarRed(
                                                         'User already registered');
                                                   } else {
                                                     final docUser =
@@ -658,10 +658,10 @@ class _AccountSettingsState extends State<AccountSettings> {
                                                     user.updatePassword(
                                                         password.text);
 
-                                                    authError.showSnackBar(
+                                                    snackBar.showSnackBarGreen(
                                                         'Password Updated');
                                                   } else {
-                                                    authError.showSnackBar(
+                                                    snackBar.showSnackBarRed(
                                                         'Invalid Input');
                                                   }
                                                 },
@@ -807,7 +807,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                                     user.delete();
                                                     docUser.delete();
                                                     hideMenu();
-                                                    authError.showSnackBar(
+                                                    snackBar.showSnackBarGreen(
                                                         'Account Deleted');
                                                     Navigator.push(
                                                         context,
@@ -816,7 +816,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                                                                 homePage()));
                                                   } else {
                                                     hideMenu();
-                                                    authError.showSnackBar(
+                                                    snackBar.showSnackBarRed(
                                                         'Invalid Input');
                                                   }
                                                 },
