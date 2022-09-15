@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:math';
 
 class Users {
   String uid;
@@ -9,7 +8,6 @@ class Users {
   final String email;
   final String username;
 
-  // String doc = "user's_Doc${Random().nextInt(100)}";
   Users(
       {required this.uid,
       required this.name,

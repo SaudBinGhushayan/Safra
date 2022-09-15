@@ -323,9 +323,16 @@ class _AccountSettingsState extends State<AccountSettings> {
                                                       FirebaseFirestore.instance
                                                           .collection('Users')
                                                           .doc(user.uid);
-                                                  docUser.update(
-                                                      {'name': name.text});
-                                                  hideMenu();
+                                                  if (name.text.length < 3) {
+                                                    snackBar.showSnackBarRed(
+                                                        'Invalid Input');
+                                                  } else {
+                                                    docUser.update(
+                                                        {'name': name.text});
+                                                    hideMenu();
+                                                    snackBar.showSnackBarGreen(
+                                                        'Name Updated Successfully');
+                                                  }
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   primary: const Color.fromARGB(
@@ -475,6 +482,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                                                       'username': username.text
                                                     });
                                                     hideMenu();
+                                                    snackBar.showSnackBarGreen(
+                                                        'Username Updated Successfully');
                                                   }
                                                 },
                                                 style: ElevatedButton.styleFrom(

@@ -9,7 +9,6 @@ import 'package:safra/ui/create.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/join.dart';
-import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
 

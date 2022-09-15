@@ -81,3 +81,59 @@ class _dashboardState extends State<dashboard> {
 
 
 }
+StreamBuilder<List<Activities>>(
+                stream: readActivities(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  } else if (snapshot.hasData) {
+                    final activity = snapshot.data!;
+                    return Container(
+                        child: Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: Center(
+                                child: Column(children: [
+                              ListView(
+                                  shrinkWrap: true,
+                                  children:
+                                      activity.map(buildActivities).toList()),
+                            ]))));
+                  } else {
+                    return const Text('no search data');
+                  }
+                }),
+
+
+                Stream<List<Activities>> readActivities(
+                                  String city) =>
+                              FirebaseFirestore.instance
+                                  .collection('activities')
+                                  .where(city)
+                                  .snapshots()
+                                  .map((snapshot) => snapshot.docs
+                                      .map((doc) =>
+                                          Activities.readFromJson(doc.data()))
+                                      .toList());
+
+                          StreamBuilder<List<Activities>>(
+                              stream: readActivities(city.text),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('Something went wrong');
+                                } else if (snapshot.hasData) {
+                                  final activity = snapshot.data!;
+                                  return Container(
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(32),
+                                          child: Center(
+                                              child: Column(children: [
+                                            ListView(
+                                                shrinkWrap: true,
+                                                children: activity
+                                                    .map(buildActivities)
+                                                    .toList()),
+                                          ]))));
+                                } else {
+                                  return const Text('no search data');
+                                }
+                              });
