@@ -1,20 +1,55 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// To parse this JSON data, do
+//
+//     final places = placesFromJson(jsonString);
+
+import 'dart:convert';
+
+List<Places> placesFromJson(String str) =>
+    List<Places>.from(json.decode(str).map((x) => Places.fromJson(x)));
+
+String placesToJson(List<Places> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Places {
-  final String city;
-  final String place;
-
   Places({
-    required this.city,
-    required this.place,
+    required this.fsq_id,
+    required this.name,
+    required this.rating,
+    required this.tel,
+    required this.country,
+    required this.region,
+    required this.price,
+    required this.description,
   });
 
-  static Places readFromJson(Map<String, dynamic> json) => Places(
-        city: json['city'],
-        place: json['place'],
+  String fsq_id;
+  String name;
+  String rating;
+  String tel;
+  String country;
+  String region;
+  String price;
+  String description;
+
+  factory Places.fromJson(Map<String, dynamic> json) => Places(
+        fsq_id: json["fsq_id"],
+        name: json["name"],
+        rating: json["rating"],
+        tel: json["tel"],
+        country: json["country"],
+        region: json["region"],
+        price: json["price"],
+        description: json["description"],
       );
+
   Map<String, dynamic> toJson() => {
-        'city': city,
-        'place': place,
+        "fsq_id": fsq_id,
+        "name": name,
+        "rating": rating,
+        "tel": tel,
+        "country": country,
+        "region": region,
+        "price": price,
+        "description": description,
       };
 }
