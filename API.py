@@ -88,10 +88,14 @@ def retrieve_places(a , b , c):
     df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
 
     # filling nan values with zero
-    df = df.fillna(0)
 
-    data = df.to_json()
+    df['price'] = df['price'].fillna(-1)
+    df['tel'] = df['tel'].fillna('n/a')
+    df['description'] = df['description'].fillna('n/a')
+
+    data = df.to_json(orient = 'columns')
     return df , data
+
 
 
 
