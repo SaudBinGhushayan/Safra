@@ -1,18 +1,23 @@
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
+import 'package:safra/ui/Generate.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/create.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/join.dart';
 import 'package:safra/ui/search.dart';
+import 'package:safra/ui/searchtrip.dart';
 import 'package:safra/ui/stngs.dart';
-
+import 'package:safra/ui/simple_dialogs.dart';
 import '../objects/user.dart';
+import 'package:safra/ui/searchtrip.dart';
 
 class schedule1 extends StatefulWidget {
   const schedule1({super.key});
@@ -23,6 +28,63 @@ class schedule1 extends StatefulWidget {
 class _schedule1 extends State<schedule1> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
+  Future<void> scheduleoption() async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Select your option'),
+            children: [
+              Container(
+                height: 50,
+                width: 40,
+                padding: EdgeInsets.only(right: 270),
+                // color: Color.fromARGB(255, 16, 13, 201),
+                child: TextButton(
+                    child: Text(
+                      'Search',
+                      style: TextStyle(),
+                    ),
+                    onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const searchtrip())),
+                        }),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 258),
+                child: TextButton(
+                    child: Text('Manually'),
+                    onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const create())),
+                        }),
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 258),
+                child: TextButton(
+                    child: Text('Generate'),
+                    onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Generate())),
+                        }),
+              )
+            ],
+          );
+        })) {
+      case option.Generate:
+        print('Generate');
+        break;
+      case option.Generate:
+        print('Manually');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +112,8 @@ class _schedule1 extends State<schedule1> {
                           Container(
                               width: 33,
                               height: 33,
-                              margin: const EdgeInsets.fromLTRB(5, 40.5, 1, 1),
+                              padding: EdgeInsets.only(top: 0.1, right: 9),
+                              margin: const EdgeInsets.fromLTRB(5, 12, 1, 1),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(40),
@@ -66,7 +129,7 @@ class _schedule1 extends State<schedule1> {
                             //profile icon
                             height: 50,
                             width: 140,
-                            margin: const EdgeInsets.fromLTRB(228, 47.8, 1, 1),
+                            margin: const EdgeInsets.fromLTRB(228, 19, 1, 1),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
@@ -148,12 +211,7 @@ class _schedule1 extends State<schedule1> {
                           child: const Text("Join")),
                       SizedBox(height: 30),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const create()));
-                          },
+                          onPressed: scheduleoption,
                           style: ElevatedButton.styleFrom(
                               primary: Color.fromARGB(255, 2, 95, 172),
                               textStyle: const TextStyle(fontSize: 20),
@@ -379,3 +437,5 @@ class _schedule1 extends State<schedule1> {
     entry = null;
   }
 }
+
+enum option { Generate, Manually, search }
