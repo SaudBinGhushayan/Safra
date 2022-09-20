@@ -3,9 +3,9 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
+import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
-import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/search.dart';
@@ -282,7 +282,7 @@ class _joinState extends State<join> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const profile()));
+                                                        const accountInformation()));
                                           },
                                           icon: Image.asset(
                                               'images/NavigationBar/Profile.jpg'),

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
+import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
-import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/mention.dart';
 
@@ -258,7 +258,7 @@ class _createState extends State<create> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const profile()));
+                                                      const accountInformation()));
                                         },
                                         icon: Image.asset(
                                             'images/NavigationBar/Profile.jpg'),
