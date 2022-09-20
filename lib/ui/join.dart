@@ -46,13 +46,15 @@ class _joinState extends State<join> {
                           reverse: true,
                           child: Column(children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               //menu icon
                               children: [
                                 Container(
                                     width: 33,
                                     height: 33,
-                                    margin: const EdgeInsets.fromLTRB(
-                                        5, 40.5, 1, 1),
+                                    padding:
+                                        EdgeInsets.only(top: 0.1, right: 9),
+                                    margin: EdgeInsets.fromLTRB(5, 150, 1, 1),
                                     decoration: BoxDecoration(
                                       color: const Color.fromARGB(
                                           255, 255, 255, 255),
@@ -69,8 +71,8 @@ class _joinState extends State<join> {
                                   //profile icon
                                   height: 50,
                                   width: 140,
-                                  margin: const EdgeInsets.fromLTRB(
-                                      228, 47.8, 1, 1),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(228, 150, 1, 1),
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                         255, 255, 255, 255),
