@@ -74,7 +74,28 @@ def retrieve_places(a , b , c):
 
     df = pd.json_normalize(data['results'])
 
+
+    #deleting unnecessary columns
+    df.drop(['location.address','location.cross_street','location.formatted_address' , 'location.postcode','location.locality']
+            ,
+            axis = 1 , inplace = True)
+
+
+
+    # renaming columns
+
+
+    df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
+
+    # filling nan values with zero
+    df = df.fillna(0)
+
+    data = df.to_json()
     return df , data
+
+
+
+
 
 
 
@@ -95,7 +116,7 @@ app = Flask(__name__)
 @app.route('/' , methods = ['GET'])
 
 def index():
-    return data
+    return data_json
 
 
 
