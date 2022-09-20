@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,16 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart';
+import 'package:safra/backend/httpHandler.dart';
 import 'package:safra/backend/snackBar.dart';
 import 'package:safra/objects/ActiveTrips.dart';
 import 'package:safra/objects/Activities.dart';
 import 'package:safra/objects/Places.dart';
+import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
 import 'package:safra/ui/accountInformation.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:safra/ui/schedule1.dart';
 
 import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/test.dart';
 
 class search extends StatefulWidget {
   const search({Key? key}) : super(key: key);
@@ -27,6 +32,23 @@ class search extends StatefulWidget {
 class _searchState extends State<search> {
   String city = '';
   OverlayEntry? entry;
+  List<Places>? places;
+  var isloaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  getData() async {
+    places = await httpHandler().getPlaces();
+    if (places != null) {
+      setState(() {
+        isloaded = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +137,10 @@ class _searchState extends State<search> {
             Container(
               margin: EdgeInsets.only(right: 210),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const test()));
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: const Color.fromARGB(232, 147, 160, 172),
                     shape: RoundedRectangleBorder(
@@ -132,75 +157,20 @@ class _searchState extends State<search> {
                   )),
             ),
             SizedBox(
-                height: 150,
-                child: StreamBuilder<List<Activities>>(
-                    stream: readActivities(city),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final activity = snapshot.data!;
-                        return SingleChildScrollView(
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 32, top: 3),
-                                child: Center(
-                                    child: Column(children: [
-                                  ListView(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      children: activity
-                                          .map(buildActivities)
-                                          .toList()),
-                                ]))));
-                      } else if (!snapshot.hasData) {
-                        return const Text('no search data');
-                      } else {
-                        return snackBar.showSnackBarRed('Something Went Wrong');
-                      }
+              height: 350,
+              child: Visibility(
+                visible: isloaded,
+                child: ListView.builder(
+                    itemCount: places?.length,
+                    itemBuilder: ((context, index) {
+                      return Container(
+                          child: Text('${places![index].name.toString()}'));
                     })),
-            Container(
-              margin: EdgeInsets.only(right: 210, top: 20),
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    primary: const Color.fromARGB(232, 147, 160, 172),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 0, bottom: 0),
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  child: const Text(
-                    "Places",
-                    style: TextStyle(color: Colors.white, fontSize: 21),
-                  )),
+                replacement: const Center(
+                  child: Text('no data'),
+                ),
+              ),
             ),
-            SizedBox(
-                height: 130,
-                child: StreamBuilder<List<Places>>(
-                    stream: readPlaces(city),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final places = snapshot.data!;
-                        return SingleChildScrollView(
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 32, top: 3),
-                                child: Center(
-                                    child: Column(children: [
-                                  ListView(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      children:
-                                          places.map(buildPlaces).toList()),
-                                ]))));
-                      } else if (!snapshot.hasData) {
-                        return const Text('No Search Data');
-                      } else {
-                        return snackBar.showSnackBarRed('Something Went Wrong');
-                      }
-                    })),
             Container(
               //start of navigation bar
               margin: const EdgeInsets.only(top: 0),
@@ -379,93 +349,93 @@ class _searchState extends State<search> {
                 Text(activity.activity, style: const TextStyle(fontSize: 21))),
       ]);
 
-  Stream<List<Places>> readPlaces(String city) => FirebaseFirestore.instance
-      .collection('places')
-      .where('city', isEqualTo: city.toLowerCase())
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Places.readFromJson(doc.data())).toList());
+  // Stream<List<Places>> readPlaces(String city) => FirebaseFirestore.instance
+  //     .collection('places')
+  //     .where('city', isEqualTo: city.toLowerCase())
+  //     .snapshots()
+  //     .map((snapshot) =>
+  //         snapshot.docs.map((doc) => Places.readFromJson(doc.data())).toList());
 
-  Widget buildPlaces(Places places) => Row(children: [
-        TextButton(
-            onPressed: () {},
-            child: Text(places.city, style: const TextStyle(fontSize: 21))),
-        TextButton(
-            onPressed: () {
-              entry = OverlayEntry(
-                  builder: (context) => Scaffold(
-                      resizeToAvoidBottomInset: false,
-                      body: Card(
-                        margin: const EdgeInsets.all(0),
-                        child: Column(children: [
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.only(left: 30),
-                          ),
-                          Container(
-                              padding: const EdgeInsets.only(left: 10, top: 20),
-                              color: Color.fromARGB(31, 255, 255, 255)
-                                  .withOpacity(0.8),
-                              child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ElevatedButton.icon(
-                                          onPressed: hideMenu,
-                                          icon:
-                                              const Icon(Icons.arrow_back_ios),
-                                          label: const Text('back'),
-                                        ),
-                                        const SizedBox(height: 200),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 30)),
-                                        Text('City: ${places.city}',
-                                            style:
-                                                const TextStyle(fontSize: 21)),
-                                        const SizedBox(height: 20),
-                                        Text('Activity Name: ${places.place}',
-                                            style:
-                                                const TextStyle(fontSize: 21)),
-                                        const SizedBox(height: 20),
-                                      ]))),
-                          const SizedBox(height: 40),
-                          ElevatedButton.icon(
-                            onPressed: () async {
-                              final valid =
-                                  await Trips.availableTrip(places.place);
-                              if (!valid) {
-                                snackBar.showSnackBarRed(
-                                    'Place already registered');
-                              } else {
-                                final user = FirebaseAuth.instance.currentUser!;
-                                createTrip(
-                                  tripId: places.city +
-                                      Random().nextInt(1000).toString(),
-                                  uid: user.uid,
-                                  city: places.city,
-                                  go: places.place,
-                                  date: '',
-                                );
-                                snackBar.showSnackBarGreen(
-                                    'Place Added Successfully');
-                                hideMenu();
-                              }
-                            },
-                            icon: const Icon(Icons.check_box),
-                            label: const Text('book activity'),
-                          ),
-                        ]),
-                      )));
+  // Widget buildPlaces(Places places) => Row(children: [
+  //       TextButton(
+  //           onPressed: () {},
+  //           child: Text(places.city, style: const TextStyle(fontSize: 21))),
+  //       TextButton(
+  //           onPressed: () {
+  //             entry = OverlayEntry(
+  //                 builder: (context) => Scaffold(
+  //                     resizeToAvoidBottomInset: false,
+  //                     body: Card(
+  //                       margin: const EdgeInsets.all(0),
+  //                       child: Column(children: [
+  //                         Container(
+  //                           alignment: Alignment.centerLeft,
+  //                           margin: const EdgeInsets.only(left: 30),
+  //                         ),
+  //                         Container(
+  //                             padding: const EdgeInsets.only(left: 10, top: 20),
+  //                             color: Color.fromARGB(31, 255, 255, 255)
+  //                                 .withOpacity(0.8),
+  //                             child: Container(
+  //                                 alignment: Alignment.centerLeft,
+  //                                 child: Column(
+  //                                     crossAxisAlignment:
+  //                                         CrossAxisAlignment.start,
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       ElevatedButton.icon(
+  //                                         onPressed: hideMenu,
+  //                                         icon:
+  //                                             const Icon(Icons.arrow_back_ios),
+  //                                         label: const Text('back'),
+  //                                       ),
+  //                                       const SizedBox(height: 200),
+  //                                       Padding(
+  //                                           padding: EdgeInsets.only(left: 30)),
+  //                                       Text('City: ${places.city}',
+  //                                           style:
+  //                                               const TextStyle(fontSize: 21)),
+  //                                       const SizedBox(height: 20),
+  //                                       Text('Activity Name: ${places.place}',
+  //                                           style:
+  //                                               const TextStyle(fontSize: 21)),
+  //                                       const SizedBox(height: 20),
+  //                                     ]))),
+  //                         const SizedBox(height: 40),
+  //                         ElevatedButton.icon(
+  //                           onPressed: () async {
+  //                             final valid =
+  //                                 await Trips.availableTrip(places.place);
+  //                             if (!valid) {
+  //                               snackBar.showSnackBarRed(
+  //                                   'Place already registered');
+  //                             } else {
+  //                               final user = FirebaseAuth.instance.currentUser!;
+  //                               createTrip(
+  //                                 tripId: places.city +
+  //                                     Random().nextInt(1000).toString(),
+  //                                 uid: user.uid,
+  //                                 city: places.city,
+  //                                 go: places.place,
+  //                                 date: '',
+  //                               );
+  //                               snackBar.showSnackBarGreen(
+  //                                   'Place Added Successfully');
+  //                               hideMenu();
+  //                             }
+  //                           },
+  //                           icon: const Icon(Icons.check_box),
+  //                           label: const Text('book activity'),
+  //                         ),
+  //                       ]),
+  //                     )));
 
-              final overlay = Overlay.of(context);
-              overlay?.insert(entry!);
-            },
-            child: Text(places.place, style: const TextStyle(fontSize: 21))),
-      ]);
+  //             final overlay = Overlay.of(context);
+  //             overlay?.insert(entry!);
+  //           },
+  //           child: Text(places.place, style: const TextStyle(fontSize: 21))),
+  //     ]);
 
   void hideMenu() {
     entry?.remove();
