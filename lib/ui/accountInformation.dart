@@ -48,6 +48,7 @@ class _accountInformation extends State<accountInformation> {
                       Container(
                           width: 33,
                           height: 33,
+                          padding: EdgeInsets.only(top: 0.1, right: 9),
                           margin: const EdgeInsets.fromLTRB(5, 1, 1, 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
@@ -331,7 +332,7 @@ class _accountInformation extends State<accountInformation> {
 
                       Container(
                         //start of navigation bar
-                        margin: const EdgeInsets.only(top: 40),
+                        margin: const EdgeInsets.only(top: 54),
                         padding: EdgeInsets.only(bottom: 0),
                         height: 176,
                         decoration: const BoxDecoration(

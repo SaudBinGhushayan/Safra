@@ -15,6 +15,7 @@ import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/stngs.dart';
+import 'package:safra/ui/mention.dart';
 
 class dashboardn extends StatefulWidget {
   const dashboardn({Key? key}) : super(key: key);
@@ -52,7 +53,8 @@ class _dashboardnState extends State<dashboardn> {
                           Container(
                               width: 33,
                               height: 33,
-                              margin: const EdgeInsets.fromLTRB(5, 40.5, 1, 1),
+                              padding: EdgeInsets.only(top: 0.1, right: 9),
+                              margin: const EdgeInsets.fromLTRB(5, 12, 1, 1),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(40),
@@ -69,7 +71,7 @@ class _dashboardnState extends State<dashboardn> {
                             //profile icon
                             height: 50,
                             width: 140,
-                            margin: const EdgeInsets.fromLTRB(228, 47.8, 1, 1),
+                            margin: const EdgeInsets.fromLTRB(228, 19, 1, 1),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
@@ -205,7 +207,7 @@ class _dashboardnState extends State<dashboardn> {
                         ],
                       ),
                       Container(
-                        margin: const EdgeInsets.only(top: 95),
+                        margin: const EdgeInsets.only(top: 106),
                         height: 200,
                         width: 500,
                         decoration: const BoxDecoration(
@@ -230,7 +232,12 @@ class _dashboardnState extends State<dashboardn> {
                                   const EdgeInsets.only(left: 29, bottom: 29),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const mention()));
+                              },
                               icon: Image.asset(
                                   'images/NavigationBar/Mention.jpg'),
                               iconSize: 55,

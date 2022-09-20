@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:safra/backend/authError.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
+import 'package:safra/ui/mention.dart';
+import 'package:safra/ui/schedule1.dart';
 import 'backend/firebase_options.dart';
 
 void main() async {
@@ -24,7 +26,7 @@ class Safra extends StatelessWidget {
       scaffoldMessengerKey: authError.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',
-      home: mainPage(),
+      home: schedule1(),
     );
   }
 }

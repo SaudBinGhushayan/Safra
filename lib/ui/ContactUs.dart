@@ -108,7 +108,7 @@ class _contactUsState extends State<contactUs> {
                   const Icon(Icons.person, size: 30),
                   const Padding(padding: EdgeInsets.only(left: 30)),
                   const Text(
-                    'Abdulmalik Albesher',
+                    'Abdulmalik Albeshr',
                     style: TextStyle(
                         color: Color.fromARGB(255, 75, 74, 74), fontSize: 23),
                   ),
