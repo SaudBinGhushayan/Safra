@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
 
 
 import requests , json
@@ -14,7 +10,6 @@ import geopy
 from geopy import Nominatim
 
 
-# In[7]:
 
 
 key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
@@ -34,7 +29,6 @@ def get_latlong(a , b):
 
 
 
-# In[29]:
 
 
 lat , long = get_latlong('Saudi Arabia' , 'Riyadh')
@@ -87,13 +81,18 @@ def retrieve_places(a , b , c):
 
     df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
 
-    # filling nan values with zero
 
-    df['price'] = df['price'].fillna(-1)
-    df['tel'] = df['tel'].fillna('n/a')
-    df['description'] = df['description'].fillna('n/a')
 
-    data = df.to_json(orient = 'columns')
+    # filling nan values
+
+    df = df.fillna('n/a')
+
+
+
+    # changing datatypes
+    df = df.astype({'price': str , 'rating': str})
+
+    data = df.to_json(orient = 'records')
     return df , data
 
 
@@ -104,7 +103,8 @@ def retrieve_places(a , b , c):
 
 
 
-# In[36]:
+
+
 
 
 df , data_json = retrieve_places('' , 'Saudi Arabia' , 'Riyadh')
