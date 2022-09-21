@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:safra/backend/snackBar.dart';
 import 'package:safra/backend/storage.dart';
-import 'package:safra/objects/Trips.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
@@ -16,6 +14,7 @@ import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/stngs.dart';
+import 'package:safra/ui/mention.dart';
 
 class dashboardn extends StatefulWidget {
   const dashboardn({Key? key}) : super(key: key);
@@ -31,7 +30,6 @@ class _dashboardnState extends State<dashboardn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         body: FutureBuilder<Users?>(
             future: Users.readUser(user.uid),
             builder: (context, snapshot) {
@@ -54,7 +52,8 @@ class _dashboardnState extends State<dashboardn> {
                           Container(
                               width: 33,
                               height: 33,
-                              margin: const EdgeInsets.fromLTRB(5, 40.5, 1, 1),
+                              padding: EdgeInsets.only(top: 0.1, right: 9),
+                              margin: const EdgeInsets.fromLTRB(5, 12, 1, 1),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(40),
@@ -71,7 +70,7 @@ class _dashboardnState extends State<dashboardn> {
                             //profile icon
                             height: 50,
                             width: 140,
-                            margin: const EdgeInsets.fromLTRB(228, 47.8, 1, 1),
+                            margin: const EdgeInsets.fromLTRB(228, 19, 1, 1),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
@@ -169,160 +168,134 @@ class _dashboardnState extends State<dashboardn> {
                                   ]))),
                         ],
                       ),
-                      SizedBox(
-                          height: 200,
-                          child: StreamBuilder<List<Trips>>(
-                              stream: readTrips(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  final trips = snapshot.data!;
-                                  return SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 32, top: 10),
-                                          child: Row(
-                                            children:
-                                                trips.map(buildTrips).toList(),
-                                          )));
-                                } else if (!snapshot.hasData) {
-                                  return const Text('No Search Data');
-                                } else {
-                                  return snackBar
-                                      .showSnackBarRed('Something Went Wrong');
-                                }
-                              })),
-                      SizedBox(
-                          height: 80,
-                          child: Row(
-                            //2ndrow
-                            children: [
-                              Container(
-                                  //Your next activity
-                                  margin:
-                                      const EdgeInsets.only(left: 30, top: 0),
-                                  child: RichText(
-                                      text: TextSpan(
-                                          text: 'My Trips',
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'Verdana',
-                                              fontSize: 19),
-                                          children: [
-                                        const WidgetSpan(
-                                            child: const SizedBox(
-                                          width: 193,
-                                        )),
-                                        const TextSpan(
-                                          text: 'See all',
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontFamily: 'Verdana'),
-                                        ),
-                                        WidgetSpan(
-                                            child: IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(
-                                              Icons.arrow_forward_ios),
-                                          padding: const EdgeInsets.only(
-                                              left: 0, top: 23),
-                                          iconSize: 21,
-                                          color: const Color.fromARGB(
-                                              255, 70, 127, 226),
-                                        ))
-                                      ]))),
-                            ],
-                          )),
-                      SizedBox(
-                          height: 270,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 95),
-                            height: 200,
-                            width: 500,
-                            decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        "images/NavigationBar/Navigator.jpg"))),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  alignment: Alignment.topCenter,
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const dashboardn()));
-                                  },
-                                  icon: Image.asset(
-                                      'images/NavigationBar/DashboardActive.jpg'),
-                                  iconSize: 55,
-                                  padding: const EdgeInsets.only(
-                                      left: 29, bottom: 29),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Image.asset(
-                                      'images/NavigationBar/Mention.jpg'),
-                                  iconSize: 55,
-                                  padding: const EdgeInsets.only(
-                                      left: 14, bottom: 29),
-                                ),
-                                Container(
-                                    child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            27.5, 0.2, 30, 70),
-                                        child: CircleAvatar(
-                                            radius: 24,
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 250, 101, 2),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.search,
-                                                  color: Colors.white),
-                                              iconSize: 31,
-                                              padding:
-                                                  const EdgeInsets.all(0.2),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const search()));
-                                              },
-                                            )))),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const schedule1()));
-                                  },
-                                  icon: Image.asset(
-                                      'images/NavigationBar/Schedule.jpg'),
-                                  iconSize: 55,
-                                  padding: const EdgeInsets.only(
-                                      left: 1, bottom: 29),
-                                  highlightColor: Colors.white,
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                accountInformation()));
-                                  },
-                                  icon: Image.asset(
-                                      'images/NavigationBar/Profile.jpg'),
-                                  iconSize: 55,
-                                  padding: const EdgeInsets.only(
-                                      left: 10, bottom: 26),
-                                ),
-                              ],
+                      Row(
+                        //2ndrow
+                        children: [
+                          Container(
+                              //Your next activity
+                              margin: const EdgeInsets.only(left: 30, top: 210),
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: 'My Trips',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Verdana',
+                                          fontSize: 19),
+                                      children: [
+                                    const WidgetSpan(
+                                        child: const SizedBox(
+                                      width: 193,
+                                    )),
+                                    const TextSpan(
+                                      text: 'See all',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontFamily: 'Verdana'),
+                                    ),
+                                    WidgetSpan(
+                                        child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.arrow_forward_ios),
+                                      padding: const EdgeInsets.only(
+                                          left: 0, top: 23),
+                                      iconSize: 21,
+                                      color: const Color.fromARGB(
+                                          255, 70, 127, 226),
+                                    ))
+                                  ]))),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 106),
+                        height: 200,
+                        width: 500,
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    "images/NavigationBar/Navigator.jpg"))),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              alignment: Alignment.topCenter,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const dashboardn()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/DashboardActive.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 29, bottom: 29),
                             ),
-                          ))
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const mention()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/Mention.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 14, bottom: 29),
+                            ),
+                            Container(
+                                child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        27.5, 0.2, 30, 70),
+                                    child: CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 250, 101, 2),
+                                        child: IconButton(
+                                          icon: const Icon(Icons.search,
+                                              color: Colors.white),
+                                          iconSize: 31,
+                                          padding: const EdgeInsets.all(0.2),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const search()));
+                                          },
+                                        )))),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const schedule1()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/Schedule.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 1, bottom: 29),
+                              highlightColor: Colors.white,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            accountInformation()));
+                              },
+                              icon: Image.asset(
+                                  'images/NavigationBar/Profile.jpg'),
+                              iconSize: 55,
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 26),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ));
@@ -341,49 +314,6 @@ class _dashboardnState extends State<dashboardn> {
             }));
   }
 
-  Stream<List<Trips>> readTrips() => FirebaseFirestore.instance
-      .collection('Trips')
-      .where('active', isEqualTo: true)
-      .where('uid', isEqualTo: user.uid)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Trips.readFromJson(doc.data())).toList());
-
-  Stream<List<Trips>> readCurrentTrip() => FirebaseFirestore.instance
-      .collection('Trips')
-      .where('active', isEqualTo: true)
-      .where('uid', isEqualTo: user.uid)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Trips.readFromJson(doc.data())).toList());
-  Widget buildTrips(Trips trip) => Row(children: [
-        Container(
-            decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(30)),
-            padding: EdgeInsets.all(20),
-            child: Column(children: [
-              Text(trip.city, style: const TextStyle(fontSize: 21)),
-              Text(trip.go, style: const TextStyle(fontSize: 21)),
-              Text(trip.date, style: const TextStyle(fontSize: 21)),
-            ])),
-        SizedBox(width: 20)
-      ]);
-  Widget buildCurrentTrip(Trips trip) => Row(children: [
-        Container(
-            decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(30)),
-            padding: EdgeInsets.all(20),
-            child: Row(children: [
-              Text(trip.city, style: const TextStyle(fontSize: 21)),
-              Icon(
-                Icons.check,
-                color: Colors.green,
-                size: 21,
-              ),
-            ])),
-      ]);
   void menu() {
     entry = OverlayEntry(
         builder: (context) => Card(

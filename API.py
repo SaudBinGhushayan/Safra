@@ -1,20 +1,14 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
 
 
 import requests , json
 import threading
 import pandas as pd
-import matplotlib as plt
 import flask
 from flask import Flask
 import geopy
 from geopy import Nominatim
 
 
-# In[7]:
 
 
 key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
@@ -34,7 +28,6 @@ def get_latlong(a , b):
 
 
 
-# In[29]:
 
 
 lat , long = get_latlong('Saudi Arabia' , 'Riyadh')
@@ -47,8 +40,6 @@ def retrieve_places(a , b , c):
     a : condition --- >  example : coffee , art gallery , etc ...
     b : country name
     c : city name
-
-
     """
 
     lat , long = get_latlong(b , c)
@@ -87,10 +78,18 @@ def retrieve_places(a , b , c):
 
     df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
 
-    # filling nan values with zero
-    df = df.fillna(0)
 
-    data = df.to_json()
+
+    # filling nan values
+
+    df = df.fillna('n/a')
+
+
+
+    # changing datatypes
+    df = df.astype({'price': str , 'rating': str})
+
+    data = df.to_json(orient = 'records')
     return df , data
 
 
@@ -100,15 +99,15 @@ def retrieve_places(a , b , c):
 
 
 
-# In[36]:
+
+
+
 
 
 df , data_json = retrieve_places('' , 'Saudi Arabia' , 'Riyadh')
 
 
-# ### <span style="color:red">From this cell and below, flask code is applied</span>
 
-# In[ ]:
 
 
 app = Flask(__name__)
