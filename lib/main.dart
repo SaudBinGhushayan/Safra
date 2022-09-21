@@ -26,7 +26,7 @@ class Safra extends StatelessWidget {
       scaffoldMessengerKey: snackBar.globalKey,
       navigatorKey: navigatorKey,
       title: 'Safra',
-      home: schedule1(),
+      home: mainPage(),
     );
   }
 }

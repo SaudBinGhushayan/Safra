@@ -244,7 +244,8 @@ class _AccountSettingsState extends State<AccountSettings> {
   void changeName() {
     entry = OverlayEntry(
         builder: (context) => Scaffold(
-                body: Card(
+            resizeToAvoidBottomInset: false,
+            body: Card(
               margin: const EdgeInsets.all(0),
               color: Colors.black54.withOpacity(0.1),
               child: Column(children: [
