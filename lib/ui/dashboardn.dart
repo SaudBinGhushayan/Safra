@@ -12,6 +12,7 @@ import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/homePage.dart';
+import 'package:safra/ui/profile.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/mention.dart';
