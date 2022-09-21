@@ -1,0 +1,184 @@
+Stream<List<Activities>> readActivities(String city) => FirebaseFirestore
+      .instance
+      .collection('activities')
+      .where('city', isEqualTo: city.toLowerCase())
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => Activities.readFromJson(doc.data()))
+          .toList());
+
+  Widget buildActivities(Activities activity) => Row(children: [
+        TextButton(
+            onPressed: () {},
+            child: Text(activity.city, style: const TextStyle(fontSize: 21))),
+        TextButton(
+            onPressed: () {
+              entry = OverlayEntry(
+                  builder: (context) => Scaffold(
+                      resizeToAvoidBottomInset: false,
+                      body: Card(
+                        margin: const EdgeInsets.all(0),
+                        child: Column(children: [
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            margin: const EdgeInsets.only(left: 30),
+                          ),
+                          Container(
+                              padding: const EdgeInsets.only(left: 10, top: 20),
+                              color: Color.fromARGB(31, 255, 255, 255)
+                                  .withOpacity(0.8),
+                              child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton.icon(
+                                          onPressed: hideMenu,
+                                          icon:
+                                              const Icon(Icons.arrow_back_ios),
+                                          label: const Text('back'),
+                                        ),
+                                        const SizedBox(height: 200),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 30)),
+                                        Text('City: ${activity.city}',
+                                            style:
+                                                const TextStyle(fontSize: 21)),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                            'Activity Name: ${activity.activity}',
+                                            style:
+                                                const TextStyle(fontSize: 21)),
+                                        const SizedBox(height: 20),
+                                        Text('Activity Date: ${activity.date}',
+                                            style:
+                                                const TextStyle(fontSize: 21)),
+                                      ]))),
+                          const SizedBox(height: 40),
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              final valid =
+                                  await Trips.availableTrip(activity.activity);
+                              if (!valid) {
+                                snackBar.showSnackBarRed(
+                                    'Activity already registered');
+                              } else {
+                                final user = FirebaseAuth.instance.currentUser!;
+                                createTrip(
+                                  tripId: activity.city +
+                                      Random().nextInt(1000).toString(),
+                                  uid: user.uid,
+                                  city: activity.city,
+                                  go: activity.activity,
+                                  date: activity.date,
+                                );
+                                createActiveTrip(
+                                    uid: user.uid, city: activity.city);
+                                snackBar.showSnackBarGreen(
+                                    'Activity Added Successfully');
+                                hideMenu();
+                              }
+                            },
+                            icon: const Icon(Icons.check_box),
+                            label: const Text('book activity'),
+                          ),
+                        ]),
+                      )));
+
+              final overlay = Overlay.of(context);
+              overlay?.insert(entry!);
+            },
+            child:
+                Text(activity.activity, style: const TextStyle(fontSize: 21))),
+      ]);
+
+  // Stream<List<Places>> readPlaces(String city) => FirebaseFirestore.instance
+  //     .collection('places')
+  //     .where('city', isEqualTo: city.toLowerCase())
+  //     .snapshots()
+  //     .map((snapshot) =>
+  //         snapshot.docs.map((doc) => Places.readFromJson(doc.data())).toList());
+
+  // Widget buildPlaces(Places places) => Row(children: [
+  //       TextButton(
+  //           onPressed: () {},
+  //           child: Text(places.city, style: const TextStyle(fontSize: 21))),
+  //       TextButton(
+  //           onPressed: () {
+  //             entry = OverlayEntry(
+  //                 builder: (context) => Scaffold(
+  //                     resizeToAvoidBottomInset: false,
+  //                     body: Card(
+  //                       margin: const EdgeInsets.all(0),
+  //                       child: Column(children: [
+  //                         Container(
+  //                           alignment: Alignment.centerLeft,
+  //                           margin: const EdgeInsets.only(left: 30),
+  //                         ),
+  //                         Container(
+  //                             padding: const EdgeInsets.only(left: 10, top: 20),
+  //                             color: Color.fromARGB(31, 255, 255, 255)
+  //                                 .withOpacity(0.8),
+  //                             child: Container(
+  //                                 alignment: Alignment.centerLeft,
+  //                                 child: Column(
+  //                                     crossAxisAlignment:
+  //                                         CrossAxisAlignment.start,
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       ElevatedButton.icon(
+  //                                         onPressed: hideMenu,
+  //                                         icon:
+  //                                             const Icon(Icons.arrow_back_ios),
+  //                                         label: const Text('back'),
+  //                                       ),
+  //                                       const SizedBox(height: 200),
+  //                                       Padding(
+  //                                           padding: EdgeInsets.only(left: 30)),
+  //                                       Text('City: ${places.city}',
+  //                                           style:
+  //                                               const TextStyle(fontSize: 21)),
+  //                                       const SizedBox(height: 20),
+  //                                       Text('Activity Name: ${places.place}',
+  //                                           style:
+  //                                               const TextStyle(fontSize: 21)),
+  //                                       const SizedBox(height: 20),
+  //                                     ]))),
+  //                         const SizedBox(height: 40),
+  //                         ElevatedButton.icon(
+  //                           onPressed: () async {
+  //                             final valid =
+  //                                 await Trips.availableTrip(places.place);
+  //                             if (!valid) {
+  //                               snackBar.showSnackBarRed(
+  //                                   'Place already registered');
+  //                             } else {
+  //                               final user = FirebaseAuth.instance.currentUser!;
+  //                               createTrip(
+  //                                 tripId: places.city +
+  //                                     Random().nextInt(1000).toString(),
+  //                                 uid: user.uid,
+  //                                 city: places.city,
+  //                                 go: places.place,
+  //                                 date: '',
+  //                               );
+  //                               snackBar.showSnackBarGreen(
+  //                                   'Place Added Successfully');
+  //                               hideMenu();
+  //                             }
+  //                           },
+  //                           icon: const Icon(Icons.check_box),
+  //                           label: const Text('book activity'),
+  //                         ),
+  //                       ]),
+  //                     )));
+
+  //             final overlay = Overlay.of(context);
+  //             overlay?.insert(entry!);
+  //           },
+  //           child: Text(places.place, style: const TextStyle(fontSize: 21))),
+  //     ]);
