@@ -17,7 +17,6 @@ import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:http/http.dart' as http;
-import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/schedule1.dart';
 
 import 'package:safra/ui/dashboardn.dart';
@@ -214,7 +213,8 @@ class _searchState extends State<search> {
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
-                                                            children: [///////start here
+                                                            children: [
+                                                              //=============================================start here==========================================================
                                                               ElevatedButton
                                                                   .icon(
                                                                 onPressed:
@@ -318,8 +318,11 @@ class _searchState extends State<search> {
                               ]);
                             })),
                       );
+                      //===========================================================end here==============================================================
                     } else {
-                      return const Text('No Search Data');
+                      return Center(
+                          child: Text('No Search Data',
+                              style: TextStyle(fontSize: 21)));
                     }
                   },
                 )),
@@ -346,12 +349,7 @@ class _searchState extends State<search> {
                     padding: const EdgeInsets.only(left: 29, bottom: 29),
                   ),
                   IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const mention()));
-                    },
+                    onPressed: () {},
                     icon: Image.asset('images/NavigationBar/Mention.jpg'),
                     iconSize: 55,
                     padding: const EdgeInsets.only(left: 14, bottom: 29),
