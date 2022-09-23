@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-class ButtonWidget extends StatelessWidget {
- 
 
-    final String text;
+class ButtonWidget extends StatelessWidget {
+  final String text;
   final VoidCallback onClicked;
 
   const ButtonWidget({
@@ -23,7 +22,4 @@ class ButtonWidget extends StatelessWidget {
         textColor: Colors.white,
         onPressed: onClicked,
       );
-
-
-    
-  }
+}

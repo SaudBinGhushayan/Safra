@@ -10,6 +10,7 @@ import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
+import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
@@ -427,7 +428,13 @@ class _accountInformation extends State<accountInformation> {
                                                   left: 29, bottom: 29),
                                             ),
                                             IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const mention()));
+                                              },
                                               icon: Image.asset(
                                                   'images/NavigationBar/Mention.jpg'),
                                               iconSize: 55,

@@ -12,6 +12,7 @@ import 'package:safra/ui/create.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/join.dart';
+import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/searchtrip.dart';
 import 'package:safra/ui/stngs.dart';
@@ -248,7 +249,12 @@ class _schedule1 extends State<schedule1> {
                                   const EdgeInsets.only(left: 29, bottom: 29),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const mention()));
+                              },
                               icon: Image.asset(
                                   'images/NavigationBar/Mention.jpg'),
                               iconSize: 55,

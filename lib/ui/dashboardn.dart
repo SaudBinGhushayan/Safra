@@ -40,7 +40,7 @@ class _dashboardnState extends State<dashboardn> {
                   //////1st column
                   decoration: const BoxDecoration(
                       image: DecorationImage(
-                    image: AssetImage('images/BackgroundPics/background.jpg'),
+                    image: AssetImage('images/BackgroundPics/background.png'),
                     fit: BoxFit.cover,
                   )),
 
