@@ -1,48 +1,55 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
 
 
-import requests , json
+import requests, json
 import threading
 import pandas as pd
 import flask
-from flask import Flask
+from flask import Flask, request
 import geopy
 from geopy import Nominatim
 
 
+# In[2]:
 
 
 key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
 
 # this method helps us get long and lat of certain city
 
-def get_latlong(a , b):
+def get_latlong(b):
 
-    country = a
     city = b
 
     geolocator = Nominatim(user_agent = 'Safra')
 
-    loc = geolocator.geocode(city+','+country)
+    loc = geolocator.geocode(city)
 
     return loc.latitude , loc.longitude
 
 
+# In[3]:
 
 
+lat , long = get_latlong('egypt')
+lat , long
 
-lat , long = get_latlong('Saudi Arabia' , 'Riyadh')
+
+# In[4]:
 
 
-
-def retrieve_places(a , b , c):
+def retrieve_places(a , c):
 
     """
     a : condition --- >  example : coffee , art gallery , etc ...
-    b : country name
     c : city name
+    
     """
 
-    lat , long = get_latlong(b , c)
+    lat , long = get_latlong(c)
 
 
     if a != '':
@@ -65,12 +72,9 @@ def retrieve_places(a , b , c):
 
     df = pd.json_normalize(data['results'])
 
-
     #deleting unnecessary columns
-    df.drop(['location.address','location.cross_street','location.formatted_address' , 'location.postcode','location.locality']
-            ,
-            axis = 1 , inplace = True)
-
+    
+    df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel', 'location.country', 'location.region', 'description']),1,inplace=True)
 
 
     # renaming columns
@@ -78,11 +82,11 @@ def retrieve_places(a , b , c):
 
     df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
 
-
+    
 
     # filling nan values
 
-    df = df.fillna('n/a')
+    df = df.fillna('Not Available')
 
 
 
@@ -93,28 +97,26 @@ def retrieve_places(a , b , c):
     return df , data
 
 
+# In[5]:
 
 
+df, data_json = retrieve_places('' , 'Cairo')
+df
 
 
-
-
-
-
-
-
-
-df , data_json = retrieve_places('' , 'Saudi Arabia' , 'Riyadh')
-
+# In[ ]:
 
 
 
 
 app = Flask(__name__)
 
-@app.route('/' , methods = ['GET'])
+@app.route('/api' , methods = ['GET'])
 
 def index():
+    userInputb = str(request.args['query'])
+    df, data_json = retrieve_places('' , userInputb)
+
     return data_json
 
 
@@ -122,3 +124,10 @@ def index():
 
 if __name__ == "__main__":
     app.run()
+
+
+# In[ ]:
+
+
+
+
