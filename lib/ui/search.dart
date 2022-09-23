@@ -214,6 +214,7 @@ class _searchState extends State<search> {
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
+                                                              //=============================================start here==========================================================
                                                               ElevatedButton
                                                                   .icon(
                                                                 onPressed:
@@ -317,8 +318,11 @@ class _searchState extends State<search> {
                               ]);
                             })),
                       );
+                      //===========================================================end here==============================================================
                     } else {
-                      return const Text('No Search Data');
+                      return Center(
+                          child: Text('No Search Data',
+                              style: TextStyle(fontSize: 21)));
                     }
                   },
                 )),
