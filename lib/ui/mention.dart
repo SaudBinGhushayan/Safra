@@ -27,7 +27,7 @@ class _mentionState extends State<mention> {
         height: 1000,
         decoration: const BoxDecoration(
             image: DecorationImage(
-          image: AssetImage('images/BackgroundPics/background.jpg'),
+          image: AssetImage('images/BackgroundPics/background.png'),
           fit: BoxFit.cover,
         )),
         child: Column(
@@ -113,11 +113,13 @@ class _mentionState extends State<mention> {
             //   ),
             // ),
             Container(
-              margin: const EdgeInsets.only(top: 0),
+              padding: EdgeInsets.only(top: 57),
+              margin: const EdgeInsets.only(top: 6),
               height: 200,
               width: 500,
               decoration: const BoxDecoration(
                   image: DecorationImage(
+                      alignment: Alignment.bottomCenter,
                       image: AssetImage("images/NavigationBar/Navigator.jpg"))),
               child: Row(
                 children: [
@@ -135,7 +137,8 @@ class _mentionState extends State<mention> {
                   ),
                   IconButton(
                     onPressed: () {},
-                    icon: Image.asset('images/NavigationBar/mentionactive.png'),
+                    icon: Image.asset(
+                        'images/NavigationBar/mentionactive (2).png'),
                     iconSize: 55,
                     padding: const EdgeInsets.only(left: 14, bottom: 29),
                   ),

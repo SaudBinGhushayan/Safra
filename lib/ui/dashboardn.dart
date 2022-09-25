@@ -37,6 +37,7 @@ class _dashboardnState extends State<dashboardn> {
                 final users = snapshot.data!;
                 return Scaffold(
                     body: Container(
+                  height: 1500,
                   //////1st column
                   decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -206,11 +207,13 @@ class _dashboardnState extends State<dashboardn> {
                         ],
                       ),
                       Container(
+                        padding: EdgeInsets.only(top: 57),
                         margin: const EdgeInsets.only(top: 106),
                         height: 200,
                         width: 500,
                         decoration: const BoxDecoration(
                             image: DecorationImage(
+                                alignment: Alignment.bottomCenter,
                                 image: AssetImage(
                                     "images/NavigationBar/Navigator.jpg"))),
                         child: Row(

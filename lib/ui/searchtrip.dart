@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:safra/ui/ContactUs.dart';
+import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
@@ -17,6 +21,8 @@ class searchtrip extends StatefulWidget {
 
 class _searchtripState extends State<searchtrip> {
   @override
+  final user = FirebaseAuth.instance.currentUser!;
+  OverlayEntry? entry;
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
@@ -43,7 +49,7 @@ class _searchtripState extends State<searchtrip> {
                     child: IconButton(
                       icon: const Icon(Icons.menu),
                       iconSize: 20,
-                      onPressed: () {},
+                      onPressed: menu,
                     )),
                 Container(
                   //profile icon
@@ -132,7 +138,12 @@ class _searchtripState extends State<searchtrip> {
                     padding: const EdgeInsets.only(left: 29, bottom: 29),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const mention()));
+                    },
                     icon: Image.asset('images/NavigationBar/Mention.jpg'),
                     iconSize: 55,
                     padding: const EdgeInsets.only(left: 14, bottom: 29),
@@ -186,5 +197,116 @@ class _searchtripState extends State<searchtrip> {
         ),
       ),
     ));
+  }
+
+  void menu() {
+    entry = OverlayEntry(
+        builder: (context) => Card(
+              margin: EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.8),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 30),
+                    child: Text('Menu',
+                        style: TextStyle(color: Colors.grey, fontSize: 21))),
+                SizedBox(height: 40),
+                Container(
+                    color: Colors.black12.withOpacity(0.5),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(top: 10, left: 30),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const stngs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const FAQ())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'FAQ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const contactUs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const homePage())),
+                                  FirebaseAuth.instance.signOut(),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Sign out',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              )
+                            ]))),
+                SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideMenu,
+                  icon: Icon(Icons.visibility_off),
+                  label: Text('back'),
+                )
+              ]),
+            ));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry!);
+  }
+
+  void hideMenu() {
+    entry?.remove();
+    entry = null;
   }
 }

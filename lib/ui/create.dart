@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
+import 'package:safra/ui/ContactUs.dart';
+import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
+import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/mention.dart';
-
+import 'package:safra/ui/stngs.dart';
 
 class create extends StatefulWidget {
   const create({Key? key}) : super(key: key);
@@ -37,7 +40,7 @@ class _createState extends State<create> {
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                           image: AssetImage(
-                              'images/BackgroundPics/background.jpg'),
+                              'images/BackgroundPics/background.png'),
                           fit: BoxFit.cover,
                         )),
                         child: SingleChildScrollView(
@@ -45,11 +48,28 @@ class _createState extends State<create> {
                             Row(
                               children: [
                                 Container(
+                                    width: 33,
+                                    height: 33,
+                                    padding:
+                                        EdgeInsets.only(top: 0.1, right: 9),
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 12, 1, 1),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.menu),
+                                      iconSize: 20,
+                                      onPressed: menu,
+                                    )),
+                                Container(
                                   //profile icon
                                   height: 50,
                                   width: 140,
-                                  margin: const EdgeInsets.fromLTRB(
-                                      228, 47.8, 1, 1),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(228, 30, 1, 1),
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                         255, 255, 255, 255),
@@ -210,7 +230,13 @@ class _createState extends State<create> {
                                             left: 29, bottom: 29),
                                       ),
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const mention()));
+                                        },
                                         icon: Image.asset(
                                             'images/NavigationBar/Mention.jpg'),
                                         iconSize: 55,
@@ -310,28 +336,68 @@ class _createState extends State<create> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Settings',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
-                              ),
-                              SizedBox(height: 25),
-                              Text(
-                                'FAQ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
-                              ),
-                              SizedBox(height: 25),
-                              Text(
-                                'Contact Us',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
-                                textAlign: TextAlign.left,
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const stngs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 25),
                               TextButton(
-                                onPressed: () =>
-                                    FirebaseAuth.instance.signOut(),
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const FAQ())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'FAQ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const contactUs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const homePage())),
+                                  FirebaseAuth.instance.signOut(),
+                                  hideMenu()
+                                },
                                 child: const Text(
                                   'Sign out',
                                   style: TextStyle(

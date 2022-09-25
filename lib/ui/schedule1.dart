@@ -103,7 +103,7 @@ class _schedule1 extends State<schedule1> {
                     //////1st column
                     decoration: const BoxDecoration(
                         image: DecorationImage(
-                      image: AssetImage('images/BackgroundPics/background.jpg'),
+                      image: AssetImage('images/BackgroundPics/background.png'),
                       fit: BoxFit.cover,
                     )),
 
@@ -191,7 +191,7 @@ class _schedule1 extends State<schedule1> {
                         ],
                       ),
                       Container(
-                          margin: EdgeInsets.fromLTRB(0, 135, 135, 0),
+                          margin: EdgeInsets.fromLTRB(0, 165, 135, 0),
                           child: Text(
                             'What do you Prefer ?',
                             style:
@@ -224,11 +224,13 @@ class _schedule1 extends State<schedule1> {
 
                       //bottomnavigationbar
                       Container(
+                        padding: EdgeInsets.only(top: 57),
                         margin: const EdgeInsets.only(top: 26),
                         height: 200,
                         width: 500,
                         decoration: const BoxDecoration(
                             image: DecorationImage(
+                                alignment: Alignment.bottomCenter,
                                 image: AssetImage(
                                     "images/NavigationBar/Navigator.jpg"))),
                         child: Row(
