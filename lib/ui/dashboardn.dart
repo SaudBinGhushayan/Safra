@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/objects/Places.dart';
+import 'package:safra/objects/Trips.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
@@ -26,6 +28,7 @@ class dashboardn extends StatefulWidget {
 class _dashboardnState extends State<dashboardn> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
+  List<Trips>? trips;
 
   @override
   Widget build(BuildContext context) {
@@ -168,12 +171,55 @@ class _dashboardnState extends State<dashboardn> {
                                   ]))),
                         ],
                       ),
+                      SizedBox(
+                          height: 100,
+                          child: StreamBuilder<List<Trips>>(
+                              stream: readActivities(user.uid),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('Something went wrong');
+                                } else if (snapshot.hasData) {
+                                  trips = snapshot.data;
+                                  return SizedBox(
+                                      height: 100,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: trips?[0].name.length,
+                                          itemBuilder: ((context, index) {
+                                            return Row(children: [
+                                              Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    color: Colors.grey
+                                                        .withOpacity(0.6),
+                                                  ),
+                                                  child: Column(children: [
+                                                    Text(trips![0]
+                                                        .name[index]
+                                                        .toString()),
+                                                    Text(trips![0]
+                                                        .country[index]
+                                                        .toString()),
+                                                    Text(trips![0]
+                                                        .tel[index]
+                                                        .toString()),
+                                                  ])),
+                                              SizedBox(width: 12)
+                                            ]);
+                                          })));
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              })),
                       Row(
                         //2ndrow
                         children: [
                           Container(
                               //Your next activity
-                              margin: const EdgeInsets.only(left: 30, top: 210),
+                              margin: const EdgeInsets.only(left: 30, top: 130),
                               child: RichText(
                                   text: TextSpan(
                                       text: 'My Trips',
@@ -206,7 +252,7 @@ class _dashboardnState extends State<dashboardn> {
                         ],
                       ),
                       Container(
-                        margin: const EdgeInsets.only(top: 106),
+                        margin: EdgeInsets.only(top: 86),
                         height: 200,
                         width: 500,
                         decoration: const BoxDecoration(
@@ -313,6 +359,13 @@ class _dashboardnState extends State<dashboardn> {
               }
             }));
   }
+
+  Stream<List<Trips>> readActivities(String uid) => FirebaseFirestore.instance
+      .collection('Trips')
+      .where('uid', isEqualTo: uid)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Trips.fromJson(doc.data())).toList());
 
   void menu() {
     entry = OverlayEntry(

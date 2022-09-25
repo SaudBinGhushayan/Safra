@@ -10,8 +10,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:safra/backend/httpHandler.dart';
 import 'package:safra/backend/snackBar.dart';
-import 'package:safra/objects/ActiveTrips.dart';
-import 'package:safra/objects/Activities.dart';
 import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
@@ -31,24 +29,20 @@ class search extends StatefulWidget {
 
 class _searchState extends State<search> {
   String city = '';
+  final url = TextEditingController();
   OverlayEntry? entry;
   List<Places>? places;
+  List<String> fsq_id = [];
+  List<String> name = [];
+  List<String> rating = [];
+  List<String> tel = [];
+  List<String> country = [];
+  List<String> region = [];
+  List<String> price = [];
+  List<String> description = [];
+  bool active = true;
+  final user = FirebaseAuth.instance.currentUser!;
   var isloaded = false;
-
-  @override
-  // void initState() {
-  //   super.initState();
-  //   getData();
-  // }
-
-  // getData() async {
-  //   places = await httpHandler().getPlaces();
-  //   if (places != null) {
-  //     setState(() {
-  //       isloaded = true;
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +109,7 @@ class _searchState extends State<search> {
                   ),
                   color: Colors.white),
               child: TextField(
+                controller: url,
                 style: const TextStyle(),
                 decoration: InputDecoration(
                     border: const OutlineInputBorder(
@@ -127,10 +122,11 @@ class _searchState extends State<search> {
                     prefixIcon: IconButton(
                         icon: const Icon(Icons.search,
                             color: Color.fromARGB(255, 102, 101, 101)),
-                        onPressed: () {})),
-                onChanged: (value) => setState(() {
-                  city = value;
-                }),
+                        onPressed: () {
+                          setState(() {
+                            city = url.text;
+                          });
+                        })),
               ),
             ),
             const SizedBox(height: 55),
@@ -153,21 +149,6 @@ class _searchState extends State<search> {
                     style: TextStyle(color: Colors.white, fontSize: 21),
                   )),
             ),
-            // SizedBox(
-            //   height: 350,
-            //   child: Visibility(
-            //     visible: isloaded,
-            //     child: ListView.builder(
-            //         itemCount: places?.length,
-            //         itemBuilder: ((context, index) {
-            //           return Container(
-            //               child: Text('${places![index].name.toString()}'));
-            //         })),
-            //     replacement: const Center(
-            //       child: Text('no data'),
-            //     ),
-            //   ),
-            // ),
             SizedBox(
                 height: 350,
                 child: FutureBuilder<List<Places>?>(
@@ -275,27 +256,63 @@ class _searchState extends State<search> {
                                                             ]))),
                                                 const SizedBox(height: 40),
                                                 ElevatedButton.icon(
-                                                  onPressed: () {
-                                                    // final valid =
-                                                    //     await Trips.availableTrip(activity.activity);
-                                                    // if (!valid) {
-                                                    //   snackBar.showSnackBarRed(
-                                                    //       'Activity already registered');
-                                                    // } else {
-                                                    //   final user = FirebaseAuth.instance.currentUser!;
-                                                    //   createTrip(
-                                                    //     tripId: activity.city +
-                                                    //         Random().nextInt(1000).toString(),
-                                                    //     uid: user.uid,
-                                                    //     city: activity.city,
-                                                    //     go: activity.activity,
-                                                    //     date: activity.date,
-                                                    //   );
-                                                    //   createActiveTrip(
-                                                    //       uid: user.uid, city: activity.city);
-                                                    //   snackBar.showSnackBarGreen(
-                                                    //       'Activity Added Successfully');
-                                                    //   hideMenu();
+                                                  onPressed: () async {
+                                                    final valid = await Trips
+                                                        .availableActivity(
+                                                            places![index]
+                                                                .name
+                                                                .toString());
+                                                    if (!valid) {
+                                                      snackBar.showSnackBarRed(
+                                                          'Activity already registered');
+                                                    } else {
+                                                      setState(() {
+                                                        fsq_id.add(
+                                                            places![index]
+                                                                .fsq_id);
+
+                                                        name.add(places![index]
+                                                            .name);
+
+                                                        rating.add(
+                                                            places![index]
+                                                                .rating);
+
+                                                        tel.add(
+                                                            places![index].tel);
+
+                                                        country.add(
+                                                            places![index]
+                                                                .country);
+
+                                                        region.add(
+                                                            places![index]
+                                                                .region);
+
+                                                        price.add(places![index]
+                                                            .price);
+
+                                                        description.add(
+                                                            places![index]
+                                                                .description);
+                                                      });
+                                                      createTrip(
+                                                          uid: user.uid,
+                                                          fsq_id: fsq_id,
+                                                          name: name,
+                                                          rating: rating,
+                                                          tel: tel,
+                                                          country: country,
+                                                          region: region,
+                                                          price: price,
+                                                          description:
+                                                              description,
+                                                          active: active);
+
+                                                      snackBar.showSnackBarGreen(
+                                                          'Activity Added Successfully');
+                                                      hideMenu();
+                                                    }
                                                   },
                                                   icon: const Icon(
                                                       Icons.check_box),
