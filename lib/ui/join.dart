@@ -42,13 +42,13 @@ class _joinState extends State<join> {
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                           image: AssetImage(
-                              'images/BackgroundPics/background.png'),
+                              'images/BackgroundPics/background.jpg'),
                           fit: BoxFit.cover,
                         )),
                         child: SingleChildScrollView(
-                          reverse: true,
                           child: Column(children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               //menu icon
                               children: [
                                 Container(
@@ -57,7 +57,7 @@ class _joinState extends State<join> {
                                     padding:
                                         EdgeInsets.only(top: 0.1, right: 9),
                                     margin:
-                                        const EdgeInsets.fromLTRB(5, 180, 1, 1),
+                                        const EdgeInsets.fromLTRB(5, 30, 1, 1),
                                     decoration: BoxDecoration(
                                       color: const Color.fromARGB(
                                           255, 255, 255, 255),
@@ -74,7 +74,7 @@ class _joinState extends State<join> {
                                   //profile icon
                                   height: 50,
                                   width: 140,
-                                  margin: EdgeInsets.only(top: 130),
+                                  margin: EdgeInsets.only(top: 30),
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                         255, 255, 255, 255),
