@@ -3,6 +3,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
+import 'package:safra/ui/ContactUs.dart';
+import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
@@ -11,6 +13,7 @@ import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/ui/stngs.dart';
 
 class join extends StatefulWidget {
   const join({Key? key}) : super(key: key);
@@ -43,7 +46,6 @@ class _joinState extends State<join> {
                           fit: BoxFit.cover,
                         )),
                         child: SingleChildScrollView(
-                          reverse: true,
                           child: Column(children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,7 +56,8 @@ class _joinState extends State<join> {
                                     height: 33,
                                     padding:
                                         EdgeInsets.only(top: 0.1, right: 9),
-                                    margin: EdgeInsets.fromLTRB(5, 150, 1, 1),
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 30, 1, 1),
                                     decoration: BoxDecoration(
                                       color: const Color.fromARGB(
                                           255, 255, 255, 255),
@@ -64,15 +67,14 @@ class _joinState extends State<join> {
                                         icon: const Icon(Icons.menu),
                                         iconSize: 20,
                                         onPressed: menu)),
-                                const SizedBox(
-                                  height: 90,
-                                ),
+                                // const SizedBox(
+                                //   height: 90,
+                                // ),
                                 Container(
                                   //profile icon
                                   height: 50,
                                   width: 140,
-                                  margin:
-                                      const EdgeInsets.fromLTRB(228, 150, 1, 1),
+                                  margin: EdgeInsets.only(top: 30),
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                         255, 255, 255, 255),
@@ -317,45 +319,77 @@ class _joinState extends State<join> {
   void menu() {
     entry = OverlayEntry(
         builder: (context) => Card(
-              margin: const EdgeInsets.all(0),
+              margin: EdgeInsets.all(0),
               color: Colors.black54.withOpacity(0.8),
               child: Column(children: [
                 const SizedBox(height: 200),
                 Container(
                     alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(left: 30),
-                    child: const Text('Menu',
-                        style:
-                            const TextStyle(color: Colors.grey, fontSize: 21))),
-                const SizedBox(height: 40),
+                    margin: EdgeInsets.only(left: 30),
+                    child: Text('Menu',
+                        style: TextStyle(color: Colors.grey, fontSize: 21))),
+                SizedBox(height: 40),
                 Container(
                     color: Colors.black12.withOpacity(0.5),
                     child: Container(
                         alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(top: 10, left: 30),
+                        margin: EdgeInsets.only(top: 10, left: 30),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Settings',
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 21),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const stngs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 25),
-                              const Text(
-                                'FAQ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 21),
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const FAQ())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'FAQ',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 25),
-                              const Text(
-                                'Contact Us',
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 21),
-                                textAlign: TextAlign.left,
+                              SizedBox(height: 25),
+                              TextButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const contactUs())),
+                                  hideMenu()
+                                },
+                                child: const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 25),
+                              SizedBox(height: 25),
                               TextButton(
                                 onPressed: () => {
                                   Navigator.push(
@@ -375,11 +409,11 @@ class _joinState extends State<join> {
                                 ),
                               )
                             ]))),
-                const SizedBox(height: 40),
+                SizedBox(height: 40),
                 ElevatedButton.icon(
                   onPressed: hideMenu,
-                  icon: const Icon(Icons.visibility_off),
-                  label: const Text('back'),
+                  icon: Icon(Icons.visibility_off),
+                  label: Text('back'),
                 )
               ]),
             ));
