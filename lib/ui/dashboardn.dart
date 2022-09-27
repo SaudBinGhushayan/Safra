@@ -28,7 +28,7 @@ class dashboardn extends StatefulWidget {
 class _dashboardnState extends State<dashboardn> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
-  List<Trips>? trips;
+  Trips? trips;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _dashboardnState extends State<dashboardn> {
                   //////1st column
                   decoration: const BoxDecoration(
                       image: DecorationImage(
-                    image: AssetImage('images/BackgroundPics/background.jpg'),
+                    image: AssetImage('images/BackgroundPics/background.png'),
                     fit: BoxFit.cover,
                   )),
 
@@ -173,18 +173,20 @@ class _dashboardnState extends State<dashboardn> {
                       ),
                       SizedBox(
                           height: 100,
-                          child: StreamBuilder<List<Trips>>(
-                              stream: readActivities(user.uid),
+                          child: FutureBuilder<Trips?>(
+                              future: readTrip(user.uid),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
-                                  return const Text('Something went wrong');
+                                  print(snapshot.error);
+
+                                  return Text('Something went wrong');
                                 } else if (snapshot.hasData) {
-                                  trips = snapshot.data;
+                                  trips = snapshot.data!;
                                   return SizedBox(
                                       height: 100,
                                       child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: trips?[0].name.length,
+                                          itemCount: trips?.name.length,
                                           itemBuilder: ((context, index) {
                                             return Row(children: [
                                               Container(
@@ -196,22 +198,18 @@ class _dashboardnState extends State<dashboardn> {
                                                         .withOpacity(0.6),
                                                   ),
                                                   child: Column(children: [
-                                                    Text(trips![0]
-                                                        .name[index]
+                                                    Text(trips!.name[index]
                                                         .toString()),
-                                                    Text(trips![0]
-                                                        .country[index]
+                                                    Text(trips!.country[index]
                                                         .toString()),
-                                                    Text(trips![0]
-                                                        .tel[index]
+                                                    Text(trips!.tel[index]
                                                         .toString()),
                                                   ])),
                                               SizedBox(width: 12)
                                             ]);
                                           })));
                                 } else {
-                                  return Center(
-                                      child: CircularProgressIndicator());
+                                  return Text('no data');
                                 }
                               })),
                       Row(
@@ -360,12 +358,14 @@ class _dashboardnState extends State<dashboardn> {
             }));
   }
 
-  Stream<List<Trips>> readActivities(String uid) => FirebaseFirestore.instance
-      .collection('Trips')
-      .where('uid', isEqualTo: uid)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Trips.fromJson(doc.data())).toList());
+  Future<Trips?> readTrip(String uid) async {
+    final docUser = FirebaseFirestore.instance.collection('Trips').doc(uid);
+    final snapshot = await docUser.get();
+
+    if (snapshot.exists) {
+      return Trips.fromJson(snapshot.data()!);
+    }
+  }
 
   void menu() {
     entry = OverlayEntry(

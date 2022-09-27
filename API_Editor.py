@@ -34,8 +34,8 @@ def get_latlong(b):
 # In[3]:
 
 
-lat , long = get_latlong('egypt')
-lat , long
+# lat , long = get_latlong('egypt')
+# lat , long
 
 
 # In[4]:

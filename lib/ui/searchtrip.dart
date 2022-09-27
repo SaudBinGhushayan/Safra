@@ -31,7 +31,7 @@ class _searchtripState extends State<searchtrip> {
         width: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
-          image: AssetImage('images/BackgroundPics/background.jpg'),
+          image: AssetImage('images/BackgroundPics/background.png'),
           fit: BoxFit.cover,
         )),
         child: Column(

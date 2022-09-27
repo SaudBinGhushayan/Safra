@@ -36,7 +36,6 @@ class _searchState extends State<search> {
   String city = '';
   final url = TextEditingController();
   OverlayEntry? entry;
-  List<Places>? places;
   List<String> fsq_id = [];
   List<String> name = [];
   List<String> rating = [];
@@ -59,7 +58,7 @@ class _searchState extends State<search> {
         width: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
-          image: AssetImage('images/BackgroundPics/background.jpg'),
+          image: AssetImage('images/BackgroundPics/background.png'),
           fit: BoxFit.cover,
         )),
         child: Column(
@@ -140,7 +139,16 @@ class _searchState extends State<search> {
                 right: 230,
               ),
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection('Trips')
+                        .doc(user.uid)
+                        .get()
+                        .then((value) =>
+                            // List<Map<String, dynamic>> name = value['name']
+                            // FirebaseFirestore.instance.collection('Trips').doc(uid).set('name'[value['name'].length]: name));
+                            print(value.get('name')));
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: const Color.fromARGB(232, 147, 160, 172),
                     shape: RoundedRectangleBorder(
@@ -162,11 +170,12 @@ class _searchState extends State<search> {
                   future: httpHandler().getPlaces(city),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      List<Places>? places;
                       places = snapshot.data!;
                       return SizedBox(
                         height: 350,
                         child: ListView.builder(
-                            itemCount: places?.length,
+                            itemCount: places.length,
                             itemBuilder: ((context, index) {
                               return Row(children: [
                                 Expanded(
@@ -227,36 +236,36 @@ class _searchState extends State<search> {
                                                                       fontSize:
                                                                           21)),
                                                               Text(
-                                                                  'Region: ${places![index].region}',
+                                                                  'Region: ${places[index].region}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
                                                               const SizedBox(
                                                                   height: 20),
                                                               Text(
-                                                                  'Name: ${places![index].name}',
+                                                                  'Name: ${places[index].name}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
                                                               const SizedBox(
                                                                   height: 20),
                                                               Text(
-                                                                  'Rating: ${places![index].rating}',
+                                                                  'Rating: ${places[index].rating}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
                                                               Text(
-                                                                  'Telephone: ${places![index].tel}',
+                                                                  'Telephone: ${places[index].tel}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
                                                               Text(
-                                                                  'Price: ${places![index].price}',
+                                                                  'Price: ${places[index].price}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
                                                               Text(
-                                                                  'Description: ${places![index].description}',
+                                                                  'Description: ${places[index].description}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
@@ -264,45 +273,52 @@ class _searchState extends State<search> {
                                                 const SizedBox(height: 40),
                                                 ElevatedButton.icon(
                                                   onPressed: () async {
+                                                    setState(() {
+                                                      fsq_id.add(places![index]
+                                                          .fsq_id);
+
+                                                      name.add(
+                                                          places[index].name);
+
+                                                      rating.add(
+                                                          places[index].rating);
+
+                                                      tel.add(
+                                                          places[index].tel);
+
+                                                      country.add(places[index]
+                                                          .country);
+
+                                                      region.add(
+                                                          places[index].region);
+
+                                                      price.add(
+                                                          places[index].price);
+
+                                                      description.add(
+                                                          places[index]
+                                                              .description);
+                                                    });
                                                     final valid = await Trips
-                                                        .availableActivity(
-                                                            places![index]
-                                                                .name
-                                                                .toString());
-                                                    if (!valid) {
-                                                      snackBar.showSnackBarRed(
-                                                          'Activity already registered');
+                                                        .availableTrip(
+                                                            user.uid);
+                                                    if (valid) {
+                                                      appendTrip(
+                                                          uid: user.uid,
+                                                          fsq_id: fsq_id,
+                                                          name: name,
+                                                          rating: rating,
+                                                          tel: tel,
+                                                          country: country,
+                                                          region: region,
+                                                          price: price,
+                                                          description:
+                                                              description,
+                                                          active: active);
+                                                      snackBar.showSnackBarGreen(
+                                                          'Trip updated Successfully');
+                                                      hideMenu();
                                                     } else {
-                                                      setState(() {
-                                                        fsq_id.add(
-                                                            places![index]
-                                                                .fsq_id);
-
-                                                        name.add(places![index]
-                                                            .name);
-
-                                                        rating.add(
-                                                            places![index]
-                                                                .rating);
-
-                                                        tel.add(
-                                                            places![index].tel);
-
-                                                        country.add(
-                                                            places![index]
-                                                                .country);
-
-                                                        region.add(
-                                                            places![index]
-                                                                .region);
-
-                                                        price.add(places![index]
-                                                            .price);
-
-                                                        description.add(
-                                                            places![index]
-                                                                .description);
-                                                      });
                                                       createTrip(
                                                           uid: user.uid,
                                                           fsq_id: fsq_id,
