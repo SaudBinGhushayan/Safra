@@ -93,19 +93,46 @@ def translate(array):
 def extract_categories(array):
     templist = [array[i][0]['name'] for i in range(len(array))]
     
+    
     return templist
     
 
 
-# In[7]:
+# In[102]:
 
 
 def add_photos(array):
     
-    return
+    # list of links
+    lol = []
+    
+    # index
+    index = 0
+    for fsq_id in array:
+        
+        try:
+            
+            url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=1&sort=POPULAR&classifications=outdoor"
+
+            headers = {
+                "accept": "application/json",
+                "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
+                    }
+
+            response = requests.get(url, headers=headers).json()
+            
+            if response[0]['prefix'] != '':
+                lol.append(response[0]['prefix']+'original'+response[0]['suffix'])
+            else:
+                lol.append('Not Available')
+            print(response.text)
+        
+        except: True
+            
+    return lol
 
 
-# In[8]:
+# In[108]:
 
 
 def retrieve_places(a , c):
@@ -120,10 +147,10 @@ def retrieve_places(a , c):
     if type(lat) != str:
 
         if a != '':
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cphotos"
+            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories"
 
         else:
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cphotos"
+            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cfeatures"
 
 
         url = fields_url
@@ -156,13 +183,13 @@ def retrieve_places(a , c):
         ============== remember to change range when changing number of retrieved rows ==============
         """
         if 'price' not in df.columns:
-            df.insert(len(df.columns) , 'price' , ['Not Available' for i in range(10)] )
+            df.insert(len(df.columns) , 'price' , ['Not Available' for i in range(df.shape[0])] )
         
         if 'description' not in df.columns:
-            df.insert(len(df.columns) , 'description' , ['Not Available' for i in range(10)])
+            df.insert(len(df.columns) , 'description' , ['Not Available' for i in range(df.shape[0])])
         
         if 'rating' not in df.columns:
-            df.insert(len(df.columns) , 'rating' , ['Not Available' for i in range(10)])
+            df.insert(len(df.columns) , 'rating' , ['Not Available' for i in range(df.shape[0])])
 
         
 #         # renaming columns
@@ -221,8 +248,18 @@ def retrieve_places(a , c):
             # changing datatypes
             df = df.astype({'price': str , 'rating': str})
         except: df = df
-
-
+        
+        
+        '''
+        adding photos to dataframe 
+        
+        ==== i suggest to make this function separately rather th
+        lol : ---> list of links
+        '''
+        lol = add_photos(df['fsq_id'].to_list())
+        
+        df.insert(len(df) , 'photos' , lol)
+        
         data = df.to_json(orient = 'records')
         return df , data
     else:
@@ -230,13 +267,7 @@ def retrieve_places(a , c):
     
 
 
-# In[ ]:
-
-
-
-
-
-# In[9]:
+# In[105]:
 
 
 '''
@@ -247,14 +278,14 @@ test field
 '''
 
 
-# In[10]:
+# In[109]:
 
 
-df, data_json = retrieve_places('coffee' , 'riyadh')
+df, data_json = retrieve_places('' , 'london')
 df
 
 
-# In[13]:
+# In[14]:
 
 
 app = Flask(__name__)
