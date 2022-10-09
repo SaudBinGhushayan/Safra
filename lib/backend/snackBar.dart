@@ -12,10 +12,23 @@ class snackBar {
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+
   static showSnackBarGreen(String? text) {
     if (text == null) return;
 
-    final snackBar = SnackBar(content: Text(text), backgroundColor: Colors.green);
+    final snackBar =
+        SnackBar(content: Text(text), backgroundColor: Colors.green);
+
+    globalKey.currentState!
+      ..removeCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  static showSnackBarYellow(String? text) {
+    if (text == null) return;
+
+    final snackBar =
+        SnackBar(content: Text(text), backgroundColor: Colors.amber);
 
     globalKey.currentState!
       ..removeCurrentSnackBar()

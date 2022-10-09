@@ -403,8 +403,8 @@ class _accountInformation extends State<accountInformation> {
                                       ),
                                       //End for 2 containers Joined date ,username)
                                       Container(
-                                        margin: EdgeInsets.only(top: 22),
-                                        height: 200,
+                                        margin: const EdgeInsets.only(top: 13),
+                                        height: 150,
                                         width: 500,
                                         decoration: const BoxDecoration(
                                             image: DecorationImage(
@@ -422,10 +422,10 @@ class _accountInformation extends State<accountInformation> {
                                                             const dashboardn()));
                                               },
                                               icon: Image.asset(
-                                                  'images/NavigationBar/DashboardActive.jpg'),
+                                                  'images/NavigationBar/Dashboard.jpg'),
                                               iconSize: 55,
                                               padding: const EdgeInsets.only(
-                                                  left: 29, bottom: 29),
+                                                  left: 30, bottom: 27),
                                             ),
                                             IconButton(
                                               onPressed: () {
@@ -445,7 +445,7 @@ class _accountInformation extends State<accountInformation> {
                                                 child: Padding(
                                                     padding: const EdgeInsets
                                                             .fromLTRB(
-                                                        27.5, 0.2, 30, 70),
+                                                        27, 0.2, 30, 64),
                                                     child: CircleAvatar(
                                                         radius: 24,
                                                         backgroundColor:
@@ -494,10 +494,10 @@ class _accountInformation extends State<accountInformation> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            accountInformation()));
+                                                            const accountInformation()));
                                               },
                                               icon: Image.asset(
-                                                  'images/NavigationBar/Profile.jpg'),
+                                                  'images/NavigationBar/ProfileActive.jpg'),
                                               iconSize: 55,
                                               padding: const EdgeInsets.only(
                                                   left: 10, bottom: 26),

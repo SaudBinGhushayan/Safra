@@ -11,9 +11,7 @@ import flask
 from flask import Flask, request
 import geopy
 from geopy import Nominatim
-from translate import Translator
 from langdetect import detect
-from iso639 import languages
 from textblob import TextBlob
 
 
@@ -201,7 +199,7 @@ def retrieve_places(a , c):
             tdl = translate(array)
 
             # insert it into last 
-            df.insert(df.columns.get_loc('description')+1  , 'translated_description' , tdl)
+            df.insert(df.columns.get_loc('description')+1 , 'translated_description', tdl)
 
         
         
@@ -265,8 +263,8 @@ app = Flask(__name__)
 @app.route('/api' , methods = ['GET'])
 
 def index():
-    userInputb = str(request.args['query'])
-    userInputa = str(request.args['query'])
+    userInputb = str(request.args['query1'])
+    userInputa = str(request.args['query2'])
     df, data_json = retrieve_places(userInputa , userInputb)
 
     return data_json

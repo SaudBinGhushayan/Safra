@@ -427,13 +427,16 @@ class _travelHistory extends State<travelHistory> {
                                                   'images/NavigationBar/Dashboard.jpg'),
                                               iconSize: 55,
                                               padding: const EdgeInsets.only(
-                                                  left: 29, bottom: 29),
+                                                  left: 30, bottom: 27),
                                             ),
                                             IconButton(
-                                              onPressed: () {Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const mention()));},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const mention()));
+                                              },
                                               icon: Image.asset(
                                                   'images/NavigationBar/Mention.jpg'),
                                               iconSize: 55,

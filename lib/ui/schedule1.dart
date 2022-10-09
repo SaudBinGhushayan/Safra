@@ -16,7 +16,6 @@ import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/searchtrip.dart';
 import 'package:safra/ui/stngs.dart';
-import 'package:safra/ui/simple_dialogs.dart';
 import '../objects/user.dart';
 import 'package:safra/ui/searchtrip.dart';
 

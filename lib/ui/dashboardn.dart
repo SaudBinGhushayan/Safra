@@ -5,8 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
+import 'package:safra/objects/TripsDisplay.dart';
+import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
@@ -28,7 +31,6 @@ class dashboardn extends StatefulWidget {
 class _dashboardnState extends State<dashboardn> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
-  Trips? trips;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +140,7 @@ class _dashboardnState extends State<dashboardn> {
                         children: [
                           Container(
                               //Your next activity
-                              margin: const EdgeInsets.only(left: 30, top: 150),
+                              margin: const EdgeInsets.only(left: 30, top: 180),
                               child: RichText(
                                   text: TextSpan(
                                       text: 'Your Next Activity',
@@ -152,72 +154,81 @@ class _dashboardnState extends State<dashboardn> {
                                         child: const SizedBox(
                                       width: 110,
                                     )),
-                                    const TextSpan(
-                                      text: 'See all',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontFamily: 'Verdana'),
-                                    ),
-                                    WidgetSpan(
-                                        child: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.arrow_forward_ios),
-                                      padding: const EdgeInsets.only(
-                                          left: 0, top: 23),
-                                      iconSize: 21,
-                                      color: const Color.fromARGB(
-                                          255, 70, 127, 226),
-                                    ))
                                   ]))),
                         ],
                       ),
+                      SizedBox(height: 10),
                       SizedBox(
-                          height: 100,
-                          child: FutureBuilder<Trips?>(
-                              future: readTrip(user.uid),
+                          height: 196,
+                          child: FutureBuilder<TripsDisplay?>(
+                              future: TripsDisplay.displayNearestTripActivities(
+                                  user.uid),
                               builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  print(snapshot.error);
-
+                                if (!snapshot.hasData) {
+                                  return Text('No data');
+                                } else if (snapshot.hasError) {
                                   return Text('Something went wrong');
                                 } else if (snapshot.hasData) {
-                                  trips = snapshot.data!;
+                                  final trips = snapshot.data!;
                                   return SizedBox(
                                       height: 100,
                                       child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: trips?.name.length,
+                                          itemCount: trips.activities.length,
                                           itemBuilder: ((context, index) {
                                             return Row(children: [
-                                              Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    color: Colors.grey
-                                                        .withOpacity(0.6),
-                                                  ),
-                                                  child: Column(children: [
-                                                    Text(trips!.name[index]
-                                                        .toString()),
-                                                    Text(trips!.country[index]
-                                                        .toString()),
-                                                    Text(trips!.tel[index]
-                                                        .toString()),
-                                                  ])),
+                                              Center(
+                                                  child: Container(
+                                                      width: 196,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        gradient:
+                                                            LinearGradient(
+                                                                begin: Alignment
+                                                                    .topRight,
+                                                                end: Alignment
+                                                                    .bottomLeft,
+                                                                colors: const [
+                                                              Color.fromARGB(
+                                                                  255,
+                                                                  129,
+                                                                  196,
+                                                                  228),
+                                                              Colors.cyanAccent
+                                                            ]),
+                                                      ),
+                                                      child: Column(children: [
+                                                        SizedBox(height: 50),
+                                                        Text(trips
+                                                            .activities[index]
+                                                            .name
+                                                            .toString()),
+                                                        Text(trips
+                                                            .activities[index]
+                                                            .country
+                                                            .toString()),
+                                                        Text(trips
+                                                            .activities[index]
+                                                            .tel
+                                                            .toString()),
+                                                      ]))),
                                               SizedBox(width: 12)
                                             ]);
                                           })));
                                 } else {
-                                  return Text('no data');
+                                  return Center(
+                                      child: CircularProgressIndicator());
                                 }
                               })),
+                      SizedBox(height: 20),
                       Row(
                         //2ndrow
                         children: [
                           Container(
                               //Your next activity
-                              margin: const EdgeInsets.only(left: 30, top: 130),
+                              margin: const EdgeInsets.only(left: 30),
                               child: RichText(
                                   text: TextSpan(
                                       text: 'My Trips',
@@ -225,32 +236,61 @@ class _dashboardnState extends State<dashboardn> {
                                           color: Colors.black,
                                           fontFamily: 'Verdana',
                                           fontSize: 19),
-                                      children: [
-                                    const WidgetSpan(
-                                        child: const SizedBox(
-                                      width: 193,
-                                    )),
-                                    const TextSpan(
-                                      text: 'See all',
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontFamily: 'Verdana'),
-                                    ),
-                                    WidgetSpan(
-                                        child: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.arrow_forward_ios),
-                                      padding: const EdgeInsets.only(
-                                          left: 0, top: 23),
-                                      iconSize: 21,
-                                      color: const Color.fromARGB(
-                                          255, 70, 127, 226),
-                                    ))
-                                  ]))),
+                                      children: []))),
                         ],
                       ),
+                      SizedBox(
+                          height: 100,
+                          child: FutureBuilder<List<TripsInfo>?>(
+                              future: TripsInfo.displayNearestTrip(user.uid),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Something went wrong');
+                                } else if (snapshot.data?.length == 0) {
+                                  return Text('No data');
+                                } else if (snapshot.hasData) {
+                                  final trip = snapshot.data![0];
+                                  return Container(
+                                      margin: EdgeInsets.only(
+                                          left: 20, right: 20, top: 20),
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 2, 20, 2),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        gradient: LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: const [
+                                              Color.fromARGB(
+                                                  255, 129, 196, 228),
+                                              Colors.cyanAccent
+                                            ]),
+                                      ),
+                                      child: Row(children: [
+                                        Expanded(
+                                            child: Text(trip.tripId,
+                                                style:
+                                                    TextStyle(fontSize: 21))),
+                                        SizedBox(width: 20),
+                                        Expanded(
+                                            child: Text(
+                                                '${trip.from.year}/${trip.from.month}/${trip.from.day}'
+                                                    .toString(),
+                                                style:
+                                                    TextStyle(fontSize: 18))),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                            child: Text(
+                                                '${trip.to.year}/${trip.to.month}/${trip.to.day}',
+                                                style:
+                                                    TextStyle(fontSize: 18))),
+                                      ]));
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              })),
                       Container(
-                        margin: EdgeInsets.only(top: 86),
                         height: 200,
                         width: 500,
                         decoration: const BoxDecoration(
@@ -356,15 +396,6 @@ class _dashboardnState extends State<dashboardn> {
                 ));
               }
             }));
-  }
-
-  Future<Trips?> readTrip(String uid) async {
-    final docUser = FirebaseFirestore.instance.collection('Trips').doc(uid);
-    final snapshot = await docUser.get();
-
-    if (snapshot.exists) {
-      return Trips.fromJson(snapshot.data()!);
-    }
   }
 
   void menu() {

@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -10,9 +13,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:safra/backend/httpHandler.dart';
 import 'package:safra/backend/snackBar.dart';
+import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
+import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
@@ -34,20 +39,33 @@ class search extends StatefulWidget {
 
 class _searchState extends State<search> {
   String city = '';
+  String category = '';
+  final filter_1 = TextEditingController();
   final url = TextEditingController();
   OverlayEntry? entry;
-  List<String> fsq_id = [];
-  List<String> name = [];
-  List<String> rating = [];
-  List<String> tel = [];
-  List<String> country = [];
-  List<String> region = [];
-  List<String> price = [];
-  List<String> description = [];
-  bool active = true;
+  OverlayEntry? entry_date;
+  String fsq_id = '';
+  String name = '';
+  String rating = '';
+  String tel = '';
+  String country = '';
+  String region = '';
+  String price = '';
+  String description = '';
+  String active = 'true';
+  String tripId = '';
   final user = FirebaseAuth.instance.currentUser!;
   var isloaded = false;
-
+  String trip_id = '';
+  List<String> tripIdList = [];
+  var _value = false;
+  bool noTrips = false;
+  bool pressed_create = false;
+  var enterTripName = TextEditingController();
+  var from_cont = TextEditingController();
+  var to_cont = TextEditingController();
+  DateTime from = DateTime.parse('2020-01-12');
+  DateTime to = DateTime.parse('2020-01-12');
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -129,7 +147,38 @@ class _searchState extends State<search> {
                         onPressed: () {
                           setState(() {
                             city = url.text;
+
+                            category = filter_1.text;
                           });
+                        }),
+                    suffixIcon: IconButton(
+                        icon: const Icon(Icons.filter_list,
+                            color: Color.fromARGB(255, 102, 101, 101)),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(actions: [
+                                  Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Advanced Search',
+                                      )),
+                                  PopupMenuItem(
+                                      child: TextField(
+                                          controller: filter_1,
+                                          style: const TextStyle(),
+                                          decoration: InputDecoration(
+                                              border: const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(40),
+                                                ),
+                                              ),
+                                              hintText: 'Enter Category',
+                                              hintStyle: const TextStyle(
+                                                  color: Colors.grey)))),
+                                ]);
+                              });
                         })),
               ),
             ),
@@ -139,15 +188,28 @@ class _searchState extends State<search> {
                 right: 230,
               ),
               child: ElevatedButton(
-                  onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('Trips')
-                        .doc(user.uid)
-                        .get()
-                        .then((value) =>
-                            // List<Map<String, dynamic>> name = value['name']
-                            // FirebaseFirestore.instance.collection('Trips').doc(uid).set('name'[value['name'].length]: name));
-                            print(value.get('name')));
+                  onPressed: () async {
+                    final response = await SupaBase_Manager()
+                        .client
+                        .from('trips_info')
+                        .select()
+                        .eq('active', 'true')
+                        .eq('uid', user.uid)
+                        .filter('to', 'gt', DateTime.now())
+                        .execute();
+                    print(response.data);
+
+                    // if (response.error == null) {
+                    //   var data = response.data[0].toString();
+                    //   data = data.replaceAll('{', '{"');
+                    //   data = data.replaceAll(': ', '": "');
+                    //   data = data.replaceAll(', ', '", "');
+                    //   data = data.replaceAll('}', '"}');
+                    //   data = data.replaceAll('}",', '},');
+                    //   data = data.replaceAll('"{', '{');
+                    //   data = data.replaceAll('"[', '[');
+                    //   data = data.replaceAll(']"', ']');
+                    // }
                   },
                   style: ElevatedButton.styleFrom(
                     primary: const Color.fromARGB(232, 147, 160, 172),
@@ -167,7 +229,7 @@ class _searchState extends State<search> {
             SizedBox(
                 height: 350,
                 child: FutureBuilder<List<Places>?>(
-                  future: httpHandler().getPlaces(city),
+                  future: httpHandler().getPlaces(city, category),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       List<Places>? places;
@@ -183,9 +245,7 @@ class _searchState extends State<search> {
                                   onPressed: () {
                                     entry = OverlayEntry(
                                         builder: (context) => Scaffold(
-                                            resizeToAvoidBottomInset: false,
-                                            body: Card(
-                                              margin: const EdgeInsets.all(0),
+                                                body: SingleChildScrollView(
                                               child: Column(children: [
                                                 Container(
                                                   alignment:
@@ -214,8 +274,16 @@ class _searchState extends State<search> {
                                                               //=============================================start here==========================================================
                                                               ElevatedButton
                                                                   .icon(
-                                                                onPressed:
-                                                                    hideMenu,
+                                                                onPressed: () {
+                                                                  hideMenu();
+                                                                  setState(() {
+                                                                    ValueNotifier<bool>(
+                                                                            false)
+                                                                        .value = false;
+                                                                  });
+                                                                  pressed_create =
+                                                                      true;
+                                                                },
                                                                 icon: const Icon(
                                                                     Icons
                                                                         .arrow_back_ios),
@@ -271,38 +339,115 @@ class _searchState extends State<search> {
                                                                           21)),
                                                             ]))),
                                                 const SizedBox(height: 40),
+                                                SizedBox(
+                                                  height: 200,
+                                                  child: FutureBuilder<
+                                                      List<TripsInfo>?>(
+                                                    future: TripsInfo
+                                                        .readTrips_Info(
+                                                            user.uid),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot.hasError) {
+                                                        return Text(
+                                                            'something went wrong');
+                                                      } else if (snapshot
+                                                              .data?.length ==
+                                                          0) {
+                                                        noTrips = true;
+                                                        return Text(
+                                                            'no trips registerd');
+                                                      } else if (snapshot
+                                                          .hasData) {
+                                                        List<TripsInfo> data =
+                                                            snapshot.data!;
+                                                        return SizedBox(
+                                                            height: 200,
+                                                            child: ListView
+                                                                .builder(
+                                                              itemCount:
+                                                                  data.length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return Container(
+                                                                    margin: EdgeInsets
+                                                                        .fromLTRB(
+                                                                            20,
+                                                                            0,
+                                                                            20,
+                                                                            4),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Row(
+                                                                        children: [
+                                                                          Expanded(
+                                                                              child: Text(data[index].tripId, style: TextStyle(fontSize: 21))),
+                                                                          SizedBox(
+                                                                              width: 20),
+                                                                          Expanded(
+                                                                              child: Text('${data[index].from.year}/${data[index].from.month}/${data[index].from.day}'.toString(), style: TextStyle(fontSize: 18))),
+                                                                          SizedBox(
+                                                                              width: 10),
+                                                                          Expanded(
+                                                                              child: Text('${data[index].to.year}/${data[index].to.month}/${data[index].to.day}', style: TextStyle(fontSize: 18))),
+                                                                          ValueListenableBuilder<bool>(
+                                                                              valueListenable: ValueNotifier<bool>(false),
+                                                                              builder: (context, value, child) {
+                                                                                return Checkbox(
+                                                                                  onChanged: (value) {
+                                                                                    setState(() {
+                                                                                      _value = value!;
+                                                                                      tripId = data[index].tripId;
+                                                                                    });
+                                                                                  },
+                                                                                  value: value,
+                                                                                );
+                                                                              })
+                                                                        ]));
+                                                              },
+                                                            ));
+                                                      } else {
+                                                        return Center(
+                                                            child:
+                                                                CircularProgressIndicator());
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
                                                 ElevatedButton.icon(
                                                   onPressed: () async {
                                                     setState(() {
-                                                      fsq_id.add(places![index]
-                                                          .fsq_id);
+                                                      fsq_id =
+                                                          places![index].fsq_id;
 
-                                                      name.add(
-                                                          places[index].name);
+                                                      name = places[index].name;
 
-                                                      rating.add(
-                                                          places[index].rating);
+                                                      rating =
+                                                          places[index].rating;
 
-                                                      tel.add(
-                                                          places[index].tel);
+                                                      tel = places[index].tel;
 
-                                                      country.add(places[index]
-                                                          .country);
+                                                      country =
+                                                          places[index].country;
 
-                                                      region.add(
-                                                          places[index].region);
+                                                      region =
+                                                          places[index].region;
 
-                                                      price.add(
-                                                          places[index].price);
+                                                      price =
+                                                          places[index].price;
 
-                                                      description.add(
+                                                      description =
                                                           places[index]
-                                                              .description);
+                                                              .description;
                                                     });
-                                                    final valid = await Trips
-                                                        .availableTrip(
-                                                            user.uid);
-                                                    if (valid) {
+                                                    final tripExist =
+                                                        await Trips
+                                                            .availableTrip(
+                                                                user.uid);
+                                                    if (tripExist &&
+                                                        _value == true) {
                                                       appendTrip(
                                                           uid: user.uid,
                                                           fsq_id: fsq_id,
@@ -314,33 +459,71 @@ class _searchState extends State<search> {
                                                           price: price,
                                                           description:
                                                               description,
-                                                          active: active);
-                                                      snackBar.showSnackBarGreen(
-                                                          'Trip updated Successfully');
-                                                      hideMenu();
-                                                    } else {
-                                                      createTrip(
-                                                          uid: user.uid,
-                                                          fsq_id: fsq_id,
-                                                          name: name,
-                                                          rating: rating,
-                                                          tel: tel,
-                                                          country: country,
-                                                          region: region,
-                                                          price: price,
-                                                          description:
-                                                              description,
-                                                          active: active);
+                                                          active: active,
+                                                          trip_id: tripId);
 
                                                       snackBar.showSnackBarGreen(
-                                                          'Activity Added Successfully');
+                                                          'Activity Added to trip ${tripId} Successfully');
+
                                                       hideMenu();
+                                                      setState(() {
+                                                        _value = false;
+                                                      });
+                                                    } else if (noTrips) {
+                                                      return snackBar
+                                                          .showSnackBarRed(
+                                                              'You dont have a registered trips yet please create a trip in schedule page');
+                                                    } else if (_value ==
+                                                        false) {
+                                                      return snackBar
+                                                          .showSnackBarRed(
+                                                              'please select which trip to add your activity');
                                                     }
                                                   },
                                                   icon: const Icon(
                                                       Icons.check_box),
                                                   label: const Text(
                                                       'book activity'),
+                                                ),
+                                                ElevatedButton.icon(
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      fsq_id =
+                                                          places![index].fsq_id;
+
+                                                      name = places[index].name;
+
+                                                      rating =
+                                                          places[index].rating;
+
+                                                      tel = places[index].tel;
+
+                                                      country =
+                                                          places[index].country;
+
+                                                      region =
+                                                          places[index].region;
+
+                                                      price =
+                                                          places[index].price;
+
+                                                      description =
+                                                          places[index]
+                                                              .description;
+                                                    });
+                                                    if (!pressed_create &&
+                                                        !noTrips) {
+                                                      pressed_create = true;
+                                                      snackBar.showSnackBarYellow(
+                                                          'You have registered trips if you want to create a new trip press create again');
+                                                    } else {
+                                                      datePicker();
+                                                    }
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.check_box),
+                                                  label:
+                                                      const Text('create trip'),
                                                 ),
                                               ]),
                                             )));
@@ -359,10 +542,20 @@ class _searchState extends State<search> {
                             })),
                       );
                       //===========================================================end here==============================================================
-                    } else {
+                    } else if (!snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.done) {
                       return Center(
                           child: Text('No Search Data',
                               style: TextStyle(fontSize: 21)));
+                    } else {
+                      return Center(
+                          child: Column(children: const [
+                        CircularProgressIndicator(),
+                        Text(
+                          'Please wait until we fetch your data',
+                          style: TextStyle(fontSize: 21),
+                        )
+                      ]));
                     }
                   },
                 )),
@@ -562,5 +755,169 @@ class _searchState extends State<search> {
   void hideMenu() {
     entry?.remove();
     entry = null;
+  }
+
+  void datePicker() {
+    entry_date = OverlayEntry(
+        builder: (context) => Card(
+              margin: EdgeInsets.all(0),
+              color: Colors.black54.withOpacity(0.8),
+              child: Column(children: [
+                const SizedBox(height: 200),
+                Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 30),
+                    child: Text('Menu',
+                        style: TextStyle(color: Colors.grey, fontSize: 21))),
+                SizedBox(height: 40),
+                Container(
+                    color: Colors.black12.withOpacity(0.5),
+                    child: Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(top: 10, left: 30),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 16),
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(40),
+                                    ),
+                                    color: Colors.white),
+                                child: TextField(
+                                  controller: enterTripName,
+                                  style: const TextStyle(),
+                                  decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(40),
+                                        ),
+                                      ),
+                                      hintText: 'Enter trip name',
+                                      hintStyle:
+                                          const TextStyle(color: Colors.grey),
+                                      prefixIcon: IconButton(
+                                          icon: const Icon(Icons.search,
+                                              color: Color.fromARGB(
+                                                  255, 102, 101, 101)),
+                                          onPressed: () {})),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 16),
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(40),
+                                    ),
+                                    color: Colors.white),
+                                child: TextField(
+                                  controller: from_cont,
+                                  style: const TextStyle(),
+                                  decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(40),
+                                        ),
+                                      ),
+                                      hintText: 'from',
+                                      hintStyle:
+                                          const TextStyle(color: Colors.grey),
+                                      prefixIcon: IconButton(
+                                          icon: const Icon(Icons.search,
+                                              color: Color.fromARGB(
+                                                  255, 102, 101, 101)),
+                                          onPressed: () {})),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 16),
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(40),
+                                    ),
+                                    color: Colors.white),
+                                child: TextField(
+                                  controller: to_cont,
+                                  style: const TextStyle(),
+                                  decoration: InputDecoration(
+                                      border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(40),
+                                        ),
+                                      ),
+                                      hintText: 'to',
+                                      hintStyle:
+                                          const TextStyle(color: Colors.grey),
+                                      prefixIcon: IconButton(
+                                          icon: const Icon(Icons.search,
+                                              color: Color.fromARGB(
+                                                  255, 102, 101, 101)),
+                                          onPressed: () {})),
+                                ),
+                              ),
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  hideDatePicker();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('Ok'),
+                                onPressed: () {
+                                  setState(() {
+                                    trip_id = enterTripName.text;
+                                    from = DateTime.tryParse(from_cont.text)!;
+                                    to = DateTime.tryParse(to_cont.text)!;
+                                  });
+                                  createTrip(
+                                      uid: user.uid,
+                                      fsq_id: fsq_id,
+                                      name: name,
+                                      rating: rating,
+                                      tel: tel,
+                                      country: country,
+                                      region: region,
+                                      price: price,
+                                      description: description,
+                                      active: active,
+                                      trip_id: trip_id,
+                                      from: from,
+                                      to: to);
+                                  hideDatePicker();
+                                  snackBar.showSnackBarGreen(
+                                      'Activity Added to trip ${trip_id} Successfully');
+                                  hideMenu();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const search()));
+                                  setState(() {
+                                    ValueNotifier<bool>(false).value = false;
+                                  });
+                                  setState(() {
+                                    pressed_create = false;
+                                  });
+                                },
+                              )
+                            ]))),
+                SizedBox(height: 40),
+                ElevatedButton.icon(
+                  onPressed: hideDatePicker,
+                  icon: Icon(Icons.visibility_off),
+                  label: Text('back'),
+                )
+              ]),
+            ));
+
+    final overlay = Overlay.of(context);
+    overlay?.insert(entry_date!);
+  }
+
+  void hideDatePicker() {
+    entry_date?.remove();
+    entry_date = null;
   }
 }

@@ -25,6 +25,7 @@ class join extends StatefulWidget {
 class _joinState extends State<join> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
+  DateTime date = DateTime(2022, 12, 24);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class _joinState extends State<join> {
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                           image: AssetImage(
-                              'images/BackgroundPics/background.jpg'),
+                              'images/BackgroundPics/background.png'),
                           fit: BoxFit.cover,
                         )),
                         child: SingleChildScrollView(
@@ -70,6 +71,65 @@ class _joinState extends State<join> {
                                 // const SizedBox(
                                 //   height: 90,
                                 // ),
+                                // ElevatedButton(
+                                //     onPressed: () {
+                                //       showDialog(
+                                //           context: context,
+                                //           builder: (context) {
+                                //             return AlertDialog(
+                                //               title: Text(
+                                //                   'Choose a date for your trip'),
+                                //               content: Row(children: [
+                                //                 ElevatedButton(
+                                //                     onPressed: () async {
+                                //                       DateTime? from =
+                                //                           await showDatePicker(
+                                //                               context: context,
+                                //                               initialDate: date,
+                                //                               firstDate:
+                                //                                   DateTime(
+                                //                                       1950),
+                                //                               lastDate:
+                                //                                   DateTime(
+                                //                                       2050));
+                                //                     },
+                                //                     child: Text(
+                                //                         'Choose from date')),
+                                //                 ElevatedButton(
+                                //                     onPressed: () async {
+                                //                       DateTime? to =
+                                //                           await showDatePicker(
+                                //                               context: context,
+                                //                               initialDate: date,
+                                //                               firstDate:
+                                //                                   DateTime(
+                                //                                       1950),
+                                //                               lastDate:
+                                //                                   DateTime(
+                                //                                       2050));
+                                //                     },
+                                //                     child:
+                                //                         Text('Choose to date'))
+                                //               ]),
+                                //               actions: [
+                                //                 TextButton(
+                                //                   child: Text('Cancel'),
+                                //                   onPressed: () {
+                                //                     Navigator.pop(context);
+                                //                   },
+                                //                 ),
+                                //                 TextButton(
+                                //                   child: Text('Ok'),
+                                //                   onPressed: () {
+                                //                     Navigator.pop(context);
+                                //                   },
+                                //                 )
+                                //               ],
+                                //             );
+                                //           });
+                                //     },
+                                //     child: Text('go')),
+
                                 Container(
                                   //profile icon
                                   height: 50,
@@ -138,6 +198,7 @@ class _joinState extends State<join> {
                                 )
                               ], //end1st row
                             ),
+
                             Center(
                               //Jointrip,tripid,..
                               child: Column(
