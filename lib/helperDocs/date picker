@@ -1,0 +1,61 @@
+// const SizedBox(
+                                //   height: 90,
+                                // ),
+                                // ElevatedButton(
+                                //     onPressed: () {
+                                //       showDialog(
+                                //           context: context,
+                                //           builder: (context) {
+                                //             return AlertDialog(
+                                //               title: Text(
+                                //                   'Choose a date for your trip'),
+                                //               content: Row(children: [
+                                //                 ElevatedButton(
+                                //                     onPressed: () async {
+                                //                       DateTime? from =
+                                //                           await showDatePicker(
+                                //                               context: context,
+                                //                               initialDate: date,
+                                //                               firstDate:
+                                //                                   DateTime(
+                                //                                       1950),
+                                //                               lastDate:
+                                //                                   DateTime(
+                                //                                       2050));
+                                //                     },
+                                //                     child: Text(
+                                //                         'Choose from date')),
+                                //                 ElevatedButton(
+                                //                     onPressed: () async {
+                                //                       DateTime? to =
+                                //                           await showDatePicker(
+                                //                               context: context,
+                                //                               initialDate: date,
+                                //                               firstDate:
+                                //                                   DateTime(
+                                //                                       1950),
+                                //                               lastDate:
+                                //                                   DateTime(
+                                //                                       2050));
+                                //                     },
+                                //                     child:
+                                //                         Text('Choose to date'))
+                                //               ]),
+                                //               actions: [
+                                //                 TextButton(
+                                //                   child: Text('Cancel'),
+                                //                   onPressed: () {
+                                //                     Navigator.pop(context);
+                                //                   },
+                                //                 ),
+                                //                 TextButton(
+                                //                   child: Text('Ok'),
+                                //                   onPressed: () {
+                                //                     Navigator.pop(context);
+                                //                   },
+                                //                 )
+                                //               ],
+                                //             );
+                                //           });
+                                //     },
+                                //     child: Text('go')),

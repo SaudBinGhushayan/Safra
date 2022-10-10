@@ -268,7 +268,7 @@ class _dashboardnState extends State<dashboardn> {
                                       ),
                                       child: Row(children: [
                                         Expanded(
-                                            child: Text(trip.tripId,
+                                            child: Text(trip.trip_name,
                                                 style:
                                                     TextStyle(fontSize: 21))),
                                         SizedBox(width: 20),

@@ -53,11 +53,12 @@ class _searchState extends State<search> {
   String price = '';
   String description = '';
   String active = 'true';
-  String tripId = '';
   final user = FirebaseAuth.instance.currentUser!;
+  List<String> uids = [];
   var isloaded = false;
-  String trip_id = '';
-  List<String> tripIdList = [];
+  String tripid = '';
+  String trip_id = '${Random().nextDouble() * 265}';
+  String trip_name = '';
   var _value = false;
   bool noTrips = false;
   bool pressed_create = false;
@@ -192,23 +193,20 @@ class _searchState extends State<search> {
                     final response = await SupaBase_Manager()
                         .client
                         .from('trips_info')
-                        .select()
-                        .eq('active', 'true')
-                        .eq('uid', user.uid)
-                        .filter('to', 'gt', DateTime.now())
-                        .execute();
-                    print(response.data);
+                        .insert([
+                      {"uids": List<dynamic>.from(uids.map((x) => 'gg'))}
+                    ]).execute();
+                    print(response.error);
 
                     // if (response.error == null) {
-                    //   var data = response.data[0].toString();
+                    //   var data = response.data.toString();
                     //   data = data.replaceAll('{', '{"');
                     //   data = data.replaceAll(': ', '": "');
                     //   data = data.replaceAll(', ', '", "');
                     //   data = data.replaceAll('}', '"}');
                     //   data = data.replaceAll('}",', '},');
                     //   data = data.replaceAll('"{', '{');
-                    //   data = data.replaceAll('"[', '[');
-                    //   data = data.replaceAll(']"', ']');
+                    //   print(data);
                     // }
                   },
                   style: ElevatedButton.styleFrom(
@@ -247,6 +245,7 @@ class _searchState extends State<search> {
                                         builder: (context) => Scaffold(
                                                 body: SingleChildScrollView(
                                               child: Column(children: [
+                                                //========================================================= start here =======================================================================
                                                 Container(
                                                   alignment:
                                                       Alignment.centerLeft,
@@ -271,7 +270,6 @@ class _searchState extends State<search> {
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
-                                                              //=============================================start here==========================================================
                                                               ElevatedButton
                                                                   .icon(
                                                                 onPressed: () {
@@ -348,6 +346,7 @@ class _searchState extends State<search> {
                                                             user.uid),
                                                     builder:
                                                         (context, snapshot) {
+                                                      print(snapshot.error);
                                                       if (snapshot.hasError) {
                                                         return Text(
                                                             'something went wrong');
@@ -383,7 +382,7 @@ class _searchState extends State<search> {
                                                                     child: Row(
                                                                         children: [
                                                                           Expanded(
-                                                                              child: Text(data[index].tripId, style: TextStyle(fontSize: 21))),
+                                                                              child: Text(data[index].trip_name, style: TextStyle(fontSize: 21))),
                                                                           SizedBox(
                                                                               width: 20),
                                                                           Expanded(
@@ -399,7 +398,8 @@ class _searchState extends State<search> {
                                                                                   onChanged: (value) {
                                                                                     setState(() {
                                                                                       _value = value!;
-                                                                                      tripId = data[index].tripId;
+                                                                                      trip_name = data[index].trip_name;
+                                                                                      tripid = data[index].tripId;
                                                                                     });
                                                                                   },
                                                                                   value: value,
@@ -460,10 +460,11 @@ class _searchState extends State<search> {
                                                           description:
                                                               description,
                                                           active: active,
-                                                          trip_id: tripId);
+                                                          trip_id: tripid,
+                                                          trip_name: trip_name);
 
                                                       snackBar.showSnackBarGreen(
-                                                          'Activity Added to trip ${tripId} Successfully');
+                                                          'Activity Added to trip ${trip_name} Successfully');
 
                                                       hideMenu();
                                                       setState(() {
@@ -537,11 +538,11 @@ class _searchState extends State<search> {
                                       child: Text(places![index].name,
                                           style:
                                               const TextStyle(fontSize: 20))),
+                                  //===================================== end here ================================================
                                 )),
                               ]);
                             })),
                       );
-                      //===========================================================end here==============================================================
                     } else if (!snapshot.hasData &&
                         snapshot.connectionState == ConnectionState.done) {
                       return Center(
@@ -867,7 +868,7 @@ class _searchState extends State<search> {
                                 child: Text('Ok'),
                                 onPressed: () {
                                   setState(() {
-                                    trip_id = enterTripName.text;
+                                    trip_name = enterTripName.text;
                                     from = DateTime.tryParse(from_cont.text)!;
                                     to = DateTime.tryParse(to_cont.text)!;
                                   });
@@ -884,10 +885,11 @@ class _searchState extends State<search> {
                                       active: active,
                                       trip_id: trip_id,
                                       from: from,
-                                      to: to);
+                                      to: to,
+                                      trip_name: trip_name);
                                   hideDatePicker();
                                   snackBar.showSnackBarGreen(
-                                      'Activity Added to trip ${trip_id} Successfully');
+                                      'Activity Added to trip ${trip_name} Successfully');
                                   hideMenu();
                                   Navigator.push(
                                       context,

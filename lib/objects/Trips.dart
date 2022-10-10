@@ -23,9 +23,12 @@ class Trips {
       required this.price,
       required this.description,
       required this.active,
-      required this.trip_id});
+      required this.trip_id,
+      required this.trip_name});
 
   String uid;
+  String trip_name;
+
   String fsq_id;
   String name;
   String rating;
@@ -38,6 +41,7 @@ class Trips {
   String trip_id;
 
   factory Trips.fromJson(Map<String, dynamic> json) => Trips(
+        trip_name: json["trip_name"],
         uid: json["uid"],
         fsq_id: json['fsq_id'],
         trip_id: json["trip_id"],
@@ -52,6 +56,7 @@ class Trips {
       );
 
   Map<String, dynamic> toJson() => {
+        "trip_name": trip_name,
         "uid": uid,
         "fsq_id": fsq_id,
         "trip_id": trip_id,
@@ -115,7 +120,8 @@ Future createTrip(
     required String active,
     required String trip_id,
     required DateTime from,
-    required DateTime to}) async {
+    required DateTime to,
+    required String trip_name}) async {
   final trips = Trips(
       uid: uid,
       fsq_id: fsq_id,
@@ -127,24 +133,25 @@ Future createTrip(
       price: price,
       description: description,
       active: active,
+      trip_name: trip_name,
       trip_id: trip_id);
-  final trips_Info = TripsInfo(
-    tripId: trip_id,
-    active: active,
-    uid: uid,
-    from: from,
-    to: to,
-  );
 
-  await SupaBase_Manager()
-      .client
-      .from('activities')
-      .insert([trips.toJson()]).execute();
+  final trips_Info = TripsInfo(
+      tripId: trip_id,
+      active: active,
+      uid: uid,
+      from: from,
+      to: to,
+      trip_name: trip_name);
 
   await SupaBase_Manager()
       .client
       .from('trips_info')
       .insert([trips_Info.toJson()]).execute();
+  await SupaBase_Manager()
+      .client
+      .from('activities')
+      .insert([trips.toJson()]).execute();
 }
 
 Future appendTrip(
@@ -158,8 +165,10 @@ Future appendTrip(
     required String price,
     required String description,
     required String active,
+    required String trip_name,
     required String trip_id}) async {
   final trips = Trips(
+      trip_name: trip_name,
       uid: uid,
       fsq_id: fsq_id,
       name: name,
@@ -172,7 +181,7 @@ Future appendTrip(
       active: active,
       trip_id: trip_id);
 
-  final docTrip = await SupaBase_Manager()
+  await SupaBase_Manager()
       .client
       .from('activities')
       .insert([trips.toJson()]).execute();
