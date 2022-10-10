@@ -281,8 +281,8 @@ test field
 # In[109]:
 
 
-df, data_json = retrieve_places('' , 'london')
-df
+# df, data_json = retrieve_places('' , 'london')
+# df
 
 
 # In[14]:
