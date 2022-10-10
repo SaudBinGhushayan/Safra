@@ -226,7 +226,7 @@ def retrieve_places(a , c):
             tdl = translate(array)
 
             # insert it into last 
-            df.insert(df.columns.get_loc('description')+1 , 'translated_description', tdl)
+            df.insert(df.columns.get_loc('description')+1  , 'translated_description' , tdl)
 
         
         
@@ -242,7 +242,7 @@ def retrieve_places(a , c):
             templist = extract_categories(templist)
             
             df.drop(['categories'] , inplace = True , axis = 1)
-            df.insert(len(df) , 'categories' , templist)
+            # df.insert(len(df) , 'categories' , templist)
             
         try:
             # changing datatypes
@@ -256,9 +256,9 @@ def retrieve_places(a , c):
         ==== i suggest to make this function separately rather th
         lol : ---> list of links
         '''
-        lol = add_photos(df['fsq_id'].to_list())
+        # lol = add_photos(df['fsq_id'].to_list())
         
-        df.insert(len(df) , 'photos' , lol)
+        # df.insert(len(df) , 'photos' , lol)
         
         data = df.to_json(orient = 'records')
         return df , data
@@ -296,6 +296,7 @@ app = Flask(__name__)
 def index():
     userInputb = str(request.args['query1'])
     userInputa = str(request.args['query2'])
+
     df, data_json = retrieve_places(userInputa , userInputb)
 
     return data_json

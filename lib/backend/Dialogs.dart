@@ -17,7 +17,7 @@ class Dialogs {
               ],
             )),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () => Navigator.pop(context), child: Text('ok'))
             ],
           );

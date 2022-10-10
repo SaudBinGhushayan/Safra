@@ -32,6 +32,7 @@ class TripsDisplay {
         .eq('active', 'true')
         .filter('to', 'gt', DateTime.now())
         .execute();
+
     if (response.error == null) {
       var data = response.data[0].toString();
       data = data.replaceAll('{', '{"');
