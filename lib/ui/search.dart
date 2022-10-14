@@ -67,6 +67,7 @@ class _searchState extends State<search> {
   var to_cont = TextEditingController();
   DateTime from = DateTime.parse('2020-01-12');
   DateTime to = DateTime.parse('2020-01-12');
+  String participate = '${Random().nextDouble() * 256}';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -193,10 +194,11 @@ class _searchState extends State<search> {
                     final response = await SupaBase_Manager()
                         .client
                         .from('trips_info')
-                        .insert([
-                      {"uids": List<dynamic>.from(uids.map((x) => 'gg'))}
-                    ]).execute();
-                    print(response.error);
+                        .select('participate(*)inner(trips_info(*)')
+                        .eq('uid', user.uid)
+                        .execute();
+
+                    print(response.data.isEmpty);
 
                     // if (response.error == null) {
                     //   var data = response.data.toString();
@@ -232,6 +234,7 @@ class _searchState extends State<search> {
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
+
                       return SizedBox(
                         height: 350,
                         child: ListView.builder(
@@ -346,7 +349,6 @@ class _searchState extends State<search> {
                                                             user.uid),
                                                     builder:
                                                         (context, snapshot) {
-                                                      print(snapshot.error);
                                                       if (snapshot.hasError) {
                                                         return Text(
                                                             'something went wrong');
@@ -355,7 +357,7 @@ class _searchState extends State<search> {
                                                           0) {
                                                         noTrips = true;
                                                         return Text(
-                                                            'no trips registerd');
+                                                            'no active trips registerd');
                                                       } else if (snapshot
                                                           .hasData) {
                                                         List<TripsInfo> data =
@@ -418,6 +420,14 @@ class _searchState extends State<search> {
                                                 ),
                                                 ElevatedButton.icon(
                                                   onPressed: () async {
+                                                    final userHasTrips =
+                                                        await TripsInfo
+                                                            .userHasTrip(
+                                                                user.uid);
+                                                    if (userHasTrips) {
+                                                      active = "false";
+                                                    }
+
                                                     setState(() {
                                                       fsq_id =
                                                           places![index].fsq_id;
@@ -866,7 +876,12 @@ class _searchState extends State<search> {
                               ),
                               TextButton(
                                 child: Text('Ok'),
-                                onPressed: () {
+                                onPressed: () async {
+                                  final userHasTrips =
+                                      await TripsInfo.userHasTrip(user.uid);
+                                  if (userHasTrips) {
+                                    active = "false";
+                                  }
                                   setState(() {
                                     trip_name = enterTripName.text;
                                     from = DateTime.tryParse(from_cont.text)!;
@@ -886,7 +901,8 @@ class _searchState extends State<search> {
                                       trip_id: trip_id,
                                       from: from,
                                       to: to,
-                                      trip_name: trip_name);
+                                      trip_name: trip_name,
+                                      participate_id: participate);
                                   hideDatePicker();
                                   snackBar.showSnackBarGreen(
                                       'Activity Added to trip ${trip_name} Successfully');

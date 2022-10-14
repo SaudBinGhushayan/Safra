@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/backend/supabase.dart';
-import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
-import 'package:safra/objects/TripsDisplay.dart';
 import 'package:safra/objects/TripsInfo.dart';
+import 'package:safra/objects/displayTripsInfo.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
@@ -160,11 +159,11 @@ class _dashboardnState extends State<dashboardn> {
                       SizedBox(height: 10),
                       SizedBox(
                           height: 196,
-                          child: FutureBuilder<TripsDisplay?>(
-                              future: TripsDisplay.displayNearestTripActivities(
-                                  user.uid),
+                          child: FutureBuilder<List<Trips>?>(
+                              future:
+                                  Trips.displayNearestTripActivities(user.uid),
                               builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
+                                if (snapshot.data?.length == 0) {
                                   return Text('No data');
                                 } else if (snapshot.hasError) {
                                   return Text('Something went wrong');
@@ -174,7 +173,7 @@ class _dashboardnState extends State<dashboardn> {
                                       height: 100,
                                       child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: trips.activities.length,
+                                          itemCount: trips.length,
                                           itemBuilder: ((context, index) {
                                             return Row(children: [
                                               Center(
@@ -201,16 +200,13 @@ class _dashboardnState extends State<dashboardn> {
                                                       ),
                                                       child: Column(children: [
                                                         SizedBox(height: 50),
-                                                        Text(trips
-                                                            .activities[index]
+                                                        Text(trips[index]
                                                             .name
                                                             .toString()),
-                                                        Text(trips
-                                                            .activities[index]
+                                                        Text(trips[index]
                                                             .country
                                                             .toString()),
-                                                        Text(trips
-                                                            .activities[index]
+                                                        Text(trips[index]
                                                             .tel
                                                             .toString()),
                                                       ]))),
@@ -241,8 +237,9 @@ class _dashboardnState extends State<dashboardn> {
                       ),
                       SizedBox(
                           height: 100,
-                          child: FutureBuilder<List<TripsInfo>?>(
-                              future: TripsInfo.displayNearestTrip(user.uid),
+                          child: FutureBuilder<List<displayTripsInfo>?>(
+                              future:
+                                  displayTripsInfo.displayNearestTrip(user.uid),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
                                   return Text('Something went wrong');
@@ -268,20 +265,21 @@ class _dashboardnState extends State<dashboardn> {
                                       ),
                                       child: Row(children: [
                                         Expanded(
-                                            child: Text(trip.trip_name,
+                                            child: Text(
+                                                trip.tripsInfo.trip_name,
                                                 style:
                                                     TextStyle(fontSize: 21))),
                                         SizedBox(width: 20),
                                         Expanded(
                                             child: Text(
-                                                '${trip.from.year}/${trip.from.month}/${trip.from.day}'
+                                                '${trip.tripsInfo.from.year}/${trip.tripsInfo.from.month}/${trip.tripsInfo.from.day}'
                                                     .toString(),
                                                 style:
                                                     TextStyle(fontSize: 18))),
                                         SizedBox(width: 10),
                                         Expanded(
                                             child: Text(
-                                                '${trip.to.year}/${trip.to.month}/${trip.to.day}',
+                                                '${trip.tripsInfo.from.year}/${trip.tripsInfo.from.month}/${trip.tripsInfo.from.day}',
                                                 style:
                                                     TextStyle(fontSize: 18))),
                                       ]));

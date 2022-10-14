@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/TripsInfo.dart';
+import 'package:safra/objects/participate.dart';
 
 List<Trips> TripsFromJson(String str) =>
     List<Trips>.from(json.decode(str).map((x) => Trips.fromJson(x)));
@@ -28,7 +29,6 @@ class Trips {
 
   String uid;
   String trip_name;
-
   String fsq_id;
   String name;
   String rating;
@@ -92,7 +92,6 @@ class Trips {
         .eq('active', 'true')
         .eq('uid', uid)
         .execute();
-
     if (response.error == null) {
       var data = response.data.toString();
       data = data.replaceAll('{', '{"');
@@ -101,7 +100,22 @@ class Trips {
       data = data.replaceAll('}', '"}');
       data = data.replaceAll('}",', '},');
       data = data.replaceAll('"{', '{');
+      return TripsFromJson(data);
+    }
+  }
 
+  static Future<List<Trips>?> displayNearestTripActivities(String uid) async {
+    final response = await SupaBase_Manager()
+        .client
+        .rpc('display_activities', params: {'userid': uid}).execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
       return TripsFromJson(data);
     }
   }
@@ -121,7 +135,8 @@ Future createTrip(
     required String trip_id,
     required DateTime from,
     required DateTime to,
-    required String trip_name}) async {
+    required String trip_name,
+    required String participate_id}) async {
   final trips = Trips(
       uid: uid,
       fsq_id: fsq_id,
@@ -144,6 +159,12 @@ Future createTrip(
       to: to,
       trip_name: trip_name);
 
+  final participate = Participate(
+    participate_id: participate_id,
+    tripId: trip_id,
+    uid: uid,
+  );
+
   await SupaBase_Manager()
       .client
       .from('trips_info')
@@ -152,6 +173,10 @@ Future createTrip(
       .client
       .from('activities')
       .insert([trips.toJson()]).execute();
+  await SupaBase_Manager()
+      .client
+      .from('participate')
+      .insert([participate.toJson()]).execute();
 }
 
 Future appendTrip(

@@ -37,13 +37,27 @@ class TripsInfo {
   Map<String, dynamic> toJson() => {
         "trip_id": tripId,
         "trip_name": trip_name,
-        "uids": uid,
+        "uid": uid,
         "active": active,
         "from":
             "${from.year.toString().padLeft(4, '0')}-${from.month.toString().padLeft(2, '0')}-${from.day.toString().padLeft(2, '0')}",
         "to":
             "${to.year.toString().padLeft(4, '0')}-${to.month.toString().padLeft(2, '0')}-${to.day.toString().padLeft(2, '0')}",
       };
+  static Future<bool> userHasTrip(String uid) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('trips_info')
+        .select('participate(*)inner(trips_info(*)')
+        .eq('uid', uid)
+        .execute();
+    if (response.data.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<List<TripsInfo>?> readTrips_Info(String uid) async {
     final response = await SupaBase_Manager()
         .client
@@ -61,53 +75,6 @@ class TripsInfo {
       data = data.replaceAll('}', '"}');
       data = data.replaceAll('}",', '},');
       data = data.replaceAll('"{', '{');
-
-      return tripsInfoFromJson(data);
-    }
-  }
-
-  static Future<List<TripsInfo>?> displayNearestTrip(String uid) async {
-    final response = await SupaBase_Manager()
-        .client
-        .from('trips_info')
-        .select()
-        .eq('active', 'true')
-        .eq('uid', uid)
-        .filter('to', 'gt', DateTime.now())
-        .execute();
-    if (response.error == null) {
-      var data = response.data.toString();
-      data = data.replaceAll('{', '{"');
-      data = data.replaceAll(': ', '": "');
-      data = data.replaceAll(', ', '", "');
-      data = data.replaceAll('}', '"}');
-      data = data.replaceAll('}",', '},');
-      data = data.replaceAll('"{', '{');
-
-      return tripsInfoFromJson(data);
-    }
-  }
-
-  static Future<List<TripsInfo>?> addMember(String uid) async {
-    final response = await SupaBase_Manager()
-        .client
-        .from('trips_info')
-        .select()
-        .eq('active', 'true')
-        .eq('uid', uid)
-        .filter('to', 'gt', DateTime.now())
-        .execute();
-    if (response.error == null) {
-      var data = response.data.toString();
-      data = data.replaceAll('{', '{"');
-      data = data.replaceAll(': ', '": "');
-      data = data.replaceAll(', ', '", "');
-      data = data.replaceAll('}', '"}');
-      data = data.replaceAll('}",', '},');
-      data = data.replaceAll('"{', '{');
-      data = data.replaceAll(']"', ']');
-      data = data.replaceAll(' "[', ' ["');
-      data = data.replaceAll(']}]', '"]}]');
 
       return tripsInfoFromJson(data);
     }
