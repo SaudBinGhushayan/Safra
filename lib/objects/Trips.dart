@@ -13,19 +13,23 @@ List<Trips> TripsFromJson(String str) =>
     List<Trips>.from(json.decode(str).map((x) => Trips.fromJson(x)));
 
 class Trips {
-  Trips(
-      {required this.uid,
-      required this.fsq_id,
-      required this.name,
-      required this.rating,
-      required this.tel,
-      required this.country,
-      required this.region,
-      required this.price,
-      required this.description,
-      required this.active,
-      required this.trip_id,
-      required this.trip_name});
+  Trips({
+    required this.uid,
+    required this.fsq_id,
+    required this.name,
+    required this.rating,
+    required this.tel,
+    required this.country,
+    required this.region,
+    required this.price,
+    required this.description,
+    required this.active,
+    required this.trip_id,
+    required this.trip_name,
+    required this.categories,
+    required this.photo_url,
+    required this.translated_description,
+  });
 
   String uid;
   String trip_name;
@@ -39,10 +43,16 @@ class Trips {
   String description;
   String active;
   String trip_id;
+  String translated_description;
+  String categories;
+  String photo_url;
 
   factory Trips.fromJson(Map<String, dynamic> json) => Trips(
         trip_name: json["trip_name"],
         uid: json["uid"],
+        translated_description: json["translated_description"],
+        categories: json["categories"],
+        photo_url: json["photo_url"],
         fsq_id: json['fsq_id'],
         trip_id: json["trip_id"],
         name: json['name'],
@@ -58,6 +68,9 @@ class Trips {
   Map<String, dynamic> toJson() => {
         "trip_name": trip_name,
         "uid": uid,
+        "translated_description": translated_description,
+        "categories": categories,
+        "photo_url": photo_url,
         "fsq_id": fsq_id,
         "trip_id": trip_id,
         "name": name,
@@ -108,6 +121,7 @@ class Trips {
     final response = await SupaBase_Manager()
         .client
         .rpc('display_activities', params: {'userid': uid}).execute();
+    print(response.error);
     if (response.error == null) {
       var data = response.data.toString();
       data = data.replaceAll('{', '{"');
@@ -121,25 +135,32 @@ class Trips {
   }
 }
 
-Future createTrip(
-    {required String uid,
-    required String fsq_id,
-    required String name,
-    required String rating,
-    required String tel,
-    required String country,
-    required String region,
-    required String price,
-    required String description,
-    required String active,
-    required String trip_id,
-    required DateTime from,
-    required DateTime to,
-    required String trip_name,
-    required String participate_id}) async {
+Future createTrip({
+  required String uid,
+  required String fsq_id,
+  required String name,
+  required String rating,
+  required String tel,
+  required String country,
+  required String region,
+  required String price,
+  required String description,
+  required String active,
+  required String trip_id,
+  required DateTime from,
+  required DateTime to,
+  required String trip_name,
+  required String participate_id,
+  required String photo_url,
+  required String translated_description,
+  required String categories,
+}) async {
   final trips = Trips(
       uid: uid,
       fsq_id: fsq_id,
+      photo_url: photo_url,
+      categories: categories,
+      translated_description: translated_description,
       name: name,
       rating: rating,
       tel: tel,
@@ -191,10 +212,16 @@ Future appendTrip(
     required String description,
     required String active,
     required String trip_name,
+    required String photo_url,
+    required String translated_description,
+    required String categories,
     required String trip_id}) async {
   final trips = Trips(
       trip_name: trip_name,
       uid: uid,
+      photo_url: photo_url,
+      categories: categories,
+      translated_description: translated_description,
       fsq_id: fsq_id,
       name: name,
       rating: rating,
