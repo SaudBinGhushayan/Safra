@@ -198,7 +198,6 @@ def retrieve_places(a , c):
     
         
 
-
         # filling nan values
 
         df = df.fillna('Not Available')

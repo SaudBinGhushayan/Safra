@@ -55,6 +55,9 @@ class _searchState extends State<search> {
   String price = '';
   String description = '';
   String active = 'true';
+  String photoUrl = '';
+  String translated_description = '';
+  String categories = '';
   final user = FirebaseAuth.instance.currentUser!;
   List<String> uids = [];
   var isloaded = false;
@@ -573,6 +576,12 @@ class _searchState extends State<search> {
                                                       description =
                                                           places[index]
                                                               .description;
+                                                      // translated_description = places[index]
+                                                      //         .translated_description;
+                                                      //         categories = places[index]
+                                                      //         .categories;
+                                                      //         photoUrl = places[index]
+                                                      //         .photo_ur;
                                                     });
                                                     final tripExist =
                                                         await Trips
@@ -581,6 +590,11 @@ class _searchState extends State<search> {
                                                     if (tripExist &&
                                                         _value == true) {
                                                       appendTrip(
+                                                          photo_url: photoUrl,
+                                                          categories:
+                                                              categories,
+                                                          translated_description:
+                                                              translated_description,
                                                           uid: user.uid,
                                                           fsq_id: fsq_id,
                                                           name: name,
@@ -643,6 +657,12 @@ class _searchState extends State<search> {
                                                       description =
                                                           places[index]
                                                               .description;
+                                                      // translated_description = places[index]
+                                                      // .translated_description;
+                                                      // categories = places[index]
+                                                      // .categories;
+                                                      // photoUrl = places[index]
+                                                      // .photo_ur;
                                                     });
                                                     if (!pressed_create &&
                                                         !noTrips) {
@@ -1010,6 +1030,10 @@ class _searchState extends State<search> {
                                     to = DateTime.tryParse(to_cont.text)!;
                                   });
                                   createTrip(
+                                      photo_url: photoUrl,
+                                      categories: categories,
+                                      translated_description:
+                                          translated_description,
                                       uid: user.uid,
                                       fsq_id: fsq_id,
                                       name: name,
