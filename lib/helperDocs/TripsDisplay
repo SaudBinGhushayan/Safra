@@ -26,13 +26,7 @@ class TripsDisplay {
   static Future<TripsDisplay?> displayNearestTripActivities(String uid) async {
     final response = await SupaBase_Manager()
         .client
-        .from('trips_info')
-        .select('activities(*)')
-        .eq('uid', uid)
-        .eq('active', 'true')
-        .filter('to', 'gt', DateTime.now())
-        .execute();
-
+        .rpc('get_activities', params: {'userid': uid}).execute();
     if (response.error == null) {
       var data = response.data[0].toString();
       data = data.replaceAll('{', '{"');
