@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:math';
-
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,6 +42,8 @@ class _searchState extends State<search> {
   String city = '';
   String category = '';
   final filter_1 = TextEditingController();
+  // added
+  final comment = TextEditingController();
   final url = TextEditingController();
   OverlayEntry? entry;
   OverlayEntry? entry_date;
@@ -52,6 +55,12 @@ class _searchState extends State<search> {
   String region = '';
   String price = '';
   String description = '';
+
+  //////////////////////////////////////////
+  String translated_description = '';
+  String categories = '';
+  String photo_url = '';
+
   String active = 'true';
   final user = FirebaseAuth.instance.currentUser!;
   List<String> uids = [];
@@ -227,8 +236,10 @@ class _searchState extends State<search> {
             SizedBox(
                 height: 350,
                 child: FutureBuilder<List<Places>?>(
+                  // ==================================================== to edit sort by ====================================
                   future: httpHandler().getPlaces(city, category),
                   builder: (context, snapshot) {
+                    print(snapshot.error);
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
@@ -247,17 +258,17 @@ class _searchState extends State<search> {
                                               child: Column(children: [
                                                 //========================================================= start here =======================================================================
                                                 Container(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  margin: const EdgeInsets.only(
-                                                      left: 30),
-                                                ),
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 30)),
                                                 Container(
                                                     padding:
                                                         const EdgeInsets.only(
-                                                            left: 10, top: 20),
-                                                    color: const Color.fromARGB(
-                                                            31, 255, 255, 255)
+                                                            top: 20),
+                                                    color: Color.fromARGB(
+                                                            31, 254, 254, 255)
                                                         .withOpacity(0.8),
                                                     child: Container(
                                                         alignment: Alignment
@@ -284,58 +295,297 @@ class _searchState extends State<search> {
                                                                 },
                                                                 icon: const Icon(
                                                                     Icons
-                                                                        .arrow_back_ios),
+                                                                        .arrow_back_ios_new),
                                                                 label:
                                                                     const Text(
                                                                         'back'),
                                                               ),
-                                                              const SizedBox(
-                                                                  height: 200),
+                                                              // abdullah changed this
+                                                              // const SizedBox(
+                                                              //     height: 10),
                                                               const Padding(
                                                                   padding: EdgeInsets
                                                                       .only(
                                                                           left:
                                                                               30)),
-                                                              Text(
-                                                                  'Country: ${places![index].country}',
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          21)),
-                                                              Text(
-                                                                  'Region: ${places[index].region}',
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          21)),
+
+                                                              // this line was added by abdullah
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
+
+                                                              // image
+                                                              Image.network(
+                                                                  'https://fastly.4sqi.net/img/general/original/1049719_PiLE0Meoa27AkuLvSaNwcvswnmYRa0vxLQkOrpgMlwk.jpg',
+                                                                  fit: BoxFit
+                                                                      .fill),
+                                                              SizedBox(
+                                                                height: 5,
+                                                              ),
+
+                                                              Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                        border: Border.all(
+                                                                            style: BorderStyle
+                                                                                .solid,
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                214,
+                                                                                214,
+                                                                                224)),
+                                                                        // borderRadius:
+                                                                        //     BorderRadius
+                                                                        //         .all(
+                                                                        //   Radius.circular(
+                                                                        //       20),
+                                                                        // ),
+                                                                        image: DecorationImage(
+                                                                            fit:
+                                                                                BoxFit.fill,
+                                                                            image: AssetImage('images/BackgroundPics/lightBackground.jpg'))),
+                                                                width: 500,
+                                                                height: 151,
+
+                                                                // this row is for the top to containers for name , location, ratings and money
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Container(
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .centerLeft,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          gradient:
+                                                                              RadialGradient(
+                                                                            colors: [
+                                                                              Colors.white,
+                                                                              Colors.white12,
+                                                                            ],
+                                                                            radius:
+                                                                                0.75,
+                                                                            focal:
+                                                                                Alignment(0.7, -0.7),
+                                                                            tileMode:
+                                                                                TileMode.clamp,
+                                                                          ),
+                                                                          border: Border.all(
+                                                                              style: BorderStyle.solid,
+                                                                              color: Color.fromARGB(255, 255, 255, 255)),
+                                                                          borderRadius: BorderRadius.only(
+                                                                              bottomLeft: Radius.circular(20),
+                                                                              topLeft: Radius.circular(20)),
+                                                                          // image: DecorationImage(fit: BoxFit.fill, image: AssetImage('images/BackgroundPics/WhiteBackground.jpg'), colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.9), BlendMode.modulate))
+                                                                        ),
+                                                                        width:
+                                                                            200,
+                                                                        height:
+                                                                            150,
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
+                                                                          children: [
+                                                                            SizedBox(height: 25),
+                                                                            GradientText(
+                                                                              '${places![index].name}',
+                                                                              colors: [
+                                                                                Colors.black,
+                                                                                Colors.black,
+                                                                                Colors.black
+                                                                              ],
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(fontSize: places[index].name.length > 10 ? 15 : 25, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 25,
+                                                                            ),
+                                                                            Text(
+                                                                              '${places[index].region},  ${places[index].country} ',
+                                                                              style: TextStyle(fontSize: places[index].region.length > 12 ? 15 : 25, fontWeight: FontWeight.bold),
+                                                                              textAlign: TextAlign.center,
+                                                                            )
+                                                                          ],
+                                                                        )),
+                                                                    Container(
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .center,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          gradient:
+                                                                              LinearGradient(
+                                                                            begin:
+                                                                                Alignment.centerLeft,
+                                                                            end:
+                                                                                Alignment.centerRight,
+                                                                            colors: [
+                                                                              Colors.white12,
+                                                                              Colors.white,
+                                                                            ],
+                                                                          ),
+                                                                          border: Border.all(
+                                                                              style: BorderStyle.solid,
+                                                                              color: Color.fromARGB(255, 255, 255, 255)),
+                                                                          borderRadius: BorderRadius.only(
+                                                                              topRight: Radius.circular(20),
+                                                                              bottomRight: Radius.circular(20)),
+                                                                          // image: DecorationImage(fit: BoxFit.fill, image: AssetImage('images/BackgroundPics/WhiteBackground.jpg'), colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.9), BlendMode.modulate))
+                                                                        ),
+                                                                        width:
+                                                                            209,
+                                                                        height:
+                                                                            150,
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
+                                                                          children: [
+                                                                            SizedBox(height: 25),
+                                                                            Text(
+                                                                              'Rating:',
+                                                                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 3,
+                                                                            ),
+                                                                            Text('${places[index].rating}' == 'Not Available' ? ' ' : '${places[index].rating}',
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(
+                                                                                    fontSize: 16,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: places[index].rating == 'Not Available'
+                                                                                        ? Colors.white
+                                                                                        : double.parse(places[index].rating) > 8
+                                                                                            ? Colors.green
+                                                                                            : double.parse(places[index].rating) < 8 && double.parse(places[index].rating) > 6
+                                                                                                ? Color.fromARGB(255, 164, 160, 24)
+                                                                                                : double.parse(places[index].rating) < 6
+                                                                                                    ? Colors.red
+                                                                                                    : Colors.red)),
+                                                                            SizedBox(height: 25),
+                                                                            Text(
+                                                                              '${places[index].price == '1.0' ? '\$' : places[index].price == '2.0' ? '\$\$' : places[index].price == '3.0' ? '\$\$\$' : places[index].price == '4.0' ? '\$\$\$\$' : places[index].price == 'Not Available' ? ' ' : ''}',
+                                                                              textAlign: TextAlign.center,
+                                                                              style: TextStyle(
+                                                                                  decoration: TextDecoration.underline,
+                                                                                  fontSize: 18,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  color: places[index].price == '1.0'
+                                                                                      ? Color.fromARGB(255, 67, 164, 70)
+                                                                                      : places[index].price == '2.0'
+                                                                                          ? Color.fromARGB(255, 91, 117, 29)
+                                                                                          : places[index].price == '3.0'
+                                                                                              ? Colors.orange
+                                                                                              : places[index].price == '4.0'
+                                                                                                  ? Colors.red
+                                                                                                  : places[index].price == 'Not Available'
+                                                                                                      ? Colors.white
+                                                                                                      : Colors.white),
+                                                                            )
+                                                                          ],
+                                                                        ))
+                                                                  ],
+                                                                ),
+                                                              ),
+// alt solution if first container still gives errors
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 3,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(style: BorderStyle.solid, color: Color.fromARGB(255, 214, 214, 224)),
+                                                                      // borderRadius:
+                                                                      //     BorderRadius
+                                                                      //         .all(
+                                                                      //   Radius.circular(
+                                                                      //       20),
+                                                                      // ),
+                                                                      image: DecorationImage(fit: BoxFit.fill, image: AssetImage('images/BackgroundPics/lightBackground.jpg'))),
+                                                                  width: 500,
+                                                                  height: 800,
+
+                                                                  // this row is for the top to containers for name , location, ratings and money
+                                                                  child: Column(
+                                                                    // mainAxisAlignment:
+                                                                    //     MainAxisAlignment
+                                                                    //         .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        'About:',
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            5,
+                                                                      ),
+                                                                      Text(
+                                                                        places[index]
+                                                                            .description,
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontSize: 16),
+                                                                      ),
+                                                                      Text(
+                                                                        'translate',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                10,
+                                                                            fontStyle:
+                                                                                FontStyle.italic,
+                                                                            decoration: TextDecoration.underline,
+                                                                            color: Colors.black),
+                                                                      )
+                                                                    ],
+                                                                  )
+                                                                  // name
+                                                                  ),
+                                                              const SizedBox(
+                                                                  height: 15),
+
+                                                              // HERE WILL BE LOCATION OF PLACE .. MUST MODIFY API FEATURES
+                                                              // Text(
+                                                              //   ''
+                                                              // ),
+
                                                               const SizedBox(
                                                                   height: 20),
-                                                              Text(
-                                                                  'Name: ${places[index].name}',
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          21)),
-                                                              const SizedBox(
-                                                                  height: 20),
-                                                              Text(
-                                                                  'Rating: ${places[index].rating}',
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          21)),
+
                                                               Text(
                                                                   'Telephone: ${places[index].tel}',
                                                                   style: const TextStyle(
                                                                       fontSize:
                                                                           21)),
-                                                              Text(
-                                                                  'Price: ${places[index].price}',
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          21)),
+                                                              SizedBox(
+                                                                  height: 10),
                                                               Text(
                                                                   'Description: ${places[index].description}',
                                                                   style: const TextStyle(
                                                                       fontSize:
-                                                                          21)),
+                                                                          21))
                                                             ]))),
+
                                                 const SizedBox(height: 40),
                                                 SizedBox(
                                                   height: 200,
@@ -416,8 +666,124 @@ class _searchState extends State<search> {
                                                     },
                                                   ),
                                                 ),
+                                                //// comment code =========================================================
+// SizedBox(
+//                                                   height: 200,
+//                                                   child: FutureBuilder<
+//                                                       List<Comments>?>(
+//                                                     future:
+//                                                         Comments.readComments(
+//                                                             places[index]
+//                                                                 .fsq_id),
+//                                                     builder:
+//                                                         (context, snapshot) {
+//                                                       if (snapshot.hasError) {
+//                                                         return Text(
+//                                                             'something went wrong');
+//                                                       } else if (snapshot
+//                                                               .data?.length ==
+//                                                           0) {
+//                                                         noTrips = true;
+//                                                         return Text(
+//                                                             'no comments');
+//                                                       } else if (snapshot
+//                                                           .hasData) {
+//                                                         List<Comments>
+//                                                             comments =
+//                                                             snapshot.data!;
+//                                                         return SizedBox(
+//                                                             height: 200,
+//                                                             child: ListView
+//                                                                 .builder(
+//                                                               itemCount:
+//                                                                   comments
+//                                                                       .length,
+//                                                               itemBuilder:
+//                                                                   (context,
+//                                                                       index) {
+//                                                                 return Container(
+//                                                                     margin: EdgeInsets
+//                                                                         .fromLTRB(
+//                                                                             20,
+//                                                                             0,
+//                                                                             20,
+//                                                                             4),
+//                                                                     alignment:
+//                                                                         Alignment
+//                                                                             .centerLeft,
+//                                                                     child: Row(
+//                                                                         children: [
+//                                                                           Expanded(
+//                                                                               child: Text(comments[index].comment, style: TextStyle(fontSize: 21))),
+//                                                                           SizedBox(
+//                                                                               width: 20),
+//                                                                           Text(
+//                                                                               comments[index].likes.toString(),
+//                                                                               style: TextStyle(fontSize: 18)),
+//                                                                           IconButton(
+//                                                                               onPressed: () async {
+//                                                                                 final interaction = await Comments.increment_likes(comments[index].comment_id, comments[index].likes);
+//                                                                                 if (interaction) {
+//                                                                                   snackBar.showSnackBarGreen('Comment added successfully');
+//                                                                                 } else {
+//                                                                                   snackBar.showSnackBarRed('Something went wrong');
+//                                                                                 }
+//                                                                               },
+//                                                                               icon: Icon(Icons.thumb_up)),
+//                                                                           SizedBox(
+//                                                                               width: 10),
+//                                                                           Text(
+//                                                                               comments[index].dislikes.toString(),
+//                                                                               style: TextStyle(fontSize: 18)),
+//                                                                           IconButton(
+//                                                                               onPressed: () async {
+//                                                                                 final interaction = await Comments.increment_dislikes(comments[index].comment_id, comments[index].dislikes);
+//                                                                                 if (interaction) {
+//                                                                                   snackBar.showSnackBarGreen('disliked successfully');
+//                                                                                 } else {
+//                                                                                   snackBar.showSnackBarRed('Something went wrong');
+//                                                                                 }
+//                                                                               },
+//                                                                               icon: Icon(Icons.thumb_down)),
+//                                                                         ]));
+//                                                               },
+//                                                             ));
+//                                                       } else {
+//                                                         return Center(
+//                                                             child:
+//                                                                 CircularProgressIndicator());
+//                                                       }
+//                                                     },
+//                                                   ),
+//                                                 ),
+
+                                                /// comment button
+// TextField(
+//                                                     controller: comment,
+//                                                     style: const TextStyle(),
+//                                                     decoration: InputDecoration(
+//                                                         border:
+//                                                             const OutlineInputBorder(
+//                                                           borderRadius:
+//                                                               BorderRadius.all(
+//                                                             Radius.circular(40),
+//                                                           ),
+//                                                         ),
+//                                                         hintText:
+//                                                             'add a comment',
+//                                                         hintStyle:
+//                                                             const TextStyle(
+//                                                                 color: Colors
+//                                                                     .grey))),
                                                 ElevatedButton.icon(
                                                   onPressed: () async {
+                                                    // final userHasTrips =
+                                                    //     await TripsInfo
+                                                    //         .userHasTrip(
+                                                    //             user.uid);
+                                                    // if (userHasTrips) {
+                                                    //   active = "false";
+                                                    // }
                                                     setState(() {
                                                       fsq_id =
                                                           places![index].fsq_id;
@@ -867,6 +1233,14 @@ class _searchState extends State<search> {
                               TextButton(
                                 child: Text('Ok'),
                                 onPressed: () {
+                                  //==================================================================
+                                  // final userHasTrips =
+                                  //                       await TripsInfo
+                                  //                           .userHasTrip(
+                                  //                               user.uid);
+                                  //                   if (userHasTrips) {
+                                  //                     active = "false";
+                                  //                   }
                                   setState(() {
                                     trip_name = enterTripName.text;
                                     from = DateTime.tryParse(from_cont.text)!;
