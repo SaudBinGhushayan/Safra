@@ -12,6 +12,8 @@ import 'package:safra/objects/displayTripsInfo.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
+import 'package:safra/ui/ManageActivities.dart';
+import 'package:safra/ui/ManageTrips.dart';
 import 'package:safra/ui/accountInformation.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
@@ -139,24 +141,31 @@ class _dashboardnState extends State<dashboardn> {
                         children: [
                           Container(
                               //Your next activity
-                              margin: const EdgeInsets.only(left: 30, top: 180),
-                              child: RichText(
-                                  text: TextSpan(
-                                      text: 'Your Next Activity',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Verdana',
-                                        fontSize: 19,
-                                      ),
-                                      children: [
-                                    const WidgetSpan(
-                                        child: const SizedBox(
-                                      width: 110,
-                                    )),
-                                  ]))),
+                              margin: const EdgeInsets.only(left: 30, top: 170),
+                              child: Row(children: [
+                                Text(
+                                  'Your Next Activity',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Verdana',
+                                    fontSize: 19,
+                                  ),
+                                ),
+                                SizedBox(width: 100),
+                                TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ManageActivities()));
+                                    },
+                                    label: Text('Manage'),
+                                    icon: Icon(Icons.manage_history))
+                              ])),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       SizedBox(
                           height: 196,
                           child: FutureBuilder<List<Trips>?>(
@@ -218,25 +227,32 @@ class _dashboardnState extends State<dashboardn> {
                                       child: CircularProgressIndicator());
                                 }
                               })),
-                      SizedBox(height: 20),
-                      Row(
-                        //2ndrow
-                        children: [
-                          Container(
-                              //Your next activity
-                              margin: const EdgeInsets.only(left: 30),
-                              child: RichText(
-                                  text: TextSpan(
-                                      text: 'My Trips',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'Verdana',
-                                          fontSize: 19),
-                                      children: []))),
-                        ],
-                      ),
+                      Container(
+                          //Your next activity
+                          margin: const EdgeInsets.only(left: 30),
+                          child: Row(children: [
+                            Text(
+                              'Your Current Trip',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Verdana',
+                                fontSize: 19,
+                              ),
+                            ),
+                            SizedBox(width: 100),
+                            TextButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ManageTrips()));
+                                },
+                                label: Text('Manage'),
+                                icon: Icon(Icons.manage_history))
+                          ])),
                       SizedBox(
-                          height: 100,
+                          height: 95,
                           child: FutureBuilder<List<displayTripsInfo>?>(
                               future:
                                   displayTripsInfo.displayNearestTrip(user.uid),

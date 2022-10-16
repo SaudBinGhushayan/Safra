@@ -18,6 +18,7 @@ import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
 import 'package:safra/objects/TripsInfo.dart';
+import 'package:safra/objects/comments.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
@@ -41,6 +42,7 @@ class _searchState extends State<search> {
   String city = '';
   String category = '';
   final filter_1 = TextEditingController();
+  final comment = TextEditingController();
   final url = TextEditingController();
   OverlayEntry? entry;
   OverlayEntry? entry_date;
@@ -191,24 +193,12 @@ class _searchState extends State<search> {
               ),
               child: ElevatedButton(
                   onPressed: () async {
-                    final response = await SupaBase_Manager()
-                        .client
-                        .from('trips_info')
-                        .select('participate(*)inner(trips_info(*)')
-                        .eq('uid', user.uid)
-                        .execute();
-
-                    print(response.data.isEmpty);
-
-                    // if (response.error == null) {
-                    //   var data = response.data.toString();
-                    //   data = data.replaceAll('{', '{"');
-                    //   data = data.replaceAll(': ', '": "');
-                    //   data = data.replaceAll(', ', '", "');
-                    //   data = data.replaceAll('}', '"}');
-                    //   data = data.replaceAll('}",', '},');
-                    //   data = data.replaceAll('"{', '{');
-                    //   print(data);
+                    // final res = await Comments.increment_likes(
+                    //     '4bffe46292a6c9282b3e43e2', 0);
+                    // if (res) {
+                    //   print('done');
+                    // } else {
+                    //   print('not done');
                     // }
                   },
                   style: ElevatedButton.styleFrom(
@@ -417,6 +407,138 @@ class _searchState extends State<search> {
                                                       }
                                                     },
                                                   ),
+                                                ),
+                                                SizedBox(
+                                                  height: 200,
+                                                  child: FutureBuilder<
+                                                      List<Comments>?>(
+                                                    future:
+                                                        Comments.readComments(
+                                                            places[index]
+                                                                .fsq_id),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot.hasError) {
+                                                        return Text(
+                                                            'something went wrong');
+                                                      } else if (snapshot
+                                                              .data?.length ==
+                                                          0) {
+                                                        noTrips = true;
+                                                        return Text(
+                                                            'no comments');
+                                                      } else if (snapshot
+                                                          .hasData) {
+                                                        List<Comments>
+                                                            comments =
+                                                            snapshot.data!;
+                                                        return SizedBox(
+                                                            height: 200,
+                                                            child: ListView
+                                                                .builder(
+                                                              itemCount:
+                                                                  comments
+                                                                      .length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return Container(
+                                                                    margin: EdgeInsets
+                                                                        .fromLTRB(
+                                                                            20,
+                                                                            0,
+                                                                            20,
+                                                                            4),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Row(
+                                                                        children: [
+                                                                          Expanded(
+                                                                              child: Text(comments[index].comment, style: TextStyle(fontSize: 21))),
+                                                                          SizedBox(
+                                                                              width: 20),
+                                                                          Text(
+                                                                              comments[index].likes.toString(),
+                                                                              style: TextStyle(fontSize: 18)),
+                                                                          IconButton(
+                                                                              onPressed: () async {
+                                                                                final interaction = await Comments.increment_likes(comments[index].comment_id, comments[index].likes);
+                                                                                if (interaction) {
+                                                                                  snackBar.showSnackBarGreen('Comment added successfully');
+                                                                                } else {
+                                                                                  snackBar.showSnackBarRed('Something went wrong');
+                                                                                }
+                                                                              },
+                                                                              icon: Icon(Icons.thumb_up)),
+                                                                          SizedBox(
+                                                                              width: 10),
+                                                                          Text(
+                                                                              comments[index].dislikes.toString(),
+                                                                              style: TextStyle(fontSize: 18)),
+                                                                          IconButton(
+                                                                              onPressed: () async {
+                                                                                final interaction = await Comments.increment_dislikes(comments[index].comment_id, comments[index].dislikes);
+                                                                                if (interaction) {
+                                                                                  snackBar.showSnackBarGreen('disliked successfully');
+                                                                                } else {
+                                                                                  snackBar.showSnackBarRed('Something went wrong');
+                                                                                }
+                                                                              },
+                                                                              icon: Icon(Icons.thumb_down)),
+                                                                        ]));
+                                                              },
+                                                            ));
+                                                      } else {
+                                                        return Center(
+                                                            child:
+                                                                CircularProgressIndicator());
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                TextField(
+                                                    controller: comment,
+                                                    style: const TextStyle(),
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            const OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(40),
+                                                          ),
+                                                        ),
+                                                        hintText:
+                                                            'add a comment',
+                                                        hintStyle:
+                                                            const TextStyle(
+                                                                color: Colors
+                                                                    .grey))),
+                                                ElevatedButton.icon(
+                                                  onPressed: () async {
+                                                    if (comment.text.isEmpty) {
+                                                      snackBar.showSnackBarRed(
+                                                          'No entered comment, please enter a comment');
+                                                    } else {
+                                                      addComment(
+                                                          uid: user.uid,
+                                                          comment_id: (Random()
+                                                                      .nextDouble() *
+                                                                  265)
+                                                              .toString(),
+                                                          fsq_id: places![index]
+                                                              .fsq_id,
+                                                          comment: comment.text,
+                                                          likes: 0,
+                                                          dislikes: 0);
+                                                      snackBar.showSnackBarGreen(
+                                                          "Comment added successfully");
+                                                    }
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.check_box),
+                                                  label:
+                                                      const Text('add comment'),
                                                 ),
                                                 ElevatedButton.icon(
                                                   onPressed: () async {
