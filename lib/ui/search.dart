@@ -55,8 +55,7 @@ class _searchState extends State<search> {
   String region = '';
   String price = '';
   String description = '';
-
-  //////////////////////////////////////////
+  String participate = '${Random().nextDouble() * 256}';
   String translated_description = '';
   String categories = '';
   String photo_url = '';
@@ -1249,6 +1248,7 @@ class _searchState extends State<search> {
                                   createTrip(
                                       uid: user.uid,
                                       fsq_id: fsq_id,
+                                      participate_id: participate,
                                       name: name,
                                       rating: rating,
                                       tel: tel,

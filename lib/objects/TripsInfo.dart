@@ -66,7 +66,7 @@ class TripsInfo {
         .eq('active', 'true')
         .eq('uid', uid)
         .execute();
-
+    print(response.data);
     if (response.error == null) {
       var data = response.data.toString();
       data = data.replaceAll('{', '{"');
@@ -75,7 +75,6 @@ class TripsInfo {
       data = data.replaceAll('}', '"}');
       data = data.replaceAll('}",', '},');
       data = data.replaceAll('"{', '{');
-
       return tripsInfoFromJson(data);
     }
   }
