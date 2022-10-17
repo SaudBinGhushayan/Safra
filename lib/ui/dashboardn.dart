@@ -147,7 +147,6 @@ class _dashboardnState extends State<dashboardn> {
                                   'Your Next Activity',
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontFamily: 'Verdana',
                                     fontSize: 19,
                                   ),
                                 ),
@@ -199,12 +198,8 @@ class _dashboardnState extends State<dashboardn> {
                                                                 end: Alignment
                                                                     .bottomLeft,
                                                                 colors: const [
-                                                              Color.fromARGB(
-                                                                  255,
-                                                                  129,
-                                                                  196,
-                                                                  228),
-                                                              Colors.cyanAccent
+                                                              Colors.white,
+                                                              Colors.grey
                                                             ]),
                                                       ),
                                                       child: Column(children: [
@@ -235,7 +230,6 @@ class _dashboardnState extends State<dashboardn> {
                               'Your Current Trip',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontFamily: 'Verdana',
                                 fontSize: 19,
                               ),
                             ),
@@ -259,7 +253,7 @@ class _dashboardnState extends State<dashboardn> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasError) {
                                   return Text('Something went wrong');
-                                } else if (snapshot.data?.length == 0) {
+                                } else if (snapshot.data == null) {
                                   return Text('No data');
                                 } else if (snapshot.hasData) {
                                   final trip = snapshot.data![0];
@@ -274,9 +268,8 @@ class _dashboardnState extends State<dashboardn> {
                                             begin: Alignment.topRight,
                                             end: Alignment.bottomLeft,
                                             colors: const [
-                                              Color.fromARGB(
-                                                  255, 129, 196, 228),
-                                              Colors.cyanAccent
+                                              Colors.white,
+                                              Colors.blueGrey
                                             ]),
                                       ),
                                       child: Row(children: [
@@ -295,7 +288,7 @@ class _dashboardnState extends State<dashboardn> {
                                         SizedBox(width: 10),
                                         Expanded(
                                             child: Text(
-                                                '${trip.tripsInfo.from.year}/${trip.tripsInfo.from.month}/${trip.tripsInfo.from.day}',
+                                                '${trip.tripsInfo.to.year}/${trip.tripsInfo.to.month}/${trip.tripsInfo.to.day}',
                                                 style:
                                                     TextStyle(fontSize: 18))),
                                       ]));

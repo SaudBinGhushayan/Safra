@@ -34,7 +34,8 @@ class displayTripsInfo {
         .eq('uid', uid)
         .filter('trips_info.to', 'gt', DateTime.now())
         .execute();
-    if (response.error == null) {
+
+    if (response.data.isNotEmpty) {
       var data = response.data[0].toString();
       data = data.replaceAll('{', '[{"');
       data = data.replaceAll(': ', '": "');

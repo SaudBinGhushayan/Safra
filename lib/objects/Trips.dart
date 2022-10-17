@@ -121,7 +121,6 @@ class Trips {
     final response = await SupaBase_Manager()
         .client
         .rpc('display_activities', params: {'userid': uid}).execute();
-    print(response.error);
     if (response.error == null) {
       var data = response.data.toString();
       data = data.replaceAll('{', '{"');
@@ -135,26 +134,26 @@ class Trips {
   }
 }
 
-Future createTrip({
-  required String uid,
-  required String fsq_id,
-  required String name,
-  required String rating,
-  required String tel,
-  required String country,
-  required String region,
-  required String price,
-  required String description,
-  required String active,
-  required String trip_id,
-  required DateTime from,
-  required DateTime to,
-  required String trip_name,
-  required String participate_id,
-  required String photo_url,
-  required String translated_description,
-  required String categories,
-}) async {
+Future createTrip(
+    {required String uid,
+    required String fsq_id,
+    required String name,
+    required String rating,
+    required String tel,
+    required String country,
+    required String region,
+    required String price,
+    required String description,
+    required String active,
+    required String trip_id,
+    required DateTime from,
+    required DateTime to,
+    required String trip_name,
+    required String participate_id,
+    required String photo_url,
+    required String translated_description,
+    required String categories,
+    required String username}) async {
   final trips = Trips(
       uid: uid,
       fsq_id: fsq_id,
@@ -182,6 +181,7 @@ Future createTrip({
 
   final participate = Participate(
     participate_id: participate_id,
+    username: username,
     tripId: trip_id,
     uid: uid,
   );

@@ -32,6 +32,7 @@ class _joinState extends State<join> {
   // DateTime date = DateTime(2022, 12, 24);
   final tripId = TextEditingController();
   final participate_id = '${Random().nextDouble() * 256}';
+  final username = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,6 +210,7 @@ class _joinState extends State<join> {
                                         } else {
                                           addMember(
                                               uid: user.uid,
+                                              username: username,
                                               participate_id: participate_id,
                                               trip_id: tripId.text);
                                           snackBar.showSnackBarGreen(
