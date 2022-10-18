@@ -22,7 +22,6 @@ class Places {
     required this.description,
     required this.categories,
     required this.photo_url,
-    //required this.translated_description,
   });
 
   String fsq_id;
@@ -33,7 +32,6 @@ class Places {
   String region;
   String price;
   String description;
-  //String translated_description;
   String categories;
   String photo_url;
 
@@ -41,7 +39,6 @@ class Places {
         fsq_id: json["fsq_id"],
         name: json["name"],
         rating: json["rating"],
-        //translated_description: json["translated_description"],
         categories: json["categories"],
         photo_url: json["photo_url"],
         tel: json["tel"],
@@ -55,7 +52,6 @@ class Places {
         "fsq_id": fsq_id,
         "name": name,
         "rating": rating,
-        //"translated_description": translated_description,
         "categories": categories,
         "photo_url": photo_url,
         "tel": tel,
