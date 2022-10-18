@@ -14,20 +14,30 @@ String participateToJson(List<Participate> data) =>
 
 class Participate {
   Participate(
-      {required this.tripId, required this.participate_id, required this.uid});
+      {required this.tripId,
+      required this.participate_id,
+      required this.uid,
+      required this.active,
+      required this.username});
 
   String tripId;
   String participate_id;
   String uid;
+  String active;
+  String username;
 
   factory Participate.fromJson(Map<String, dynamic> json) => Participate(
         tripId: json["trip_id"],
+        username: json["username"],
+        active: json["active"],
         participate_id: json["participate_id"],
         uid: json["uid"],
       );
 
   Map<String, dynamic> toJson() => {
         "trip_id": tripId,
+        "username": username,
+        "active": active,
         "participate_id": participate_id,
         "uid": uid,
       };
@@ -59,14 +69,39 @@ class Participate {
       return false;
     }
   }
+
+  static Future<List<Participate>?> readParticipants(String trip_id) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select()
+        .eq('trip_id', trip_id)
+        .execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      return participateFromJson(data);
+    }
+  }
 }
 
 Future addMember(
     {required String uid,
     required String participate_id,
-    required String trip_id}) async {
-  final participate =
-      Participate(uid: uid, tripId: trip_id, participate_id: participate_id);
+    required String trip_id,
+    required String active,
+    required String username}) async {
+  final participate = Participate(
+      uid: uid,
+      tripId: trip_id,
+      active: active,
+      participate_id: participate_id,
+      username: username);
 
   await SupaBase_Manager()
       .client

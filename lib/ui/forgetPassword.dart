@@ -2,10 +2,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:safra/Panels%20&%20Dialogs/Dialogs.dart';
 import 'package:safra/backend/snackBar.dart';
 import 'package:safra/ui/login.dart';
 
-import '../backend/Dialogs.dart';
+import '../Panels & Dialogs/Dialogs.dart';
 
 class forgetPassword extends StatefulWidget {
   const forgetPassword({super.key});

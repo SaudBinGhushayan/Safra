@@ -12,6 +12,7 @@ class TripsInfo {
   TripsInfo({
     required this.tripId,
     required this.trip_name,
+    required this.country,
     required this.uid,
     required this.active,
     required this.from,
@@ -22,12 +23,14 @@ class TripsInfo {
   String trip_name;
   String uid;
   String active;
+  String country;
   DateTime from;
   DateTime to;
 
   factory TripsInfo.fromJson(Map<String, dynamic> json) => TripsInfo(
         tripId: json["trip_id"],
         trip_name: json["trip_name"],
+        country: json["country"],
         uid: json['uid'],
         active: json["active"],
         from: DateTime.parse(json["from"]),
@@ -37,6 +40,7 @@ class TripsInfo {
   Map<String, dynamic> toJson() => {
         "trip_id": tripId,
         "trip_name": trip_name,
+        "country": country,
         "uid": uid,
         "active": active,
         "from":
@@ -58,6 +62,21 @@ class TripsInfo {
     }
   }
 
+  static Future<bool> validateLeader(String uid, String trip_id) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('trips_info')
+        .select()
+        .eq('uid', uid)
+        .eq('trip_id', trip_id)
+        .execute();
+    if (response.data.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<List<TripsInfo>?> readTrips_Info(String uid) async {
     final response = await SupaBase_Manager()
         .client
@@ -66,7 +85,6 @@ class TripsInfo {
         .eq('active', 'true')
         .eq('uid', uid)
         .execute();
-    print(response.data);
     if (response.error == null) {
       var data = response.data.toString();
       data = data.replaceAll('{', '{"');

@@ -32,9 +32,11 @@ class _joinState extends State<join> {
   // DateTime date = DateTime(2022, 12, 24);
   final tripId = TextEditingController();
   final participate_id = '${Random().nextDouble() * 256}';
+  final username = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: FutureBuilder<Users?>(
             future: Users.readUser(user.uid),
             builder: (context, snapshot) {
@@ -44,294 +46,286 @@ class _joinState extends State<join> {
                 final users = snapshot.data!;
 
                 return Scaffold(
+                    resizeToAvoidBottomInset: false,
                     body: Container(
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage(
-                              'images/BackgroundPics/background.png'),
-                          fit: BoxFit.cover,
-                        )),
-                        child: SingleChildScrollView(
-                          child: Column(children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //menu icon
-                              children: [
-                                Container(
-                                    width: 33,
-                                    height: 33,
-                                    padding: const EdgeInsets.only(
-                                        top: 0.1, right: 9),
-                                    margin:
-                                        const EdgeInsets.fromLTRB(5, 30, 1, 1),
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 255, 255, 255),
-                                      borderRadius: BorderRadius.circular(40),
-                                    ),
-                                    child: IconButton(
-                                        icon: const Icon(Icons.menu),
-                                        iconSize: 20,
-                                        onPressed: menu)),
-                                Container(
-                                  //profile icon
-                                  height: 50,
-                                  width: 140,
-                                  margin: const EdgeInsets.only(top: 30),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 255, 255, 255),
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 550,
-                                        width: 55,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                        ),
-                                        child: FutureBuilder(
-                                            future: Storage.readImage(user.uid),
-                                            builder: (BuildContext context,
-                                                snapshot) {
-                                              if (snapshot.connectionState ==
-                                                      ConnectionState.done &&
-                                                  snapshot.hasData) {
-                                                return ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(40),
-                                                  child: Image.network(
-                                                    snapshot.data!.toString(),
-                                                    fit: BoxFit.contain,
-                                                    width: 300,
-                                                    height: 300,
-                                                  ),
-                                                );
-                                              } else if (!snapshot.hasData) {
-                                                return const Icon(
-                                                  Icons.person,
-                                                  size: 20,
-                                                );
-                                              } else {
-                                                return Center(
-                                                    child: SpinKitCircle(
-                                                  size: 140,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final colors = [
-                                                      Colors.blue,
-                                                      Colors.cyan
-                                                    ];
-                                                    final color = colors[
-                                                        index % colors.length];
-                                                    return DecoratedBox(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: color));
-                                                  },
-                                                ));
-                                              }
-                                            }),
-                                      ),
-                                      Expanded(child: Text(users.username))
-                                    ],
-                                  ),
-                                )
-                              ], //end1st row
-                            ),
-
-                            Center(
-                              //Jointrip,tripid,..
-                              child: Column(
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                        image:
+                            AssetImage('images/BackgroundPics/background.png'),
+                        fit: BoxFit.cover,
+                      )),
+                      child: Column(children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //menu icon
+                          children: [
+                            Container(
+                                width: 33,
+                                height: 33,
+                                padding:
+                                    const EdgeInsets.only(top: 0.1, right: 9),
+                                margin: const EdgeInsets.fromLTRB(5, 30, 1, 1),
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: IconButton(
+                                    icon: const Icon(Icons.menu),
+                                    iconSize: 20,
+                                    onPressed: menu)),
+                            Container(
+                              //profile icon
+                              height: 50,
+                              width: 140,
+                              margin: const EdgeInsets.only(top: 30),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(40),
+                              ),
+                              child: Row(
                                 children: [
                                   Container(
-                                      margin: const EdgeInsets.only(top: 200),
-                                      child: const Text(
-                                        'Join trip',
-                                        style: TextStyle(
-                                            fontSize: 21,
-                                            fontFamily: "verdana",
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
-                                      )),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 30),
-                                    child: const Text(
-                                      'Please enter your trip id',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          fontFamily: "verdana",
-                                          color: Colors.black),
+                                    height: 550,
+                                    width: 55,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
                                     ),
+                                    child: FutureBuilder(
+                                        future: Storage.readImage(user.uid),
+                                        builder:
+                                            (BuildContext context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              snapshot.hasData) {
+                                            return ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              child: Image.network(
+                                                snapshot.data!.toString(),
+                                                fit: BoxFit.contain,
+                                                width: 300,
+                                                height: 300,
+                                              ),
+                                            );
+                                          } else if (!snapshot.hasData) {
+                                            return const Icon(
+                                              Icons.person,
+                                              size: 20,
+                                            );
+                                          } else {
+                                            return Center(
+                                                child: SpinKitCircle(
+                                              size: 140,
+                                              itemBuilder: (context, index) {
+                                                final colors = [
+                                                  Colors.blue,
+                                                  Colors.cyan
+                                                ];
+                                                final color = colors[
+                                                    index % colors.length];
+                                                return DecoratedBox(
+                                                    decoration: BoxDecoration(
+                                                        color: color));
+                                              },
+                                            ));
+                                          }
+                                        }),
                                   ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 20),
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(40),
-                                        ),
-                                        color: Colors.white),
-                                    child: TextField(
-                                      controller: tripId,
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(),
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(40),
-                                          ),
-                                        ),
-                                        hintText: 'Trip id',
-                                        hintStyle: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 40),
-                                  ElevatedButton(
-                                      onPressed: () async {
-                                        final validTripId =
-                                            await Participate.validTripId(
-                                                tripId.text);
-                                        final validUser =
-                                            await Participate.validUserForTrip(
-                                                user.uid, tripId.text);
-                                        if (!validTripId) {
-                                          return snackBar.showSnackBarRed(
-                                              'Sorry, Trip does not exist try to enter a valid trip id');
-                                        } else if (!validTripId) {
-                                          return snackBar.showSnackBarRed(
-                                              'You are already registered at this trip');
-                                        } else {
-                                          addMember(
-                                              uid: user.uid,
-                                              participate_id: participate_id,
-                                              trip_id: tripId.text);
-                                          snackBar.showSnackBarGreen(
-                                              'Succeefully joined trip No.${tripId.text}');
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const dashboardn()));
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: const Color.fromARGB(
-                                              255, 2, 95, 172),
-                                          textStyle:
-                                              const TextStyle(fontSize: 20),
-                                          padding: const EdgeInsets.fromLTRB(
-                                              160, 10, 160, 10)),
-                                      child: const Text("Join")),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 150),
-                                    height: 200,
-                                    width: 500,
-                                    decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                "images/NavigationBar/Navigator.jpg"))),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          alignment: Alignment.topCenter,
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const dashboardn()));
-                                          },
-                                          icon: Image.asset(
-                                              'images/NavigationBar/Dashboard.jpg'),
-                                          iconSize: 55,
-                                          padding: const EdgeInsets.only(
-                                              left: 29, bottom: 29),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const mention()));
-                                          },
-                                          icon: Image.asset(
-                                              'images/NavigationBar/Mention.jpg'),
-                                          iconSize: 55,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, bottom: 29),
-                                        ),
-                                        Container(
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        27.5, 0.2, 30, 70),
-                                                child: CircleAvatar(
-                                                    radius: 24,
-                                                    backgroundColor:
-                                                        const Color.fromARGB(
-                                                            255, 250, 101, 2),
-                                                    child: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.search,
-                                                          color: Colors.white),
-                                                      iconSize: 31,
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0.2),
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        const search()));
-                                                      },
-                                                    )))),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const schedule1()));
-                                          },
-                                          icon: Image.asset(
-                                              'images/NavigationBar/ScheduleActive.jpg'),
-                                          iconSize: 55,
-                                          padding: const EdgeInsets.only(
-                                              left: 1, bottom: 29),
-                                          highlightColor: Colors.white,
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const accountInformation()));
-                                          },
-                                          icon: Image.asset(
-                                              'images/NavigationBar/Profile.jpg'),
-                                          iconSize: 55,
-                                          padding: const EdgeInsets.only(
-                                              left: 10, bottom: 26),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                  Expanded(child: Text(users.username))
                                 ],
                               ),
-                            ),
-                            //      SizedBox(height: 39.5),
-                          ]),
-                        )));
+                            )
+                          ], //end1st row
+                        ),
+
+                        Center(
+                          //Jointrip,tripid,..
+                          child: Column(
+                            children: [
+                              Container(
+                                  margin: const EdgeInsets.only(top: 200),
+                                  child: const Text(
+                                    'Join trip',
+                                    style: TextStyle(
+                                        fontSize: 21,
+                                        fontFamily: "verdana",
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  )),
+                              Container(
+                                margin: const EdgeInsets.only(top: 30),
+                                child: const Text(
+                                  'Please enter your trip id',
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontFamily: "verdana",
+                                      color: Colors.black),
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 20),
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(40),
+                                    ),
+                                    color: Colors.white),
+                                child: TextField(
+                                  controller: tripId,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(),
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(40),
+                                      ),
+                                    ),
+                                    hintText: 'Trip id',
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 40),
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    final validTripId =
+                                        await Participate.validTripId(
+                                            tripId.text);
+                                    final validUser =
+                                        await Participate.validUserForTrip(
+                                            user.uid, tripId.text);
+                                    if (!validTripId) {
+                                      return snackBar.showSnackBarRed(
+                                          'Sorry, Trip does not exist try to enter a valid trip id');
+                                    } else if (!validTripId) {
+                                      return snackBar.showSnackBarRed(
+                                          'You are already registered at this trip');
+                                    } else {
+                                      addMember(
+                                          uid: user.uid,
+                                          username: username,
+                                          active: 'true',
+                                          participate_id: participate_id,
+                                          trip_id: tripId.text);
+                                      snackBar.showSnackBarGreen(
+                                          'Succeefully joined trip No.${tripId.text}');
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const dashboardn()));
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      primary:
+                                          const Color.fromARGB(255, 2, 95, 172),
+                                      textStyle: const TextStyle(fontSize: 20),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          160, 10, 160, 10)),
+                                  child: const Text("Join")),
+                              Container(
+                                margin: const EdgeInsets.only(top: 125),
+                                height: 200,
+                                width: 500,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            "images/NavigationBar/Navigator.jpg"))),
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      alignment: Alignment.topCenter,
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const dashboardn()));
+                                      },
+                                      icon: Image.asset(
+                                          'images/NavigationBar/Dashboard.jpg'),
+                                      iconSize: 55,
+                                      padding: const EdgeInsets.only(
+                                          left: 29, bottom: 29),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const mention()));
+                                      },
+                                      icon: Image.asset(
+                                          'images/NavigationBar/Mention.jpg'),
+                                      iconSize: 55,
+                                      padding: const EdgeInsets.only(
+                                          left: 14, bottom: 29),
+                                    ),
+                                    Container(
+                                        child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                27.5, 0.2, 30, 70),
+                                            child: CircleAvatar(
+                                                radius: 24,
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 250, 101, 2),
+                                                child: IconButton(
+                                                  icon: const Icon(Icons.search,
+                                                      color: Colors.white),
+                                                  iconSize: 31,
+                                                  padding:
+                                                      const EdgeInsets.all(0.2),
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const search()));
+                                                  },
+                                                )))),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const schedule1()));
+                                      },
+                                      icon: Image.asset(
+                                          'images/NavigationBar/ScheduleActive.jpg'),
+                                      iconSize: 55,
+                                      padding: const EdgeInsets.only(
+                                          left: 1, bottom: 29),
+                                      highlightColor: Colors.white,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const accountInformation()));
+                                      },
+                                      icon: Image.asset(
+                                          'images/NavigationBar/Profile.jpg'),
+                                      iconSize: 55,
+                                      padding: const EdgeInsets.only(
+                                          left: 10, bottom: 26),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        //      SizedBox(height: 39.5),
+                      ]),
+                    ));
               } else {
                 return Center(
                     child: SpinKitCircle(

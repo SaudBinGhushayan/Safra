@@ -47,12 +47,11 @@ dependencies:
   firebase_storage: ^10.3.7
   url_launcher: ^6.1.5
   supabase: ^0.3.6
-  dropdown_search: ^5.0.3
-  simple_gradient_text: ^1.2.4
-  translator: ^0.1.7
-  flutter_swiper: ^1.1.6
-  google_mlkit_language_id: ^0.4.0
-
+  timelines: ^0.1.0  
+  sliding_up_panel: ^2.0.0+1
+  intl: ^0.17.0
+  ffi: ^2.0.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -94,16 +93,17 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
+  #   - family: Raleway
   #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  #       - asset: packages/awesome_package/fonts/Raleway-Regular.ttf
+  #       - asset: packages/awesome_package/fonts/Raleway-Italic.ttf
   #         style: italic
+
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  # #
+  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
