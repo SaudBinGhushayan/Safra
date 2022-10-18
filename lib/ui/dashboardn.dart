@@ -269,7 +269,7 @@ class _dashboardnState extends State<dashboardn> {
                                             end: Alignment.bottomLeft,
                                             colors: const [
                                               Colors.white,
-                                              Colors.blueGrey
+                                              Colors.grey
                                             ]),
                                       ),
                                       child: Row(children: [

@@ -723,8 +723,8 @@ class _searchState extends State<search> {
                                 ]);
                               })),
                         );
-                      } else if (!placesdata.hasData &&
-                          placesdata.connectionState == ConnectionState.done) {
+                      } else if (!snapshot.hasData &&
+                          snapshot.connectionState == ConnectionState.done) {
                         return Center(
                             child: Text('No Search Data',
                                 style: TextStyle(fontSize: 21)));
@@ -1068,7 +1068,6 @@ class _searchState extends State<search> {
                                           translated_description,
                                       uid: user.uid,
                                       fsq_id: fsq_id,
-                                      participate_id: participate,
                                       name: name,
                                       rating: rating,
                                       tel: tel,
@@ -1081,6 +1080,7 @@ class _searchState extends State<search> {
                                       from: from,
                                       to: to,
                                       trip_name: trip_name,
+                                      username: username,
                                       participate_id: participate);
                                   hideDatePicker();
                                   snackBar.showSnackBarGreen(

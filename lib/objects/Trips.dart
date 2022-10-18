@@ -174,6 +174,7 @@ Future createTrip(
   final trips_Info = TripsInfo(
       tripId: trip_id,
       active: active,
+      country: country,
       uid: uid,
       from: from,
       to: to,
@@ -183,6 +184,7 @@ Future createTrip(
     participate_id: participate_id,
     username: username,
     tripId: trip_id,
+    active: active,
     uid: uid,
   );
 

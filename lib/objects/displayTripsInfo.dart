@@ -30,11 +30,10 @@ class displayTripsInfo {
         .client
         .from('participate')
         .select('trips_info(*)')
-        .eq('trips_info.active', 'true')
+        .eq('active', 'true')
         .eq('uid', uid)
         .filter('trips_info.to', 'gt', DateTime.now())
         .execute();
-
     if (response.data.isNotEmpty) {
       var data = response.data[0].toString();
       data = data.replaceAll('{', '[{"');
