@@ -6,12 +6,14 @@
 
 import requests
 import threading
+import concurrent.futures
 import pandas as pd
 import flask
 from flask import Flask, request
-import geopy
 from geopy import Nominatim
+from translate import Translator
 from langdetect import detect
+from iso639 import languages
 from textblob import TextBlob
 
 
@@ -25,7 +27,7 @@ key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
 def get_latlong(b):
 
     
-    try:
+    # try:
     
         city = b
 
@@ -34,22 +36,21 @@ def get_latlong(b):
         loc = geolocator.geocode(city)
          
         # by default
-    except: return 'No results found' , f'{b}'
+    # except: print('hello')
     
-    return loc.latitude , loc.longitude
+        return loc.latitude , loc.longitude 
 
 
 # In[3]:
 
 
 # this is a test
-lat , long = get_latlong('jeddah')
+
 
 
 # In[4]:
 
 
-lat , long
 
 
 # In[5]:
@@ -91,48 +92,72 @@ def translate(array):
 
 
 def extract_categories(array):
-    templist = [array[i][0]['name'] for i in range(len(array))]
     
+    """
+    array: array of categories
     
+    array[0] = json structure
+    
+    so this method extract only name of category out of json
+    """
+    templist = []
+    for element in array:
+        
+        category = ''
+        if element != []:
+            index = 0
+            for inner_element in element:
+                index+=1
+
+                if index < len(element):
+                    category += inner_element['name']+','
+
+                else:
+                    category += inner_element['name']
+            templist.append(category)
+        else:
+            category+= 'Not Available'
+            templist.append(category)
     return templist
-    
+                
 
 
-# In[102]:
+# In[7]:
 
 
+default = 'https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2803&q=80,https://images.unsplash.com/photo-1614109355930-7640f99a50ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80,https://images.unsplash.com/photo-1563589425593-c17204c56f56?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
 def add_photos(array):
-    
+    headers = {
+            "accept": "application/json",
+            "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
+                }
     # list of links
     lol = []
-    
-    # index
-    index = 0
     for fsq_id in array:
+        links = ''
+        url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=5&sort=POPULAR"
         
+        index = 0
+        response = ''
         try:
-            
-            url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=1&sort=POPULAR&classifications=outdoor"
-
-            headers = {
-                "accept": "application/json",
-                "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
-                    }
-
             response = requests.get(url, headers=headers).json()
-            
-            if response[0]['prefix'] != '':
-                lol.append(response[0]['prefix']+'original'+response[0]['suffix'])
-            else:
-                lol.append('Not Available')
-            print(response.text)
         
-        except: True
-            
+        
+            if response != []:
+                for element in response:
+
+                    if index < len(response):
+                        links += response[index]['prefix']+'original'+response[index]['suffix']+','
+                    else:
+                        links += response[index]['prefix']+'original'+response[index]['suffix']
+                lol.append(links)
+            else:
+                lol.append(default)
+        except: lol.append(default)
     return lol
 
 
-# In[108]:
+# In[12]:
 
 
 def retrieve_places(a , c):
@@ -150,14 +175,15 @@ def retrieve_places(a , c):
             fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories"
 
         else:
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cfeatures"
+            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories"
 
 
         url = fields_url
 
         headers = {
             "Accept": "application/json",
-            "Authorization": key
+            "Authorization": key,
+            "Accept-Language": 'en'
         }
 
         response = requests.get(url, headers=headers)
@@ -168,12 +194,11 @@ def retrieve_places(a , c):
 
         #deleting unnecessary columns
 
-        try:
-            df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel'
+        df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel'
                                            ,'location.country', 'location.region'
-                                           , 'description' , 'categories']),1,inplace=True)
+                                           , 'description' , 'categories']),axis = 1,inplace=True)  
 
-        except: df = df
+        
             
         
         
@@ -198,10 +223,12 @@ def retrieve_places(a , c):
     
         
 
+
         # filling nan values
 
         df = df.fillna('Not Available')
 
+        
 
         # translating process starts here
         # error handling
@@ -227,21 +254,27 @@ def retrieve_places(a , c):
             # insert it into last 
             df.insert(df.columns.get_loc('description')+1  , 'translated_description' , tdl)
 
-        
-        
-        if 'region' in df.columns:
-            array_r = df['region'].to_list()
+        if 'name' in df.columns:
+            array_n = df['name'].to_list()
             
-            trl = translate(array_r)
+            tnl = translate(array_n)
             
-            df.insert(df.columns.get_loc('region')+1 , 'translated_region' , trl)
+            df.insert(df.columns.get_loc('name')+1 , 'translated_name' , tnl)
+
+        
+        # if 'region' in df.columns:
+        #     array_r = df['region'].to_list()
+            
+        #     trl = translate(array_r)
+            
+        #     df.insert(df.columns.get_loc('region')+1 , 'translated_region' , trl)
 
         if 'categories' in df.columns:
             templist = df['categories'].to_list()
             templist = extract_categories(templist)
             
             df.drop(['categories'] , inplace = True , axis = 1)
-            # df.insert(len(df) , 'categories' , templist)
+            df.insert(4 , 'categories' , templist)
             
         try:
             # changing datatypes
@@ -255,18 +288,19 @@ def retrieve_places(a , c):
         ==== i suggest to make this function separately rather th
         lol : ---> list of links
         '''
-        # lol = add_photos(df['fsq_id'].to_list())
-        
-        # df.insert(len(df) , 'photos' , lol)
+        if 'fsq_id' in df.columns:
+            lol = add_photos(df['fsq_id'].to_list())
+
+            df.insert(6 , 'photo_url' , lol)
         
         data = df.to_json(orient = 'records')
-        return df , data
+        return df, data
     else:
         return lat , long 
     
 
 
-# In[105]:
+# In[9]:
 
 
 '''
@@ -277,14 +311,24 @@ test field
 '''
 
 
-# In[109]:
+# In[10]:
 
 
-# df, data_json = retrieve_places('' , 'london')
-# df
+#df , data_json = retrieve_places('coffee' , 'london')
 
 
-# In[14]:
+# In[11]:
+
+
+#df.head(50)
+# args = ['london']
+# with concurrent.futures.ThreadPoolExecutor() as executor:
+#      df_json = executor.submit(retrieve_places , 'coffee' , 'london')
+
+# df_json.result()
+
+
+# In[ ]:
 
 
 app = Flask(__name__)
@@ -293,9 +337,8 @@ app = Flask(__name__)
 @app.route('/api' , methods = ['GET'])
 
 def index():
-    userInputb = str(request.args['query1'])
-    userInputa = str(request.args['query2'])
-
+    userInputb = str(request.args['query2'])
+    userInputa = str(request.args['query1'])
     df, data_json = retrieve_places(userInputa , userInputb)
 
     return data_json
