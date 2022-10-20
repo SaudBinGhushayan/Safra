@@ -55,7 +55,7 @@ class TripsInfo {
         .select('participate(*)inner(trips_info(*)')
         .eq('uid', uid)
         .execute();
-    if (response.data.isEmpty) {
+    if (response.data.isNotEmpty) {
       return true;
     } else {
       return false;

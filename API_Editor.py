@@ -10,6 +10,7 @@ import concurrent.futures
 import pandas as pd
 import flask
 from flask import Flask, request
+import geopy
 from geopy import Nominatim
 from translate import Translator
 from langdetect import detect
@@ -27,7 +28,7 @@ key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
 def get_latlong(b):
 
     
-    # try:
+    try:
     
         city = b
 
@@ -36,21 +37,22 @@ def get_latlong(b):
         loc = geolocator.geocode(city)
          
         # by default
-    # except: print('hello')
+    except: return 'No results found' , f'{b}'
     
-        return loc.latitude , loc.longitude 
+    return loc.latitude , loc.longitude
 
 
 # In[3]:
 
 
 # this is a test
-
+# lat , long = get_latlong('jeddah')
 
 
 # In[4]:
 
 
+# lat , long
 
 
 # In[5]:
@@ -76,9 +78,12 @@ def translate(array):
 
                 # tat : text after translation
                 tat = blob.translate(from_lang = detect(desc) , to = 'en')
+                
                  # if description is already in english ---> save original description
                 if dbt != 'en':
                     tlds.append(str(tat))
+                else:
+                    tlds.append('')
 
             # if not --> save translated description
             else:
@@ -89,6 +94,42 @@ def translate(array):
 
 
 # In[6]:
+
+
+def translate2(array):
+        
+    # this list contains new translated descriptions
+    tlds = []
+    
+    for desc in array:
+        
+        # Specifying the language for
+        # detection
+        # dbt : detection before translation
+        dbt = detect(desc)
+
+        # saving desc into text to translate
+        if desc == 'Not Available':
+            tlds.append('Not Available')
+            
+        elif desc != 'Not Available' and dbt != 'en':
+
+            blob = TextBlob(desc)
+
+            # tat : text after translation
+            tat = blob.translate(from_lang = detect(desc) , to = 'en')
+
+             # if description is already in english ---> save original description
+            tlds.append(str(tat))
+        
+        elif dbt == 'en':
+            tlds.append('Not Available')
+
+        # if not --> save translated description
+    return tlds
+
+
+# In[7]:
 
 
 def extract_categories(array):
@@ -122,7 +163,7 @@ def extract_categories(array):
                 
 
 
-# In[7]:
+# In[8]:
 
 
 default = 'https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2803&q=80,https://images.unsplash.com/photo-1614109355930-7640f99a50ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80,https://images.unsplash.com/photo-1563589425593-c17204c56f56?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
@@ -148,8 +189,10 @@ def add_photos(array):
 
                     if index < len(response):
                         links += response[index]['prefix']+'original'+response[index]['suffix']+','
+                        index+=1
                     else:
                         links += response[index]['prefix']+'original'+response[index]['suffix']
+                        index+=1
                 lol.append(links)
             else:
                 lol.append(default)
@@ -157,7 +200,7 @@ def add_photos(array):
     return lol
 
 
-# In[12]:
+# In[9]:
 
 
 def retrieve_places(a , c):
@@ -172,10 +215,10 @@ def retrieve_places(a , c):
     if type(lat) != str:
 
         if a != '':
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories"
+            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=3"
 
         else:
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories"
+            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=3"
 
 
         url = fields_url
@@ -194,11 +237,12 @@ def retrieve_places(a , c):
 
         #deleting unnecessary columns
 
-        df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel'
+        try:
+            df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel'
                                            ,'location.country', 'location.region'
-                                           , 'description' , 'categories']),axis = 1,inplace=True)  
+                                           , 'description' , 'categories']),axis = 1,inplace=True)
 
-        
+        except: df = df
             
         
         
@@ -233,48 +277,49 @@ def retrieve_places(a , c):
         # translating process starts here
         # error handling
         if 'description' in df.columns:
-
+            
+            df['description'] = [i.replace(',' , '') for i in df['description']]
             # extracting
-            array = df['description'].to_list()
+#             array = df['description'].to_list()
 
-            # tdl : translated descriptions list
+#             # tdl : translated descriptions list
 
-            """
-            in this line we call function to translate all descriptions as following
+#             """
+#             in this line we call function to translate all descriptions as following
 
-            other than english ---> translate
+#             other than english ---> translate
 
-            Not Available ---> keep it as it is
+#             Not Available ---> keep it as it is
 
-            english description ---> keep it as it's
-            """ 
+#             english description ---> keep it as it's
+#             """ 
             
-            tdl = translate(array)
+#             tdl = translate2(array)
 
-            # insert it into last 
-            df.insert(df.columns.get_loc('description')+1  , 'translated_description' , tdl)
+#             # insert it into last 
+#             df.insert(df.columns.get_loc('description')+1  , 'translated_description' , tdl)
 
-        if 'name' in df.columns:
-            array_n = df['name'].to_list()
+#         if 'name' in df.columns:
+#             array_n = df['name'].to_list()
             
-            tnl = translate(array_n)
+#             tnl = translate(array_n)
             
-            df.insert(df.columns.get_loc('name')+1 , 'translated_name' , tnl)
+#             df.insert(df.columns.get_loc('name')+1 , 'translated_name' , tnl)
 
         
-        # if 'region' in df.columns:
-        #     array_r = df['region'].to_list()
+#         if 'region' in df.columns:
+#             array_r = df['region'].to_list()
             
-        #     trl = translate(array_r)
+#             trl = translate(array_r)
             
-        #     df.insert(df.columns.get_loc('region')+1 , 'translated_region' , trl)
+#             df.insert(df.columns.get_loc('region')+1 , 'translated_region' , trl)
 
         if 'categories' in df.columns:
             templist = df['categories'].to_list()
             templist = extract_categories(templist)
             
             df.drop(['categories'] , inplace = True , axis = 1)
-            df.insert(4 , 'categories' , templist)
+            df.insert(len(df.columns), 'categories' , templist)
             
         try:
             # changing datatypes
@@ -291,7 +336,7 @@ def retrieve_places(a , c):
         if 'fsq_id' in df.columns:
             lol = add_photos(df['fsq_id'].to_list())
 
-            df.insert(6 , 'photo_url' , lol)
+            df.insert(len(df.columns) , 'photo_url' , lol)
         
         data = df.to_json(orient = 'records')
         return df, data
@@ -300,7 +345,7 @@ def retrieve_places(a , c):
     
 
 
-# In[9]:
+# In[10]:
 
 
 '''
@@ -311,34 +356,36 @@ test field
 '''
 
 
-# In[10]:
-
-
-#df , data_json = retrieve_places('coffee' , 'london')
-
-
 # In[11]:
 
 
-#df.head(50)
-# args = ['london']
-# with concurrent.futures.ThreadPoolExecutor() as executor:
-#      df_json = executor.submit(retrieve_places , 'coffee' , 'london')
 
-# df_json.result()
+#df , data = retrieve_places('breakfast' , 'london')
 
 
-# In[ ]:
+# In[12]:
+
+
+#df
+
+
+# In[13]:
+
+
+# temp
+
+
+# In[14]:
 
 
 app = Flask(__name__)
 
 
-@app.route('/api' , methods = ['GET'])
+@app.route('/api' , methods = ['GET' , 'POST'])
 
 def index():
-    userInputb = str(request.args['query2'])
-    userInputa = str(request.args['query1'])
+    userInputa = str(request.args['query2'])
+    userInputb = str(request.args['query1'])
     df, data_json = retrieve_places(userInputa , userInputb)
 
     return data_json
