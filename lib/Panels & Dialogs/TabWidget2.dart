@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,11 +15,20 @@ import 'package:safra/objects/participate.dart';
 import 'package:safra/ui/ManageActivities.dart';
 import 'package:safra/ui/dashboardn.dart';
 
-class TabWidget2 extends StatelessWidget {
-  TabWidget2({Key? key, required this.scrollController}) : super(key: key);
+class TabWidget2 extends StatefulWidget {
+  TabWidget2({Key? key, required this.scrollController, required this.trip_id})
+      : super(key: key);
   final ScrollController scrollController;
+  final String trip_id;
+
+  @override
+  State<TabWidget2> createState() => _TabWidget2State();
+}
+
+class _TabWidget2State extends State<TabWidget2> {
   final user = FirebaseAuth.instance.currentUser!;
-  String trip_id = '';
+  final usernameCont = TextEditingController();
+  String username = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +43,11 @@ class TabWidget2 extends StatelessWidget {
             fit: BoxFit.cover,
           )))),
       SizedBox(
-        height: 250,
+        height: 230,
         child: FutureBuilder<List<Participate>?>(
-            future: Participate.readParticipants("3.5265567174120793"),
+            future: Participate.readParticipants(widget.trip_id),
             builder: (context, snapshot) {
+              print(snapshot.data);
               if (snapshot.data?.length == 0) {
                 return const Text('No data');
               } else if (snapshot.hasError) {
@@ -71,8 +83,7 @@ class TabWidget2 extends StatelessWidget {
                                         snackBar.showSnackBarRed(
                                             'You cannot delete the leader of this trip');
                                       } else if (!leader) {
-                                        print('fkffffffffffffffffff');
-                                        final res1 = await SupaBase_Manager()
+                                        await SupaBase_Manager()
                                             .client
                                             .from('activities')
                                             .delete()
@@ -81,9 +92,8 @@ class TabWidget2 extends StatelessWidget {
                                         }).match({
                                           'uid': participate[index].uid
                                         }).execute();
-                                        print(res1.error);
 
-                                        final res2 = await SupaBase_Manager()
+                                        await SupaBase_Manager()
                                             .client
                                             .from('participate')
                                             .delete()
@@ -92,7 +102,6 @@ class TabWidget2 extends StatelessWidget {
                                         }).match({
                                           'uid': participate[index].uid
                                         }).execute();
-                                        print(res2);
                                         return snackBar.showSnackBarGreen(
                                             'Member deleted successfully');
                                       }
@@ -111,8 +120,140 @@ class TabWidget2 extends StatelessWidget {
               }
             }),
       ),
+      Container(
+          margin: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: ElevatedButton(
+              onPressed: () async {
+                final valid =
+                    await TripsInfo.validateLeader(user.uid, widget.trip_id);
+                if (valid) {
+                  var route = new MaterialPageRoute(
+                      builder: (context) => new AddMembers(
+                            trip_id: widget.trip_id,
+                          ));
+                  Navigator.of(context).push(route);
+                } else {
+                  return snackBar
+                      .showSnackBarRed('Only leader can edit this trip');
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  primary: const Color.fromARGB(232, 0, 165, 41),
+                  textStyle: const TextStyle(fontSize: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5)),
+              child: Row(
+                children: const [
+                  SizedBox(width: 100),
+                  Icon(Icons.add,
+                      color: Color.fromARGB(255, 255, 245, 245), size: 20),
+                  SizedBox(width: 5),
+                  Text("Add Member"),
+                ],
+              ))),
     ]);
   }
+
+  // Future openDialog() {
+  //   return showDialog(
+  //       barrierColor: const Color(0x01000000),
+  //       context: context,
+  //       builder: (context) => AlertDialog(
+  //             title: const Text('Add Member'),
+  //             content: SingleChildScrollView(
+  //               child: Column(
+  //                 children: [
+  //                   TextField(
+  //                       onChanged: ((value) => setState(() {
+  //                             username = value;
+  //                           })),
+  //                       decoration: const InputDecoration(
+  //                           hintText: "Enter your friend's username")),
+  //                   Container(
+  //                     width: 300,
+  //                     child: SizedBox(
+  //                       height: 400,
+  //                       child: StreamBuilder<QuerySnapshot>(
+  //                           stream: FirebaseFirestore.instance
+  //                               .collection('Users')
+  //                               .snapshots(),
+  //                           builder: (context, snapshots) {
+  //                             return (snapshots.connectionState ==
+  //                                     ConnectionState.waiting)
+  //                                 ? const Center(
+  //                                     child: CircularProgressIndicator())
+  //                                 : ListView.builder(
+  //                                     itemCount: snapshots.data!.docs.length,
+  //                                     itemBuilder: (context, index) {
+  //                                       var users = snapshots.data!.docs[index]
+  //                                           .data() as Map<String, dynamic>;
+  //                                       if (username.isEmpty) {
+  //                                         return ListTile(
+  //                                           title: Text(
+  //                                             users['username'],
+  //                                             maxLines: 1,
+  //                                             overflow: TextOverflow.ellipsis,
+  //                                             style: const TextStyle(
+  //                                                 fontSize: 19,
+  //                                                 color: Color.fromARGB(
+  //                                                     255, 50, 160, 233)),
+  //                                           ),
+  //                                           subtitle: Text(
+  //                                             users['email'],
+  //                                             maxLines: 1,
+  //                                             overflow: TextOverflow.ellipsis,
+  //                                             style: const TextStyle(
+  //                                                 fontSize: 19,
+  //                                                 color: Color.fromARGB(
+  //                                                     255, 50, 160, 233)),
+  //                                           ),
+  //                                           leading: const Icon(Icons.person,
+  //                                               size: 40,
+  //                                               color: Color.fromARGB(
+  //                                                   255, 50, 160, 233)),
+  //                                         );
+  //                                       }
+  //                                       if (users['username']
+  //                                           .toString()
+  //                                           .toLowerCase()
+  //                                           .startsWith(
+  //                                               username.toLowerCase())) {
+  //                                         return ListTile(
+  //                                             title: Text(
+  //                                               users['username'],
+  //                                               maxLines: 1,
+  //                                               overflow: TextOverflow.ellipsis,
+  //                                               style: const TextStyle(
+  //                                                   fontSize: 19,
+  //                                                   color: Color.fromARGB(
+  //                                                       255, 50, 160, 233)),
+  //                                             ),
+  //                                             subtitle: Text(
+  //                                               users['email'],
+  //                                               maxLines: 1,
+  //                                               overflow: TextOverflow.ellipsis,
+  //                                               style: const TextStyle(
+  //                                                   fontSize: 19,
+  //                                                   color: Color.fromARGB(
+  //                                                       255, 50, 160, 233)),
+  //                                             ),
+  //                                             leading: const Icon(Icons.person,
+  //                                                 size: 40,
+  //                                                 color: const Color.fromARGB(
+  //                                                     255, 50, 160, 233)));
+  //                                       }
+  //                                       return Container();
+  //                                     });
+  //                           }),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ));
+  // }
 
   Widget buildButton(
           {required IconData icon, required VoidCallback callBack}) =>
@@ -124,4 +265,148 @@ class TabWidget2 extends StatelessWidget {
           color: Color.fromARGB(255, 50, 160, 233),
         ),
       );
+}
+
+class AddMembers extends StatefulWidget {
+  const AddMembers({Key? key, required this.trip_id}) : super(key: key);
+  final trip_id;
+
+  @override
+  State<AddMembers> createState() => _AddMembersState();
+}
+
+class _AddMembersState extends State<AddMembers> {
+  String username = '';
+  String participate_id = '${Random().nextDouble() * 256}';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+            title: Card(
+          child: TextFormField(
+            decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: "Enter your friend's username"),
+            onChanged: ((value) {
+              setState(() {
+                username = value;
+              });
+            }),
+          ),
+        )),
+        body: Container(
+          width: double.infinity,
+          child: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance.collection('Users').snapshots(),
+                builder: (context, snapshots) {
+                  return (snapshots.connectionState == ConnectionState.waiting)
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                          itemCount: snapshots.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var users = snapshots.data!.docs[index].data()
+                                as Map<String, dynamic>;
+                            if (username.isEmpty) {
+                              return ListTile(
+                                title: Text(
+                                  users['username'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 19,
+                                      color: Color.fromARGB(255, 79, 101, 116)),
+                                ),
+                                subtitle: Text(
+                                  users['email'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 19,
+                                      color: Color.fromARGB(255, 79, 101, 116)),
+                                ),
+                                leading: const Icon(Icons.person,
+                                    size: 40,
+                                    color: Color.fromARGB(255, 79, 101, 116)),
+                                trailing: IconButton(
+                                    icon: Icon(Icons.add,
+                                        size: 30, color: Colors.green),
+                                    onPressed: () async {
+                                      final validUser =
+                                          await Participate.validUserForTrip(
+                                              users['username'],
+                                              widget.trip_id);
+                                      if (!validUser) {
+                                        addMember(
+                                            uid: users['uid'],
+                                            username: users['username'],
+                                            active: 'true',
+                                            participate_id: participate_id,
+                                            trip_id: widget.trip_id);
+                                        snackBar.showSnackBarGreen(
+                                            'member added successfully');
+                                      } else {
+                                        return snackBar.showSnackBarRed(
+                                            'You are already registered at this trip');
+                                      }
+                                    }),
+                              );
+                            }
+                            if (users['username']
+                                .toString()
+                                .toLowerCase()
+                                .startsWith(username.toLowerCase())) {
+                              return ListTile(
+                                title: Text(
+                                  users['username'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 19,
+                                      color: Color.fromARGB(255, 79, 101, 116)),
+                                ),
+                                subtitle: Text(
+                                  users['email'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 19,
+                                      color: Color.fromARGB(255, 79, 101, 116)),
+                                ),
+                                leading: const Icon(Icons.person,
+                                    size: 40,
+                                    color: Color.fromARGB(255, 79, 101, 116)),
+                                trailing: IconButton(
+                                    icon: Icon(Icons.add,
+                                        size: 30, color: Colors.green),
+                                    onPressed: () async {
+                                      final validUser =
+                                          await Participate.validUserForTrip(
+                                              users['username'],
+                                              widget.trip_id);
+                                      if (!validUser) {
+                                        addMember(
+                                            uid: users['uid'],
+                                            username: users['username'],
+                                            active: 'true',
+                                            participate_id: participate_id,
+                                            trip_id: widget.trip_id);
+                                        snackBar.showSnackBarGreen(
+                                            'member added successfully');
+                                      } else {
+                                        return snackBar.showSnackBarRed(
+                                            'You are already registered at this trip');
+                                      }
+                                    }),
+                              );
+                            }
+                            return Container();
+                          });
+                }),
+          ),
+        ));
+  }
 }

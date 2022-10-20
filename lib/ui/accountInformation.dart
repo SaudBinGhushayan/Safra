@@ -67,7 +67,7 @@ class _accountInformation extends State<accountInformation> {
                             decoration: const BoxDecoration(
                                 image: DecorationImage(
                               image: AssetImage(
-                                  'images/BackgroundPics/backgroundprofile (4).png'),
+                                  'images/BackgroundPics/background.png'),
                               fit: BoxFit.cover,
                             )),
                             child: Column(children: [

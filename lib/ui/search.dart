@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:math';
@@ -304,7 +302,7 @@ class _searchState extends State<search> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        ElevatedButton.icon(
+                                                        IconButton(
                                                           onPressed: () {
                                                             kill_links();
                                                             hideMenu();
@@ -314,13 +312,10 @@ class _searchState extends State<search> {
                                                                       false)
                                                                   .value = false;
                                                             });
-                                                            pressed_create =
-                                                                true;
+                                                            
                                                           },
                                                           icon: const Icon(Icons
                                                               .arrow_back_ios_new),
-                                                          label: const Text(
-                                                              'back'),
                                                         ),
                                                         // abdullah changed this
                                                         // const SizedBox(
@@ -336,7 +331,7 @@ class _searchState extends State<search> {
                                                         ),
 
                                                         SizedBox(
-                                                            height: 100,
+                                                            height: 150,
                                                             child: ListView
                                                                 .builder(
                                                                     scrollDirection:
@@ -353,7 +348,7 @@ class _searchState extends State<search> {
                                                                                 child: Container(
                                                                               width: 196,
                                                                               decoration: BoxDecoration(
-                                                                                image: DecorationImage(image: NetworkImage(links[index])),
+                                                                                image: DecorationImage(image: NetworkImage(links[index]), fit: BoxFit.cover),
                                                                                 borderRadius: BorderRadius.circular(12),
                                                                                 // gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: const [
                                                                                 // Color.fromARGB(255, 129, 196, 228),
@@ -361,7 +356,7 @@ class _searchState extends State<search> {
                                                                                 // ]),
                                                                               ),
                                                                             )),
-                                                                            SizedBox(width: 12)
+                                                                            SizedBox(width: 3)
                                                                           ]);
                                                                     }))),
 
@@ -419,7 +414,7 @@ class _searchState extends State<search> {
                                                                       BoxDecoration(
                                                                     gradient:
                                                                         RadialGradient(
-                                                                      colors: [
+                                                                      colors: const [
                                                                         Colors
                                                                             .white,
                                                                         Colors
@@ -462,7 +457,7 @@ class _searchState extends State<search> {
                                                                               25),
                                                                       GradientText(
                                                                         '${places[index].name}',
-                                                                        colors: [
+                                                                        colors: const [
                                                                           Colors
                                                                               .black,
                                                                           Colors
@@ -508,7 +503,7 @@ class _searchState extends State<search> {
                                                                           .centerLeft,
                                                                       end: Alignment
                                                                           .centerRight,
-                                                                      colors: [
+                                                                      colors: const [
                                                                         Colors
                                                                             .white12,
                                                                         Colors
@@ -564,13 +559,13 @@ class _searchState extends State<search> {
                                                                               fontWeight: FontWeight.bold,
                                                                               color: places[index].rating == 'Not Available'
                                                                                   ? Colors.white
-                                                                                  : double.parse(places[index].rating) > 8
+                                                                                  : double.parse(places[index].rating) >= 8
                                                                                       ? Colors.green
                                                                                       : double.parse(places[index].rating) < 8 && double.parse(places[index].rating) > 6
                                                                                           ? Color.fromARGB(255, 164, 160, 24)
                                                                                           : double.parse(places[index].rating) < 6
                                                                                               ? Colors.red
-                                                                                              : Colors.red)),
+                                                                                              : Colors.black)),
                                                                       SizedBox(
                                                                           height:
                                                                               25),
@@ -738,7 +733,7 @@ class _searchState extends State<search> {
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,
-                                                                      colors: [
+                                                                      colors: const [
                                                                         Colors
                                                                             .black87,
                                                                         Colors

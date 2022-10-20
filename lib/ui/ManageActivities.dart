@@ -78,7 +78,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
                           return const Text('Something went wrong');
                         } else if (snapshot.hasData) {
                           final trips = snapshot.data!;
-                          trip_id = trips[0].trip_id;
+                          trip_id = trips[0].trip_name;
                           return Scaffold(
                               body: Container(
                                   margin: const EdgeInsets.all(20),
@@ -115,7 +115,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
             appBar: buildTabBar(),
             body: TabBarView(children: [
               TabWidget(scrollController: scrollController),
-              TabWidget2(scrollController: scrollController)
+              TabWidget2(scrollController: scrollController, trip_id: trip_id)
             ])));
   }
 

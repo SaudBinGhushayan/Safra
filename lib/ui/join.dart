@@ -200,7 +200,7 @@ class _joinState extends State<join> {
                                     if (!validTripId) {
                                       return snackBar.showSnackBarRed(
                                           'Sorry, Trip does not exist try to enter a valid trip id');
-                                    } else if (!validTripId) {
+                                    } else if (!validUser) {
                                       return snackBar.showSnackBarRed(
                                           'You are already registered at this trip');
                                     } else {

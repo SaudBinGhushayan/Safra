@@ -55,6 +55,21 @@ class Participate {
     }
   }
 
+  static Future<bool> inMember(String tripId, String username) async {
+    final docPar = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select()
+        .eq('trip_id', tripId)
+        .eq('username', username)
+        .execute();
+    if (docPar.data.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<bool> validUserForTrip(String uid, String trip_id) async {
     final docTrip = await SupaBase_Manager()
         .client
