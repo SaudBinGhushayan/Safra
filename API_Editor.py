@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 import requests
@@ -12,9 +12,13 @@ import flask
 from flask import Flask, request
 import geopy
 from geopy import Nominatim
+from translate import Translator
+from langdetect import detect
+from iso639 import languages
+from textblob import TextBlob
 
 
-# In[3]:
+# In[2]:
 
 
 key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
@@ -38,20 +42,20 @@ def get_latlong(b):
     return loc.latitude , loc.longitude
 
 
-# In[4]:
+# In[3]:
 
 
 # this is a test
 # lat , long = get_latlong('jeddah')
 
 
-# In[5]:
+# In[4]:
 
 
 # lat , long
 
 
-# In[6]:
+# In[5]:
 
 
 def translate(array):
@@ -89,7 +93,7 @@ def translate(array):
     return tlds
 
 
-# In[7]:
+# In[6]:
 
 
 def translate2(array):
@@ -125,7 +129,7 @@ def translate2(array):
     return tlds
 
 
-# In[8]:
+# In[7]:
 
 
 def extract_categories(array):
@@ -159,7 +163,7 @@ def extract_categories(array):
                 
 
 
-# In[9]:
+# In[8]:
 
 
 default = 'https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2803&q=80,https://images.unsplash.com/photo-1614109355930-7640f99a50ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80,https://images.unsplash.com/photo-1563589425593-c17204c56f56?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
@@ -196,7 +200,7 @@ def add_photos(array):
     return lol
 
 
-# In[10]:
+# In[9]:
 
 
 def retrieve_places(a , c):
@@ -341,7 +345,7 @@ def retrieve_places(a , c):
     
 
 
-# In[11]:
+# In[10]:
 
 
 '''
@@ -352,26 +356,26 @@ test field
 '''
 
 
-# In[12]:
+# In[11]:
 
 
 
 #df , data = retrieve_places('breakfast' , 'london')
 
 
-# In[13]:
+# In[12]:
 
 
 #df
 
 
-# In[14]:
+# In[13]:
 
 
 # temp
 
 
-# In[15]:
+# In[14]:
 
 
 app = Flask(__name__)

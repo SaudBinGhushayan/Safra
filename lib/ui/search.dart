@@ -1,11 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:math';
 import 'package:safra/objects/comments.dart';
 import 'package:safra/objects/user.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -26,12 +27,13 @@ import 'package:http/http.dart' as http;
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/mention.dart';
 import 'package:safra/ui/schedule1.dart';
-import 'package:translator/translator.dart';
-import 'package:google_mlkit_language_id/google_mlkit_language_id.dart';
 
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/test.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:translator/translator.dart';
+import 'package:getwidget/getwidget.dart';
 
 class search extends StatefulWidget {
   const search({Key? key}) : super(key: key);
@@ -40,9 +42,16 @@ class search extends StatefulWidget {
 }
 
 class _searchState extends State<search> {
+  _searchState() {
+    selectedValue = dropdownlist[0];
+  }
   String city = '';
   String category = '';
   final filter_1 = TextEditingController();
+
+// this is for min price
+  final filter_2 = TextEditingController();
+  final filter_3 = TextEditingController();
   // added
   final comment = TextEditingController();
   final url = TextEditingController();
@@ -63,9 +72,10 @@ class _searchState extends State<search> {
   String active = 'true';
   String photoUrl = '';
   String username = '';
-
+  String sortType = 'Relevance';
   String td = '';
-
+  String min_price = '0';
+  String max_price = '5';
   List<String> links = [];
 
   final user = FirebaseAuth.instance.currentUser!;
@@ -82,6 +92,9 @@ class _searchState extends State<search> {
   var to_cont = TextEditingController();
   DateTime from = DateTime.parse('2020-01-12');
   DateTime to = DateTime.parse('2020-01-12');
+
+  final dropdownlist = ['Relevance', 'Rating', 'Popularity'];
+  String? selectedValue = '';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -176,6 +189,10 @@ class _searchState extends State<search> {
                             city = url.text;
 
                             category = filter_1.text;
+
+                            min_price = compare_min(filter_2.text);
+
+                            max_price = compare_max(filter_3.text);
                           });
                         }),
                     suffixIcon: IconButton(
@@ -192,7 +209,9 @@ class _searchState extends State<search> {
                                         'Advanced Search',
                                       )),
                                   PopupMenuItem(
-                                      child: TextField(
+                                      child: Column(
+                                    children: [
+                                      TextField(
                                           controller: filter_1,
                                           style: const TextStyle(),
                                           decoration: InputDecoration(
@@ -203,7 +222,77 @@ class _searchState extends State<search> {
                                               ),
                                               hintText: 'Enter Category',
                                               hintStyle: const TextStyle(
-                                                  color: Colors.grey)))),
+                                                  color: Colors.grey))),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text('Sort by: '),
+                                          DropdownButton(
+                                              value: selectedValue,
+                                              items: dropdownlist.map((e) {
+                                                return DropdownMenuItem(
+                                                  child: Text(e),
+                                                  value: e,
+                                                );
+                                              }).toList(),
+                                              onChanged: (val) {
+                                                setState(() {
+                                                  sortType = val as String;
+                                                  selectedValue = val as String;
+                                                });
+                                              }),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('Minimum Price: '),
+                                          TextField(
+                                              controller: filter_2,
+                                              style: const TextStyle(),
+                                              decoration: InputDecoration(
+                                                  border:
+                                                      const OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(40),
+                                                    ),
+                                                  ),
+                                                  hintText:
+                                                      'Type range: \$ to \$\$\$\$',
+                                                  hintStyle: const TextStyle(
+                                                      color: Colors.grey)))
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('Maximum Price: '),
+                                          TextField(
+                                              controller: filter_3,
+                                              style: const TextStyle(),
+                                              decoration: InputDecoration(
+                                                  border:
+                                                      const OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(40),
+                                                    ),
+                                                  ),
+                                                  hintText:
+                                                      'Type range: \$ to \$\$\$\$',
+                                                  hintStyle: const TextStyle(
+                                                      color: Colors.grey)))
+                                        ],
+                                      )
+                                    ],
+                                  )),
                                 ]);
                               });
                         })),
@@ -253,7 +342,8 @@ class _searchState extends State<search> {
                 height: 350,
                 child: FutureBuilder<List<Places>?>(
                   // ==================================================== to edit sort by ====================================
-                  future: httpHandler().getPlaces(city, category),
+                  future: httpHandler().getPlaces(
+                      city, category, sortType, min_price, max_price),
 
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -274,6 +364,8 @@ class _searchState extends State<search> {
                                         places![index].description);
 
                                     entry = OverlayEntry(builder: (context) {
+                                      kill_prices();
+                                      kill_sortby();
                                       kill_links();
                                       add_links(places![index].photo_url);
 
@@ -312,7 +404,8 @@ class _searchState extends State<search> {
                                                                       false)
                                                                   .value = false;
                                                             });
-                                                            
+                                                            pressed_create =
+                                                                true;
                                                           },
                                                           icon: const Icon(Icons
                                                               .arrow_back_ios_new),
@@ -331,7 +424,7 @@ class _searchState extends State<search> {
                                                         ),
 
                                                         SizedBox(
-                                                            height: 150,
+                                                            height: 300,
                                                             child: ListView
                                                                 .builder(
                                                                     scrollDirection:
@@ -346,7 +439,7 @@ class _searchState extends State<search> {
                                                                           children: [
                                                                             Center(
                                                                                 child: Container(
-                                                                              width: 196,
+                                                                              width: 300,
                                                                               decoration: BoxDecoration(
                                                                                 image: DecorationImage(image: NetworkImage(links[index]), fit: BoxFit.cover),
                                                                                 borderRadius: BorderRadius.circular(12),
@@ -414,7 +507,7 @@ class _searchState extends State<search> {
                                                                       BoxDecoration(
                                                                     gradient:
                                                                         RadialGradient(
-                                                                      colors: const [
+                                                                      colors: [
                                                                         Colors
                                                                             .white,
                                                                         Colors
@@ -457,7 +550,7 @@ class _searchState extends State<search> {
                                                                               25),
                                                                       GradientText(
                                                                         '${places[index].name}',
-                                                                        colors: const [
+                                                                        colors: [
                                                                           Colors
                                                                               .black,
                                                                           Colors
@@ -503,7 +596,7 @@ class _searchState extends State<search> {
                                                                           .centerLeft,
                                                                       end: Alignment
                                                                           .centerRight,
-                                                                      colors: const [
+                                                                      colors: [
                                                                         Colors
                                                                             .white12,
                                                                         Colors
@@ -559,13 +652,13 @@ class _searchState extends State<search> {
                                                                               fontWeight: FontWeight.bold,
                                                                               color: places[index].rating == 'Not Available'
                                                                                   ? Colors.white
-                                                                                  : double.parse(places[index].rating) >= 8
+                                                                                  : double.parse(places[index].rating) > 8
                                                                                       ? Colors.green
                                                                                       : double.parse(places[index].rating) < 8 && double.parse(places[index].rating) > 6
                                                                                           ? Color.fromARGB(255, 164, 160, 24)
                                                                                           : double.parse(places[index].rating) < 6
                                                                                               ? Colors.red
-                                                                                              : Colors.black)),
+                                                                                              : Colors.red)),
                                                                       SizedBox(
                                                                           height:
                                                                               25),
@@ -627,7 +720,7 @@ class _searchState extends State<search> {
                                                               //         'images/BackgroundPics/lightBackground.jpg'))
                                                             ),
                                                             width: 500,
-                                                            height: 500,
+                                                            height: 700,
 
                                                             // this row is for the top to containers for name , location, ratings and money
                                                             child: Column(
@@ -733,7 +826,7 @@ class _searchState extends State<search> {
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,
-                                                                      colors: const [
+                                                                      colors: [
                                                                         Colors
                                                                             .black87,
                                                                         Colors
@@ -1612,5 +1705,46 @@ class _searchState extends State<search> {
 
   void kill_links() {
     links = [];
+  }
+
+  String compare_min(String text) {
+    if (text == '') {
+      return '0';
+    }
+    if (text == '\$') {
+      return '1';
+    } else if (text == '\$\$') {
+      return '2';
+    } else if (text == '\$\$\$') {
+      return '3';
+    } else if (text == '\$\$\$\$') {
+      return '4';
+    } else
+      return '0';
+  }
+
+  String compare_max(String text) {
+    if (text == '') {
+      return '5';
+    }
+    if (text == '\$') {
+      return '1';
+    } else if (text == '\$\$') {
+      return '2';
+    } else if (text == '\$\$\$') {
+      return '3';
+    } else if (text == '\$\$\$\$') {
+      return '4';
+    } else
+      return '5';
+  }
+
+  void kill_prices() {
+    min_price = '0';
+    max_price = '5';
+  }
+
+  void kill_sortby() {
+    sortType = 'Relevance';
   }
 }
