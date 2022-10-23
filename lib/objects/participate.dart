@@ -103,6 +103,26 @@ class Participate {
       return participateFromJson(data);
     }
   }
+
+  static Future<List<Participate>?> readActiveTrips(String uid) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select()
+        .eq('active', 'true')
+        .eq('uid', uid)
+        .execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      return participateFromJson(data);
+    }
+  }
 }
 
 Future addMember(

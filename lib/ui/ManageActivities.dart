@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:safra/Panels%20&%20Dialogs/TabWidget.dart';
 import 'package:safra/Panels%20&%20Dialogs/TabWidget2.dart';
+import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/Trips.dart';
 import 'package:safra/objects/displayTripsInfo.dart';
 import 'package:safra/objects/participate.dart';
@@ -23,6 +24,7 @@ class ManageActivities extends StatefulWidget {
 class _ManageActivitiesState extends State<ManageActivities> {
   final user = FirebaseAuth.instance.currentUser!;
   String trip_id = '';
+
   @override
   Widget build(BuildContext context) {
     BorderRadiusGeometry radius = const BorderRadius.only(
@@ -48,7 +50,11 @@ class _ManageActivitiesState extends State<ManageActivities> {
         ),
         body: Container(
             //////1st column
-            decoration: const BoxDecoration(),
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('images/BackgroundPics/background.png'),
+              fit: BoxFit.cover,
+            )),
             child: Column(children: [
               SizedBox(height: 20),
               Row(
@@ -56,7 +62,10 @@ class _ManageActivitiesState extends State<ManageActivities> {
                   Container(
                       alignment: Alignment.topLeft,
                       child: IconButton(
-                          icon: const Icon(Icons.arrow_back_ios),
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -64,11 +73,12 @@ class _ManageActivitiesState extends State<ManageActivities> {
                                     builder: (context) => const dashboardn()));
                           })),
                   SizedBox(width: 300),
-                  buildButton(icon: Icons.edit, callBack: () {})
+                  buildButton(icon: Icons.edit, callBack: () async {})
                 ],
               ),
+              SizedBox(height: 250),
               SizedBox(
-                  height: 500,
+                  height: 100,
                   child: FutureBuilder<List<Trips>?>(
                       future: Trips.displayNearestTripActivities(user.uid),
                       builder: (context, snapshot) {
@@ -81,17 +91,16 @@ class _ManageActivitiesState extends State<ManageActivities> {
                           trip_id = trips[0].trip_name;
                           return Scaffold(
                               body: Container(
-                                  margin: const EdgeInsets.all(20),
                                   child: SizedBox(
                                       height: 500,
                                       child: Timeline.tileBuilder(
-                                        scrollDirection: Axis.vertical,
+                                        scrollDirection: Axis.horizontal,
                                         builder: TimelineTileBuilder.fromStyle(
                                           contentsAlign:
                                               ContentsAlign.alternating,
                                           contentsBuilder: (context, index) =>
                                               Padding(
-                                            padding: const EdgeInsets.all(24.0),
+                                            padding: const EdgeInsets.all(0),
                                             child: Text(trips[index].name),
                                           ),
                                           itemCount: trips.length,
@@ -126,7 +135,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
         icon: const Icon(
           Icons.edit,
           size: 25,
-          color: Color.fromARGB(255, 50, 160, 233),
+          color: Colors.white,
         ),
       );
   PreferredSizeWidget buildTabBar() => PreferredSize(

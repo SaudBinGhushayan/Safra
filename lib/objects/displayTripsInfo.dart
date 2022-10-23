@@ -7,7 +7,7 @@ List<displayTripsInfo> displayTripsInfoFromJson(String str) =>
     List<displayTripsInfo>.from(
         json.decode(str).map((x) => displayTripsInfo.fromJson(x)));
 
-String displaytripsInfoFromJsontripsInfoToJson(List<TripsInfo> data) =>
+String displayTripsInfoToJson(List<TripsInfo> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class displayTripsInfo {

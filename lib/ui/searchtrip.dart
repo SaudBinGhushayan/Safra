@@ -1,10 +1,14 @@
+// ignore_for_file: unnecessary_new
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:safra/backend/supabase.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
+import 'package:safra/ui/cloneTrip.dart';
 import 'package:safra/ui/dashboardn.dart';
 import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
@@ -23,9 +27,11 @@ class _searchtripState extends State<searchtrip> {
   @override
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
+  String trip_search = '';
+
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: 900,
         width: double.infinity,
@@ -41,7 +47,7 @@ class _searchtripState extends State<searchtrip> {
                 Container(
                     width: 33,
                     height: 33,
-                    margin: const EdgeInsets.fromLTRB(5, 4, 1, 1),
+                    margin: const EdgeInsets.fromLTRB(5, 23, 1, 1),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 255, 255),
                       borderRadius: BorderRadius.circular(40),
@@ -55,7 +61,7 @@ class _searchtripState extends State<searchtrip> {
                   //profile icon
                   height: 50,
                   width: 140,
-                  margin: const EdgeInsets.fromLTRB(228, 5, 1, 1),
+                  margin: const EdgeInsets.fromLTRB(228, 25, 1, 1),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.circular(40),
@@ -69,55 +75,169 @@ class _searchtripState extends State<searchtrip> {
                           borderRadius: BorderRadius.circular(40),
                         ),
                       ),
-                      Expanded(child: Text('from database'))
+                      const Expanded(child: const Text('from database'))
                     ],
                   ),
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
-            SizedBox(
+            const SizedBox(
               height: 34,
             ),
             Container(
-              margin: EdgeInsets.only(top: 14.7),
+              margin: const EdgeInsets.only(top: 14.7),
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular(40),
                   ),
                   color: Colors.white),
-              child: const TextField(
-                style: TextStyle(),
-                decoration: InputDecoration(
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    trip_search = value;
+                  });
+                },
+                style: const TextStyle(),
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(40),
                       ),
                     ),
                     hintText: 'Explore new trip',
                     hintStyle: TextStyle(color: Colors.grey),
-                    prefixIcon: const Icon(Icons.search,
+                    prefixIcon: Icon(Icons.search,
                         color: Color.fromARGB(255, 102, 101, 101))),
               ),
             ),
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 10, top: 99),
-                  height: 60,
-                  width: 150,
-                  child: Text(
-                    "Most Liked Trips",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                )
-              ],
+            SizedBox(height: 53),
+            SizedBox(
+              height: 446,
+              child: StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: SupaBase_Manager()
+                      .client
+                      .from('trips_info')
+                      .stream(['trip_id']).execute(),
+                  builder: (context, snapshots) {
+                    return (snapshots.connectionState ==
+                            ConnectionState.waiting)
+                        ? const Center(child: CircularProgressIndicator())
+                        : ListView.builder(
+                            itemCount: snapshots.data!.length,
+                            itemBuilder: (context, index) {
+                              var trips = snapshots.data![index];
+                              if (trips.isEmpty) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    var route = new MaterialPageRoute(
+                                        builder: (context) => new cloneTrip(
+                                              trips: trips,
+                                            ));
+                                    Navigator.of(context).push(route);
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color.fromARGB(
+                                                    255, 94, 158, 190)
+                                                .withOpacity(0.3),
+                                            spreadRadius: 5,
+                                            blurRadius: 1,
+                                            offset: Offset(0, 3)),
+                                      ],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        trips['trip_name'],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 19,
+                                            color: Color.fromARGB(
+                                                255, 79, 101, 116)),
+                                      ),
+                                      subtitle: Text(
+                                        trips['country'],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 19,
+                                            color: Color.fromARGB(
+                                                255, 79, 101, 116)),
+                                      ),
+                                      leading: const Icon(Icons.pin_drop,
+                                          size: 40,
+                                          color: Color.fromARGB(
+                                              255, 79, 101, 116)),
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (trips['trip_name']
+                                  .toString()
+                                  .toLowerCase()
+                                  .startsWith(trip_search.toLowerCase())) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    var route = new MaterialPageRoute(
+                                        builder: (context) => new cloneTrip(
+                                              trips: trips,
+                                            ));
+                                    Navigator.of(context).push(route);
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: Color.fromARGB(
+                                                    255, 94, 158, 190)
+                                                .withOpacity(0.3),
+                                            spreadRadius: 5,
+                                            blurRadius: 1,
+                                            offset: Offset(0, 3)),
+                                      ],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        trips['trip_name'],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 19,
+                                            color: Color.fromARGB(
+                                                255, 79, 101, 116)),
+                                      ),
+                                      subtitle: Text(
+                                        trips['country'],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 19,
+                                            color: Color.fromARGB(
+                                                255, 79, 101, 116)),
+                                      ),
+                                      leading: const Icon(Icons.pin_drop,
+                                          size: 40,
+                                          color: Color.fromARGB(
+                                              255, 79, 101, 116)),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return Container();
+                            });
+                  }),
             ),
             Container(
               //start of navigation bar
-              margin: const EdgeInsets.only(top: 339),
               height: 149,
               width: 500,
               decoration: const BoxDecoration(
@@ -153,7 +273,8 @@ class _searchtripState extends State<searchtrip> {
                           padding: const EdgeInsets.fromLTRB(27.5, 0.2, 30, 70),
                           child: CircleAvatar(
                               radius: 24,
-                              backgroundColor: Color.fromARGB(255, 39, 97, 213),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 39, 97, 213),
                               child: IconButton(
                                 icon: const Icon(Icons.search,
                                     color: Colors.white),
@@ -184,7 +305,8 @@ class _searchtripState extends State<searchtrip> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => accountInformation()));
+                              builder: (context) =>
+                                  const accountInformation()));
                     },
                     icon: Image.asset('images/NavigationBar/Profile.jpg'),
                     iconSize: 55,
@@ -196,27 +318,27 @@ class _searchtripState extends State<searchtrip> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   void menu() {
     entry = OverlayEntry(
         builder: (context) => Card(
-              margin: EdgeInsets.all(0),
+              margin: const EdgeInsets.all(0),
               color: Colors.black54.withOpacity(0.8),
               child: Column(children: [
                 const SizedBox(height: 200),
                 Container(
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 30),
-                    child: Text('Menu',
+                    margin: const EdgeInsets.only(left: 30),
+                    child: const Text('Menu',
                         style: TextStyle(color: Colors.grey, fontSize: 21))),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 Container(
                     color: Colors.black12.withOpacity(0.5),
                     child: Container(
                         alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.only(top: 10, left: 30),
+                        margin: const EdgeInsets.only(top: 10, left: 30),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -237,7 +359,7 @@ class _searchtripState extends State<searchtrip> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 25),
+                              const SizedBox(height: 25),
                               TextButton(
                                 onPressed: () => {
                                   Navigator.push(
@@ -254,7 +376,7 @@ class _searchtripState extends State<searchtrip> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 25),
+                              const SizedBox(height: 25),
                               TextButton(
                                 onPressed: () => {
                                   Navigator.push(
@@ -272,7 +394,7 @@ class _searchtripState extends State<searchtrip> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 25),
+                              const SizedBox(height: 25),
                               TextButton(
                                 onPressed: () => {
                                   Navigator.push(
@@ -292,11 +414,11 @@ class _searchtripState extends State<searchtrip> {
                                 ),
                               )
                             ]))),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 ElevatedButton.icon(
                   onPressed: hideMenu,
-                  icon: Icon(Icons.visibility_off),
-                  label: Text('back'),
+                  icon: const Icon(Icons.visibility_off),
+                  label: const Text('back'),
                 )
               ]),
             ));

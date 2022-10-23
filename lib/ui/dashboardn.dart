@@ -21,6 +21,7 @@ import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/stngs.dart';
 import 'package:safra/ui/mention.dart';
+import 'package:safra/ui/test.dart';
 
 class dashboardn extends StatefulWidget {
   const dashboardn({Key? key}) : super(key: key);
@@ -136,6 +137,14 @@ class _dashboardnState extends State<dashboardn> {
                           )
                         ], //end1st row
                       ),
+                      // ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) => test()));
+                      //     },
+                      //     child: Text('Testing area')),
                       Row(
                         //2ndrow
                         children: [
@@ -157,7 +166,7 @@ class _dashboardnState extends State<dashboardn> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const ManageActivities()));
+                                                  ManageActivities()));
                                     },
                                     label: Text('Manage'),
                                     icon: Icon(Icons.manage_history))
@@ -186,6 +195,8 @@ class _dashboardnState extends State<dashboardn> {
                                             return Row(children: [
                                               Center(
                                                   child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10),
                                                       width: 196,
                                                       decoration: BoxDecoration(
                                                         borderRadius:
@@ -233,17 +244,23 @@ class _dashboardnState extends State<dashboardn> {
                                 fontSize: 19,
                               ),
                             ),
-                            SizedBox(width: 100),
-                            TextButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ManageTrips()));
-                                },
-                                label: Text('Manage'),
-                                icon: Icon(Icons.manage_history))
+                            SizedBox(width: 110),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ManageTrips()));
+                              },
+                              child: Text('See all',
+                                  style: TextStyle(fontSize: 15)),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.blue,
+                              size: 20,
+                            )
                           ])),
                       SizedBox(
                           height: 95,

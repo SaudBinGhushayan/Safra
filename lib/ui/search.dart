@@ -82,7 +82,7 @@ class _searchState extends State<search> {
   List<String> uids = [];
   var isloaded = false;
   String tripid = '';
-  String trip_id = '${Random().nextDouble() * 265}';
+  String trip_id = '${(Random().nextDouble() * 265).toStringAsExponential(4)}';
   String trip_name = '';
   var _value = false;
   bool noTrips = false;
@@ -304,25 +304,7 @@ class _searchState extends State<search> {
                 right: 230,
               ),
               child: ElevatedButton(
-                  onPressed: () async {
-                    final response = await SupaBase_Manager()
-                        .client
-                        .from('trips_info')
-                        .insert([
-                      {"uids": List<dynamic>.from(uids.map((x) => 'gg'))}
-                    ]).execute();
-
-                    // if (response.error == null) {
-                    //   var data = response.data.toString();
-                    //   data = data.replaceAll('{', '{"');
-                    //   data = data.replaceAll(': ', '": "');
-                    //   data = data.replaceAll(', ', '", "');
-                    //   data = data.replaceAll('}', '"}');
-                    //   data = data.replaceAll('}",', '},');
-                    //   data = data.replaceAll('"{', '{');
-                    //   print(data);
-                    // }
-                  },
+                  onPressed: () async {},
                   style: ElevatedButton.styleFrom(
                     primary: const Color.fromARGB(232, 147, 160, 172),
                     shape: RoundedRectangleBorder(
@@ -1009,7 +991,6 @@ class _searchState extends State<search> {
                                                 } else if (snapshot
                                                         .data?.length ==
                                                     0) {
-                                                  noTrips = true;
                                                   return Text('no comments');
                                                 } else if (snapshot.hasData) {
                                                   List<Comments> comments =
@@ -1182,7 +1163,6 @@ class _searchState extends State<search> {
                                                     region: region,
                                                     price: price,
                                                     description: description,
-                                                    active: active,
                                                     trip_id: tripid,
                                                     trip_name: trip_name);
 
@@ -1634,7 +1614,7 @@ class _searchState extends State<search> {
                                       trip_id: trip_id,
                                       from: from,
                                       to: to,
-                                      trip_name: trip_name);
+                                      trip_name: '${trip_name} by ${username}');
                                   hideDatePicker();
                                   snackBar.showSnackBarGreen(
                                       'Activity Added to trip ${trip_name} Successfully');

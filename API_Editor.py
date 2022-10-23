@@ -12,9 +12,7 @@ import flask
 from flask import Flask, request
 import geopy
 from geopy import Nominatim
-from translate import Translator
 from langdetect import detect
-from iso639 import languages
 from textblob import TextBlob
 
 
