@@ -80,7 +80,7 @@ class TabWidget extends StatelessWidget {
                               }),
                         ],
                       ),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 10),
                       Row(children: [
                         Icon(Icons.date_range,
                             size: 20,
@@ -304,12 +304,16 @@ class _editTripInfoState extends State<editTripInfo> {
                                       .client
                                       .from('participate')
                                       .update({'active': 'false'}).match(
-                                          {'active': 'true'}).execute();
+                                          {'active': 'true'}).match({
+                                    'trip_id': widget.trip_id
+                                  }).execute();
                                   await SupaBase_Manager()
                                       .client
                                       .from('trips_info')
                                       .update({'active': 'false'}).match(
-                                          {'active': 'true'}).execute();
+                                          {'active': 'true'}).match({
+                                    'trip_id': widget.trip_id
+                                  }).execute();
                                   await SupaBase_Manager()
                                       .client
                                       .from('participate')

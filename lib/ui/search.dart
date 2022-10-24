@@ -65,7 +65,7 @@ class _searchState extends State<search> {
   String region = '';
   String price = '';
   String description = '';
-  String participate = '${Random().nextDouble() * 256}';
+  String participate = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
   String translated_description = '';
   String categories = '';
   String photo_url = '';

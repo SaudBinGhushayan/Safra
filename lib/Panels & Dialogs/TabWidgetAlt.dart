@@ -95,7 +95,7 @@ class _TabWidgetAltState extends State<TabWidgetAlt> {
                               }),
                         ],
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 13),
                       Row(children: [
                         Icon(Icons.date_range,
                             size: 20,

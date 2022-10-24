@@ -241,8 +241,10 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                 child: Text(
                                                                     trips[index]
                                                                         .trip_name,
-                                                                    style:
-                                                                        TextStyle(fontSize: 19))),
+                                                                    overflow:
+                                                                        TextOverflow.ellipsis,
+                                                                    maxLines: 2,
+                                                                    style: TextStyle(fontSize: 19))),
                                                           ),
                                                           Container(
                                                               padding:
@@ -449,6 +451,8 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                       trips[index]
                                                                           .tripsInfo[0]
                                                                           .trip_name,
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                      maxLines: 2,
                                                                       style: TextStyle(fontSize: 19))),
                                                             ),
                                                             Container(

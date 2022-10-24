@@ -290,7 +290,7 @@ class _AddMembersState extends State<AddMembers> {
                                         addMember(
                                             uid: users['uid'],
                                             username: users['username'],
-                                            active: 'true',
+                                            active: widget.active,
                                             participate_id: participate_id,
                                             trip_id: widget.trip_id);
                                         snackBar.showSnackBarGreen(

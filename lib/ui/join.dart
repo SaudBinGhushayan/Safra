@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:safra/backend/snackBar.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/objects/participate.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
@@ -33,6 +34,8 @@ class _joinState extends State<join> {
   final tripId = TextEditingController();
   final participate_id = '${Random().nextDouble() * 256}';
   final username = '';
+
+  String active = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,7 +173,7 @@ class _joinState extends State<join> {
                                       Radius.circular(40),
                                     ),
                                     color: Colors.white),
-                                child: TextField(
+                                child: TextFormField(
                                   controller: tripId,
                                   textAlign: TextAlign.left,
                                   style: const TextStyle(),
@@ -186,6 +189,20 @@ class _joinState extends State<join> {
                                       fontSize: 20,
                                     ),
                                   ),
+                                  onChanged: (value) {
+                                    FutureBuilder<List<TripsInfo>?>(
+                                        future: TripsInfo.onTapReadTripInfo(
+                                            tripId.text),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            final trip_info = snapshot.data!;
+                                            active = trip_info[0].active;
+                                            return Container();
+                                          } else {
+                                            return Container();
+                                          }
+                                        });
+                                  },
                                 ),
                               ),
                               const SizedBox(height: 40),
@@ -200,16 +217,17 @@ class _joinState extends State<join> {
                                     if (!validTripId) {
                                       return snackBar.showSnackBarRed(
                                           'Sorry, Trip does not exist try to enter a valid trip id');
-                                    } else if (!validUser) {
+                                    } else if (validUser) {
                                       return snackBar.showSnackBarRed(
                                           'You are already registered at this trip');
                                     } else {
                                       addMember(
                                           uid: user.uid,
                                           username: username,
-                                          active: 'true',
+                                          active: active,
                                           participate_id: participate_id,
                                           trip_id: tripId.text);
+
                                       snackBar.showSnackBarGreen(
                                           'Succeefully joined trip No.${tripId.text}');
                                       Navigator.push(
