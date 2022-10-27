@@ -1234,6 +1234,7 @@ class _searchState extends State<search> {
                                         title: Text(places![index].name,
                                             style:
                                                 const TextStyle(fontSize: 20)),
+                                        trailing: Text(places[index].rating),
                                         leading: Container(
                                             width: 50,
                                             height: 50,
