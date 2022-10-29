@@ -8,23 +8,30 @@ import React from 'react'
 export default function Participate({ Participate }) {
   const supabase = useSupabaseClient()
   const [_document, set_document] = React.useState(null)
-  const [participate_id, set_participate_id] = useState('')
-  const [trip_id, set_Trip_id] = useState('')
-  const [uid, set_UID] = useState('')
-  const [username, set_Username] = useState('')
-  const [active, set_Active] = useState('')
-  
+  const [Cparticipate_id, set_participate_idForC] = useState('')
+  const [Ctrip_id, set_Trip_id_ForC] = useState('')
+  const [Cuid, set_UIDForC] = useState('')
+  const [Cusername, set_UsernameForC] = useState('')
+  const [Cactive, set_ActiveForC] = useState('')
+  const [Uparticipate_id, set_participate_idForU] = useState('')
+  const [Utrip_id, set_Trip_id_ForU] = useState('')
+  const [Uuid, set_UIDForU] = useState('')
+  const [Uusername, set_UsernameForU] = useState('')
+  const [Uactive, set_ActiveForU] = useState('')
+  const [Dparticipate_id, set_participate_idForD] = useState('')
+  const [Dusername, set_Username_ForD] = useState('')
+ 
   const [formError, set_FormError] = useState(null)
-
-
+    
+ 
   const sendRecord = async (e) =>{
     e.preventDefault()
 
-    if(!participate_id || !trip_id || !uid || !username || !active){
+    if(!Cparticipate_id || !Ctrip_id || !Cuid || !Cusername || !Cactive){
       set_FormError('Please fill in all fields correctly')
       return 
     }
-    const { data, error} = await supabase.from('participate').insert([{participate_id, trip_id, uid, username, active}]).select('*')
+    const { data, error} = await supabase.from('participate').insert([{participate_id:Cparticipate_id, trip_id:Ctrip_id, uid:Cuid, username:Cusername, active:Cactive}]).select('*')
 
     if(error){
       console.log(error)
@@ -40,12 +47,12 @@ export default function Participate({ Participate }) {
   const updateRecord = async (e) =>{
     e.preventDefault()
 
-    if(!participate_id || !trip_id || !uid || !username || !active){
+    if(!Uparticipate_id || !Utrip_id || !Uuid || !Uusername || !Uactive){
       set_FormError('Please fill in all fields correctly')
       return 
     }
-    const { data, error} = await supabase.from('participate').update({ participate_id, trip_id, uid, username, active })
-    .eq('participate_id', participate_id)
+    const { data, error} = await supabase.from('participate').update([{participate_id:Uparticipate_id, trip_id:Utrip_id, uid:Uuid, username:Uusername, active:Uactive}]).select('*')
+    .eq('participate_id', Uparticipate_id)
     .select('*')
 
     if(error){
@@ -62,11 +69,11 @@ export default function Participate({ Participate }) {
   const deleteRecord = async (e) =>{
     e.preventDefault()
 
-    if(!participate_id || !username){
+    if(!Dparticipate_id || !Dusername){
       set_FormError('Please fill in all fields correctly')
       return 
     }
-    const { data, error} = await supabase.from('participate').delete().eq('participate_id',participate_id).eq('username',username).select('*')
+    const { data, error} = await supabase.from('participate').delete().eq('participate_id',Dparticipate_id).eq('username',Dusername).select('*')
 
     if(error){
       console.log(error)
@@ -136,73 +143,76 @@ export default function Participate({ Participate }) {
             <input
             type="text"
             id="title"
-            value={participate_id}
-            onChange={(e)=> set_participate_id(e.target.value)}/>
+            value={Cparticipate_id}
+            onChange={(e)=> set_participate_idForC(e.target.value)}/>
 
             <label>trip_id</label>
             <input
             type="text"
             id="title"
-            value={trip_id}
-            onChange={(e)=> set_Trip_id(e.target.value)}/>
+            value={Ctrip_id}
+            onChange={(e)=> set_Trip_id_ForC(e.target.value)}/>
 
             <label>uid</label>
             <input
             type="text"
             id="title"
-            value={uid}
-            onChange={(e)=> set_UID(e.target.value)}/>
+            value={Cuid}
+            onChange={(e)=> set_UIDForC(e.target.value)}/>
 
             <label>username</label>
             <input
             type="text"
             id="title"
-            value={username}
-            onChange={(e)=> set_Username(e.target.value)}/>
+            value={Cusername}
+            onChange={(e)=> set_UsernameForC(e.target.value)}/>
 
             <label>active</label>
             <input
             type="text"
             id="title"
-            value={active}
-            onChange={(e)=> set_Active(e.target.value)}/>
+            value={Cactive}
+            onChange={(e)=> set_ActiveForC(e.target.value)}/>
             <button id='sendRecord'>Insert New Record</button>
+            {formError && <p className='error'>{formError}</p>}
+
             </form>
+
             <form className={grid.form} onSubmit={updateRecord}>
             <label>participate_id</label>
             <input
             type="text"
             id="title"
-            value={participate_id}
-            onChange={(e)=> set_participate_id(e.target.value)}/>
+            value={Uparticipate_id}
+            onChange={(e)=> set_participate_idForU(e.target.value)}/>
 
             <label>trip_id</label>
             <input
             type="text"
             id="title"
-            value={trip_id}
-            onChange={(e)=> set_Trip_id(e.target.value)}/>
+            value={Utrip_id}
+            onChange={(e)=> set_Trip_id_ForU(e.target.value)}/>
 
             <label>uid</label>
             <input
             type="text"
             id="title"
-            value={uid}
-            onChange={(e)=> set_UID(e.target.value)}/>
+            value={Uuid}
+            onChange={(e)=> set_UIDForU(e.target.value)}/>
 
             <label>username</label>
             <input
             type="text"
             id="title"
-            value={username}
-            onChange={(e)=> set_Username(e.target.value)}/>
+            value={Uusername}
+            onChange={(e)=> set_UsernameForU(e.target.value)}/>
 
             <label>active</label>
             <input
             type="text"
             id="title"
-            value={active}
-            onChange={(e)=> set_Active(e.target.value)}/>
+            value={Uactive}
+            onChange={(e)=> set_ActiveForU(e.target.value)}/>
             <button id='sendRecord'>update record</button>
             
             
@@ -215,15 +225,15 @@ export default function Participate({ Participate }) {
             <input
             type="text"
             id="title"
-            value={participate_id}
-            onChange={(e)=> set_participate_id(e.target.value)}/>
+            value={Dparticipate_id}
+            onChange={(e)=> set_participate_idForD(e.target.value)}/>
 
             <label>username</label>
             <input
             type="text"
             id="title"
-            value={username}
-            onChange={(e)=> set_Username(e.target.value)}/>
+            value={Dusername}
+            onChange={(e)=> set_Username_ForD(e.target.value)}/>
            
             <button id='sendRecord'>Delete Record</button>
             

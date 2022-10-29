@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 import '../styles/Home.module.css'
 import Nav from './Navbar'
+import grid from '../styles/Home.module.css'
 
 export default function Account({ session }) {
   const supabase = useSupabaseClient()
@@ -61,13 +62,16 @@ export default function Account({ session }) {
   }
 console.log(username)
   return (
-    
-    <div className="form-widget">
+    <>    <div className={grid.formWrapper}>
+    <img class={grid.image} src="/Safra Logo.jpeg" />
+
 <Nav />
-      <div className="Account">
+</div>
+
+      <div className={grid.account}>
       
 
-        <label class="Welcoming">Welcome Back {session.user.email}</label>
+        <label class="Welcoming">Welcome Back: {session.user.email}</label>
      
       <div>
         <label htmlFor="username">Username</label>
@@ -99,7 +103,8 @@ console.log(username)
         </button>
         </div>
 
-      </div>
     </div>
+    </>
+
   )
 }

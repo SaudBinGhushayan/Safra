@@ -153,8 +153,27 @@
 }
 
 .image{
-  width: 150px;
+  width: 180px;
 }
+
+.account {
+  padding-left: 40%;
+  padding-top: 5%;
+}
+
+.account button {
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 20px;
+  background-color: #008e98;
+  color: #eaeaea;
+  border-radius: 20px;
+  border-color: #008e98;
+  
+}
+
 
 .card {
   margin: 1rem;
