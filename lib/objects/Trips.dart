@@ -108,6 +108,32 @@ class Trips {
     }
   }
 
+  static Future<String> get_FSQ_ID(String name, String trip_id) async {
+    List<Trips> trips;
+
+    final response = await SupaBase_Manager()
+        .client
+        .from('activities')
+        .select()
+        .eq('name', name)
+        .eq('trip_id', trip_id)
+        .execute();
+
+    if (response.data.isNotEmpty) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      trips = TripsFromJson(data);
+      return trips[0].fsq_id;
+    } else {
+      return '';
+    }
+  }
+
   static Future<List<Trips>?> readTrips(String uid, String trip_id) async {
     final response = await SupaBase_Manager()
         .client

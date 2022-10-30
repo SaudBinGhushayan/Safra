@@ -92,6 +92,11 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               TextFormField(
                   controller: username,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (username) =>
+                      username != null && username.length < 3
+                          ? 'Enter 3 characters atleast'
+                          : null,
                   decoration: const InputDecoration(
                       hintText: 'Enter your username',
                       hintStyle: TextStyle(color: Colors.grey),

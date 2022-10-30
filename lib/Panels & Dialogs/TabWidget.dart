@@ -274,6 +274,12 @@ class _editTripInfoState extends State<editTripInfo> {
                               onPressed: () async {
                                 await SupaBase_Manager()
                                     .client
+                                    .from('activities')
+                                    .update({
+                                  'trip_name': trip_nameCont.text
+                                }).match({'trip_id': widget.trip_id}).execute();
+                                await SupaBase_Manager()
+                                    .client
                                     .from('trips_info')
                                     .update({
                                   'trip_name': trip_nameCont.text
@@ -350,6 +356,13 @@ class _editTripInfoState extends State<editTripInfo> {
                                 icon: const Icon(Icons.check,
                                     size: 30, color: Colors.green),
                                 onPressed: () async {
+                                  await SupaBase_Manager()
+                                      .client
+                                      .from('activities')
+                                      .update(
+                                          {'country': countryCont.text}).match({
+                                    'trip_id': widget.trip_id
+                                  }).execute();
                                   await SupaBase_Manager()
                                       .client
                                       .from('trips_info')
@@ -479,6 +492,26 @@ class _editTripInfoState extends State<editTripInfo> {
                   margin: EdgeInsets.all(20),
                   child: ElevatedButton(
                       onPressed: () async {
+                        await SupaBase_Manager()
+                            .client
+                            .from('activities')
+                            .delete()
+                            .match({'trip_id': widget.trip_id}).execute();
+                        await SupaBase_Manager()
+                            .client
+                            .from('participate')
+                            .delete()
+                            .match({'trip_id': widget.trip_id}).execute();
+                        await SupaBase_Manager()
+                            .client
+                            .from('trip_comments')
+                            .delete()
+                            .match({'trip_id': widget.trip_id}).execute();
+                        await SupaBase_Manager()
+                            .client
+                            .from('trips_likes')
+                            .delete()
+                            .match({'trip_id': widget.trip_id}).execute();
                         await SupaBase_Manager()
                             .client
                             .from('trips_info')

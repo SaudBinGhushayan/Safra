@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/Trips.dart';
@@ -32,6 +33,8 @@ class dashboardn extends StatefulWidget {
 
 class _dashboardnState extends State<dashboardn> {
   final user = FirebaseAuth.instance.currentUser!;
+  List<String> links = [];
+
   OverlayEntry? entry;
 
   @override
@@ -192,6 +195,7 @@ class _dashboardnState extends State<dashboardn> {
                                           scrollDirection: Axis.horizontal,
                                           itemCount: trips.length,
                                           itemBuilder: ((context, index) {
+                                            add_links(trips[index].photo_url);
                                             return Row(children: [
                                               Center(
                                                   child: Container(
@@ -202,28 +206,101 @@ class _dashboardnState extends State<dashboardn> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(12),
-                                                        gradient:
-                                                            LinearGradient(
-                                                                begin: Alignment
-                                                                    .topRight,
-                                                                end: Alignment
-                                                                    .bottomLeft,
-                                                                colors: const [
-                                                              Colors.white,
-                                                              Colors.grey
-                                                            ]),
+                                                        image: DecorationImage(
+                                                            image: NetworkImage(
+                                                                links[index]),
+                                                            fit: BoxFit.cover),
                                                       ),
                                                       child: Column(children: [
                                                         SizedBox(height: 50),
-                                                        Text(trips[index]
-                                                            .name
-                                                            .toString()),
-                                                        Text(trips[index]
-                                                            .country
-                                                            .toString()),
-                                                        Text(trips[index]
-                                                            .tel
-                                                            .toString()),
+                                                        Container(
+                                                            margin: EdgeInsets
+                                                                .fromLTRB(3, 75,
+                                                                    50, 3),
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    3),
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8),
+                                                                color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            201,
+                                                                            201,
+                                                                            201)
+                                                                    .withOpacity(
+                                                                        0.9)),
+                                                            child: Column(
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Icon(
+                                                                        Icons
+                                                                            .location_city,
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        size:
+                                                                            14),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                          trips[index]
+                                                                              .name,
+                                                                          maxLines:
+                                                                              2,
+                                                                          overflow: TextOverflow
+                                                                              .clip,
+                                                                          style:
+                                                                              TextStyle(fontSize: 16)),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Icon(
+                                                                        Icons
+                                                                            .pin_drop_outlined,
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        size:
+                                                                            14),
+                                                                    Text(
+                                                                        trips[index]
+                                                                            .country,
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow
+                                                                                .clip,
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                16)),
+                                                                    SizedBox(
+                                                                        width:
+                                                                            40),
+                                                                    Icon(
+                                                                        Icons
+                                                                            .date_range,
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        size:
+                                                                            14),
+                                                                    Text(
+                                                                        '12 jun',
+                                                                        maxLines:
+                                                                            2,
+                                                                        overflow:
+                                                                            TextOverflow
+                                                                                .clip,
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                16)),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            )),
                                                       ]))),
                                               SizedBox(width: 12)
                                             ]);
@@ -244,7 +321,7 @@ class _dashboardnState extends State<dashboardn> {
                                 fontSize: 19,
                               ),
                             ),
-                            SizedBox(width: 110),
+                            SizedBox(width: 130),
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -272,7 +349,8 @@ class _dashboardnState extends State<dashboardn> {
                                   return Text('Something went wrong');
                                 } else if (snapshot.data == null) {
                                   return Text('No data');
-                                } else if (snapshot.hasData) {
+                                } else if (snapshot.hasData &&
+                                    links.isNotEmpty) {
                                   final trip = snapshot.data![0];
                                   return Container(
                                       margin: EdgeInsets.only(
@@ -280,34 +358,72 @@ class _dashboardnState extends State<dashboardn> {
                                       padding:
                                           EdgeInsets.fromLTRB(20, 2, 20, 2),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        gradient: LinearGradient(
-                                            begin: Alignment.topRight,
-                                            end: Alignment.bottomLeft,
-                                            colors: const [
-                                              Colors.white,
-                                              Colors.grey
-                                            ]),
-                                      ),
-                                      child: Row(children: [
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color:
+                                              Color.fromARGB(255, 120, 192, 250)
+                                                  .withOpacity(0.3)),
+                                      child: Row(children: <Widget>[
+                                        Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: Image.network(links[0],
+                                                  height: 50,
+                                                  width: 70,
+                                                  fit: BoxFit.cover)),
+                                        ),
                                         Expanded(
+                                          child: Column(children: <Widget>[
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  10, 10, 5, 3),
+                                              child: Text(
+                                                  trip.tripsInfo.trip_name,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style:
+                                                      TextStyle(fontSize: 17)),
+                                            ),
+                                            Wrap(
+                                              children: [
+                                                Icon(Icons.date_range,
+                                                    color: Colors.blue,
+                                                    size: 14),
+                                                Text(
+                                                    '${DateFormat("MMM").format(trip.tripsInfo.from)}${trip.tripsInfo.from.day} - ${DateFormat("MMM").format(trip.tripsInfo.to)}${trip.tripsInfo.to.day}'
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontSize: 16)),
+                                              ],
+                                            )
+                                          ]),
+                                        ),
+                                        Container(
+                                            margin: EdgeInsets.only(left: 25),
+                                            padding: EdgeInsets.fromLTRB(
+                                                20, 5, 20, 5),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                color: trip.tripsInfo.active ==
+                                                        'true'
+                                                    ? Colors.blue
+                                                    : Colors.red
+                                                        .withOpacity(0.3)
+                                                        .withOpacity(0.3)),
                                             child: Text(
-                                                trip.tripsInfo.trip_name,
-                                                style:
-                                                    TextStyle(fontSize: 21))),
-                                        SizedBox(width: 20),
-                                        Expanded(
-                                            child: Text(
-                                                '${trip.tripsInfo.from.year}/${trip.tripsInfo.from.month}/${trip.tripsInfo.from.day}'
-                                                    .toString(),
-                                                style:
-                                                    TextStyle(fontSize: 18))),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                            child: Text(
-                                                '${trip.tripsInfo.to.year}/${trip.tripsInfo.to.month}/${trip.tripsInfo.to.day}',
-                                                style:
-                                                    TextStyle(fontSize: 18))),
+                                                trip.tripsInfo.active
+                                                            .toString() ==
+                                                        'true'
+                                                    ? 'joined'
+                                                    : 'Not Active',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white))),
                                       ]));
                                 } else {
                                   return Center(
@@ -531,5 +647,10 @@ class _dashboardnState extends State<dashboardn> {
   void hideMenu() {
     entry?.remove();
     entry = null;
+  }
+
+  void add_links(String link) {
+    List<String> templink = link.split(',');
+    links.addAll(templink);
   }
 }

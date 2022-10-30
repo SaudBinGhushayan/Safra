@@ -5,6 +5,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:safra/backend/snackBar.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/objects/participate.dart';
 import 'package:safra/objects/user.dart';
@@ -221,6 +222,18 @@ class _joinState extends State<join> {
                                       return snackBar.showSnackBarRed(
                                           'You are already registered at this trip');
                                     } else {
+                                      await SupaBase_Manager()
+                                          .client
+                                          .from('participate')
+                                          .update({'active': 'false'}).match({
+                                        'active': 'true'
+                                      }).match({'uid': user.uid}).execute();
+                                      await SupaBase_Manager()
+                                          .client
+                                          .from('trips_info')
+                                          .update({'active': 'false'}).match({
+                                        'active': 'true'
+                                      }).match({'uid': user.uid}).execute();
                                       addMember(
                                           uid: user.uid,
                                           username: username,

@@ -57,7 +57,7 @@ class _searchState extends State<search> {
   final url = TextEditingController();
   OverlayEntry? entry;
   OverlayEntry? entry_date;
-  String fsq_id = '';
+  String fsq_id = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
   String name = '';
   String rating = '';
   String tel = '';
@@ -82,7 +82,7 @@ class _searchState extends State<search> {
   List<String> uids = [];
   var isloaded = false;
   String tripid = '';
-  String trip_id = '${(Random().nextDouble() * 265).toStringAsExponential(4)}';
+  String trip_id = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
   String trip_name = '';
   var _value = false;
   bool noTrips = false;
@@ -895,7 +895,6 @@ class _searchState extends State<search> {
                                               future: TripsInfo.readTrips_Info(
                                                   user.uid),
                                               builder: (context, snapshot) {
-                                                print(snapshot.error);
                                                 if (snapshot.hasError) {
                                                   return Text(
                                                       'something went wrong');
@@ -1123,10 +1122,11 @@ class _searchState extends State<search> {
                                               if (userHasTrips) {
                                                 active = "false";
                                               }
-                                              setState(() {
-                                                fsq_id = places![index].fsq_id;
 
-                                                name = places[index].name;
+                                              setState(() {
+                                                fsq_id = fsq_id;
+
+                                                name = places![index].name;
 
                                                 rating = places[index].rating;
 
@@ -1146,6 +1146,7 @@ class _searchState extends State<search> {
                                                 photoUrl =
                                                     places[index].photo_url;
                                               });
+
                                               final tripExist =
                                                   await Trips.availableTrip(
                                                       user.uid);
@@ -1187,9 +1188,7 @@ class _searchState extends State<search> {
                                           ElevatedButton.icon(
                                             onPressed: () async {
                                               setState(() {
-                                                fsq_id = places![index].fsq_id;
-
-                                                name = places[index].name;
+                                                name = places![index].name;
 
                                                 rating = places[index].rating;
 

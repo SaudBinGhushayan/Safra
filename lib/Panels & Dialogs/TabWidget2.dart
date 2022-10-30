@@ -237,6 +237,20 @@ class _AddMembersState extends State<AddMembers> {
                                       final inUser = await Participate.inMember(
                                           widget.trip_id, users['username']);
                                       if (!inUser) {
+                                        await SupaBase_Manager()
+                                            .client
+                                            .from('participate')
+                                            .update({'active': 'false'}).match(
+                                                {'active': 'true'}).match({
+                                          'uid': users['uid']
+                                        }).execute();
+                                        await SupaBase_Manager()
+                                            .client
+                                            .from('trips_info')
+                                            .update({'active': 'false'}).match(
+                                                {'active': 'true'}).match({
+                                          'uid': users['uid']
+                                        }).execute();
                                         addMember(
                                             uid: users['uid'],
                                             username: users['username'],
