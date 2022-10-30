@@ -48,6 +48,8 @@ class Places {
         description: json["description"],
       );
 
+  get length => null;
+
   Map<String, dynamic> toJson() => {
         "fsq_id": fsq_id,
         "name": name,
