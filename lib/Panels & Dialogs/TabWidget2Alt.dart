@@ -15,20 +15,22 @@ import 'package:safra/objects/participate.dart';
 import 'package:safra/ui/ManageActivities.dart';
 import 'package:safra/ui/dashboardn.dart';
 
-class TabWidget2 extends StatefulWidget {
-  TabWidget2({Key? key, required this.scrollController, required this.trip_id})
+class TabWidget2Alt extends StatefulWidget {
+  TabWidget2Alt(
+      {Key? key, required this.scrollController, required this.trip_id})
       : super(key: key);
   final ScrollController scrollController;
   final String trip_id;
 
   @override
-  State<TabWidget2> createState() => _TabWidget2State();
+  State<TabWidget2Alt> createState() => _TabWidget2AltState();
 }
 
-class _TabWidget2State extends State<TabWidget2> {
+class _TabWidget2AltState extends State<TabWidget2Alt> {
   final user = FirebaseAuth.instance.currentUser!;
   final usernameCont = TextEditingController();
   String username = '';
+  String active = '';
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class _TabWidget2State extends State<TabWidget2> {
                 return const Text('Something went wrong');
               } else if (snapshot.hasData) {
                 final participate = snapshot.data!;
+                active = participate[0].active;
                 return Container(
                     margin: const EdgeInsets.only(left: 10),
                     child: ListView.builder(
@@ -130,8 +133,7 @@ class _TabWidget2State extends State<TabWidget2> {
                 if (valid) {
                   var route = new MaterialPageRoute(
                       builder: (context) => new AddMembers(
-                            trip_id: widget.trip_id,
-                          ));
+                          trip_id: widget.trip_id, active: active));
                   Navigator.of(context).push(route);
                 } else {
                   return snackBar.showSnackBarRed(
@@ -167,8 +169,10 @@ class _TabWidget2State extends State<TabWidget2> {
 }
 
 class AddMembers extends StatefulWidget {
-  const AddMembers({Key? key, required this.trip_id}) : super(key: key);
+  const AddMembers({Key? key, required this.trip_id, required this.active})
+      : super(key: key);
   final trip_id;
+  final active;
 
   @override
   State<AddMembers> createState() => _AddMembersState();
@@ -237,24 +241,10 @@ class _AddMembersState extends State<AddMembers> {
                                       final inUser = await Participate.inMember(
                                           widget.trip_id, users['username']);
                                       if (!inUser) {
-                                        await SupaBase_Manager()
-                                            .client
-                                            .from('participate')
-                                            .update({'active': 'false'}).match(
-                                                {'active': 'true'}).match({
-                                          'uid': users['uid']
-                                        }).execute();
-                                        await SupaBase_Manager()
-                                            .client
-                                            .from('trips_info')
-                                            .update({'active': 'false'}).match(
-                                                {'active': 'true'}).match({
-                                          'uid': users['uid']
-                                        }).execute();
                                         addMember(
                                             uid: users['uid'],
                                             username: users['username'],
-                                            active: 'true',
+                                            active: widget.active,
                                             participate_id: participate_id,
                                             trip_id: widget.trip_id);
                                         snackBar.showSnackBarGreen(
@@ -297,10 +287,24 @@ class _AddMembersState extends State<AddMembers> {
                                       final inUser = await Participate.inMember(
                                           widget.trip_id, users['username']);
                                       if (!inUser) {
+                                        await SupaBase_Manager()
+                                            .client
+                                            .from('participate')
+                                            .update({'active': 'false'}).match(
+                                                {'active': 'true'}).match({
+                                          'uid': users['uid']
+                                        }).execute();
+                                        await SupaBase_Manager()
+                                            .client
+                                            .from('trips_info')
+                                            .update({'active': 'false'}).match(
+                                                {'active': 'true'}).match({
+                                          'uid': users['uid']
+                                        }).execute();
                                         addMember(
                                             uid: users['uid'],
                                             username: users['username'],
-                                            active: 'true',
+                                            active: widget.active,
                                             participate_id: participate_id,
                                             trip_id: widget.trip_id);
                                         snackBar.showSnackBarGreen(

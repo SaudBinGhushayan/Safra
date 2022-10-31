@@ -55,6 +55,21 @@ class Participate {
     }
   }
 
+  static Future<bool> inMember(String tripId, String username) async {
+    final docPar = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select()
+        .eq('trip_id', tripId)
+        .eq('username', username)
+        .execute();
+    if (docPar.data.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   static Future<bool> validUserForTrip(String uid, String trip_id) async {
     final docTrip = await SupaBase_Manager()
         .client
@@ -76,6 +91,26 @@ class Participate {
         .from('participate')
         .select()
         .eq('trip_id', trip_id)
+        .execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      return participateFromJson(data);
+    }
+  }
+
+  static Future<List<Participate>?> readActiveTrips(String uid) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select()
+        .eq('active', 'true')
+        .eq('uid', uid)
         .execute();
     if (response.error == null) {
       var data = response.data.toString();

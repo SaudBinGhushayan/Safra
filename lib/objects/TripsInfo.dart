@@ -82,8 +82,46 @@ class TripsInfo {
         .client
         .from('trips_info')
         .select()
-        .eq('active', 'true')
         .eq('uid', uid)
+        .execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      return tripsInfoFromJson(data);
+    }
+  }
+
+  static Future<List<TripsInfo>?> readTrips_Info_InManageTrips(
+      String uid) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('trips_info')
+        .select()
+        .eq('uid', uid)
+        .execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      return tripsInfoFromJson(data);
+    }
+  }
+
+  static Future<List<TripsInfo>?> onTapReadTripInfo(String trip_id) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('trips_info')
+        .select()
+        .eq('trip_id', trip_id)
         .execute();
     if (response.error == null) {
       var data = response.data.toString();

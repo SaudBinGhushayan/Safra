@@ -23,7 +23,6 @@ class Trips {
     required this.region,
     required this.price,
     required this.description,
-    required this.active,
     required this.trip_id,
     required this.trip_name,
     required this.categories,
@@ -41,7 +40,6 @@ class Trips {
   String region;
   String price;
   String description;
-  String active;
   String trip_id;
   String translated_description;
   String categories;
@@ -61,7 +59,6 @@ class Trips {
         rating: json['rating'],
         region: json['region'],
         tel: json['tel'],
-        active: json["active"],
         description: json['description'],
       );
 
@@ -79,7 +76,6 @@ class Trips {
         "rating": rating,
         "region": region,
         "tel": tel,
-        "active": active,
         "description": description
       };
 
@@ -97,13 +93,47 @@ class Trips {
     }
   }
 
-  static Future<List<Trips>?> readTrips(String uid) async {
+  static Future<bool> canAddTrip(String uid, String name) async {
+    final docTrip = await SupaBase_Manager()
+        .client
+        .from('activities')
+        .select()
+        .eq('name', name)
+        .eq('uid', uid)
+        .execute();
+    if (docTrip.data.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<List<Trips>?> readTrips(String uid, String trip_id) async {
     final response = await SupaBase_Manager()
         .client
         .from('activities')
         .select()
-        .eq('active', 'true')
+        .eq('trip_id', trip_id)
         .eq('uid', uid)
+        .execute();
+    if (response.error == null) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('}', '"}');
+      data = data.replaceAll('}",', '},');
+      data = data.replaceAll('"{', '{');
+      return TripsFromJson(data);
+    }
+  }
+
+  static Future<List<Trips>?> readCloneTrips(String trip_id) async {
+    final response = await SupaBase_Manager()
+        .client
+        .from('activities')
+        .select()
+        .eq('trip_id', trip_id)
         .execute();
     if (response.error == null) {
       var data = response.data.toString();
@@ -167,7 +197,6 @@ Future createTrip(
       region: region,
       price: price,
       description: description,
-      active: active,
       trip_name: trip_name,
       trip_id: trip_id);
 
@@ -212,7 +241,6 @@ Future appendTrip(
     required String region,
     required String price,
     required String description,
-    required String active,
     required String trip_name,
     required String photo_url,
     required String translated_description,
@@ -232,7 +260,6 @@ Future appendTrip(
       region: region,
       price: price,
       description: description,
-      active: active,
       trip_id: trip_id);
 
   await SupaBase_Manager()

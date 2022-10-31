@@ -64,6 +64,7 @@ class Comments {
       data = data.replaceAll('"3"', '3');
       data = data.replaceAll('"4"', '4');
       data = data.replaceAll('"5"', '5');
+      data = data.replaceAll('"6"', '6');
 
       return commentsFromJson(data);
     }

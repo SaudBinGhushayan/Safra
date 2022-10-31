@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_new
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,13 +14,24 @@ import 'package:safra/objects/displayTripsInfo.dart';
 import 'package:safra/objects/participate.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ManageActivities.dart';
+import 'package:safra/ui/ManageTrips.dart';
 import 'package:safra/ui/dashboardn.dart';
 
-class TabWidget extends StatelessWidget {
-  TabWidget({Key? key, required this.scrollController}) : super(key: key);
+class TabWidgetAlt extends StatefulWidget {
+  TabWidgetAlt(
+      {Key? key, required this.scrollController, required this.trip_id})
+      : super(key: key);
   final ScrollController scrollController;
+  final String trip_id;
+
+  @override
+  State<TabWidgetAlt> createState() => _TabWidgetAltState();
+}
+
+class _TabWidgetAltState extends State<TabWidgetAlt> {
   final user = FirebaseAuth.instance.currentUser!;
-  String trip_id = '';
+
+  String tripId = '';
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +48,8 @@ class TabWidget extends StatelessWidget {
       const SizedBox(height: 15),
       SizedBox(
           height: 250,
-          child: FutureBuilder<List<displayTripsInfo>?>(
-              future: displayTripsInfo.displayNearestTrip(user.uid),
+          child: FutureBuilder<List<TripsInfo>?>(
+              future: TripsInfo.onTapReadTripInfo(widget.trip_id),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
@@ -44,14 +57,14 @@ class TabWidget extends StatelessWidget {
                   return const Text('No data');
                 } else if (snapshot.hasData) {
                   final trip = snapshot.data![0];
-                  trip_id = trip.tripsInfo.tripId;
+                  tripId = trip.tripId;
                   return Container(
                     margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
                     child: Column(children: [
                       Row(
                         children: [
                           Expanded(
-                            child: Text(trip.tripsInfo.trip_name,
+                            child: Text(trip.trip_name,
                                 style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 35,
@@ -61,17 +74,19 @@ class TabWidget extends StatelessWidget {
                               icon: Icons.edit,
                               callBack: () async {
                                 final valid = await TripsInfo.validateLeader(
-                                    user.uid, trip.tripsInfo.tripId);
+                                    user.uid, trip.tripId);
                                 if (valid) {
                                   var route = new MaterialPageRoute(
-                                      builder: (context) => new editTripInfo(
-                                            trip_name: trip.tripsInfo.trip_name,
-                                            active: trip.tripsInfo.active,
-                                            trip_id: trip.tripsInfo.tripId,
-                                            country: trip.tripsInfo.country,
-                                            from: trip.tripsInfo.from,
-                                            to: trip.tripsInfo.to,
+                                      builder: (context) =>
+                                          new onTapeditTripInfo(
+                                            trip_name: trip.trip_name,
+                                            active: trip.active,
+                                            trip_id: trip.tripId,
+                                            country: trip.country,
+                                            from: trip.from,
+                                            to: trip.to,
                                           ));
+                                  // ignore: use_build_context_synchronously
                                   Navigator.of(context).push(route);
                                 } else {
                                   return snackBar.showSnackBarRed(
@@ -80,7 +95,7 @@ class TabWidget extends StatelessWidget {
                               }),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 13),
                       Row(children: [
                         Icon(Icons.date_range,
                             size: 20,
@@ -88,7 +103,7 @@ class TabWidget extends StatelessWidget {
                                 .withOpacity(0.9)),
                         const SizedBox(width: 3),
                         Text(
-                            '${DateFormat("MMM").format(trip.tripsInfo.from)}${trip.tripsInfo.from.day} - ${DateFormat("MMM").format(trip.tripsInfo.to)}${trip.tripsInfo.to.day}',
+                            '${DateFormat("MMM").format(trip.from)}${trip.from.day} - ${DateFormat("MMM").format(trip.to)}${trip.to.day}',
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -101,7 +116,7 @@ class TabWidget extends StatelessWidget {
                             color: const Color.fromARGB(255, 50, 160, 233)
                                 .withOpacity(0.9)),
                         const SizedBox(width: 3),
-                        Text(trip.tripsInfo.country,
+                        Text(trip.country,
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -109,7 +124,7 @@ class TabWidget extends StatelessWidget {
                       ]),
                       const SizedBox(height: 10),
                       FutureBuilder<Users?>(
-                          future: Users.readUser(trip.tripsInfo.uid),
+                          future: Users.readUser(trip.uid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               final users = snapshot.data!;
@@ -139,7 +154,7 @@ class TabWidget extends StatelessWidget {
                                 .withOpacity(0.9)),
                         const SizedBox(width: 3),
                         Text(
-                            trip.tripsInfo.active == 'true'
+                            trip.active == 'true'
                                 ? 'Status: Active'
                                 : 'Status Not Active',
                             style: const TextStyle(
@@ -154,7 +169,7 @@ class TabWidget extends StatelessWidget {
                             color: const Color.fromARGB(255, 50, 160, 233)
                                 .withOpacity(0.9)),
                         const SizedBox(width: 3),
-                        Text("Trip id ${trip.tripsInfo.tripId}",
+                        Text("Trip id ${trip.tripId}",
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -181,14 +196,14 @@ class TabWidget extends StatelessWidget {
       );
 }
 
-class editTripInfo extends StatefulWidget {
+class onTapeditTripInfo extends StatefulWidget {
   final String trip_name;
   final String active;
   final String country;
   final String trip_id;
   final DateTime from;
   final DateTime to;
-  editTripInfo({
+  onTapeditTripInfo({
     Key? key,
     required this.trip_name,
     required this.active,
@@ -199,10 +214,10 @@ class editTripInfo extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<editTripInfo> createState() => _editTripInfoState();
+  State<onTapeditTripInfo> createState() => _onTapeditTripInfoState();
 }
 
-class _editTripInfoState extends State<editTripInfo> {
+class _onTapeditTripInfoState extends State<onTapeditTripInfo> {
   final user = FirebaseAuth.instance.currentUser!;
 
   String trip_id = '';
@@ -244,7 +259,7 @@ class _editTripInfoState extends State<editTripInfo> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const ManageActivities()));
+                                    onTapActivity(trip_id: widget.trip_id)));
                       })),
               SizedBox(height: MediaQuery.of(context).size.height / 200),
               const Text(
@@ -310,16 +325,12 @@ class _editTripInfoState extends State<editTripInfo> {
                                       .client
                                       .from('participate')
                                       .update({'active': 'false'}).match(
-                                          {'active': 'true'}).match({
-                                    'trip_id': widget.trip_id
-                                  }).execute();
+                                          {'active': 'true'}).execute();
                                   await SupaBase_Manager()
                                       .client
                                       .from('trips_info')
                                       .update({'active': 'false'}).match(
-                                          {'active': 'true'}).match({
-                                    'trip_id': widget.trip_id
-                                  }).execute();
+                                          {'active': 'true'}).execute();
                                   await SupaBase_Manager()
                                       .client
                                       .from('participate')
@@ -334,7 +345,6 @@ class _editTripInfoState extends State<editTripInfo> {
                                           {'active': activeCont.text}).match({
                                     'trip_id': widget.trip_id
                                   }).execute();
-
                                   snackBar.showSnackBarGreen(
                                       'Trip status updated successfully');
                                 }),
@@ -356,13 +366,6 @@ class _editTripInfoState extends State<editTripInfo> {
                                 icon: const Icon(Icons.check,
                                     size: 30, color: Colors.green),
                                 onPressed: () async {
-                                  await SupaBase_Manager()
-                                      .client
-                                      .from('activities')
-                                      .update(
-                                          {'country': countryCont.text}).match({
-                                    'trip_id': widget.trip_id
-                                  }).execute();
                                   await SupaBase_Manager()
                                       .client
                                       .from('trips_info')
