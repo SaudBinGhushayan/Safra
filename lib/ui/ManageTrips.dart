@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -96,22 +94,21 @@ class _ManageTripsState extends State<ManageTrips> {
                                       if (snapshot.connectionState ==
                                               ConnectionState.done &&
                                           snapshot.hasData) {
-                                        return Container();
-                                        //   return ClipRRect(
-                                        //     borderRadius:
-                                        //         BorderRadius.circular(40),
-                                        //     child: Image.network(
-                                        //       snapshot.data!.toString(),
-                                        //       fit: BoxFit.contain,
-                                        //       width: 300,
-                                        //       height: 300,
-                                        //     ),
-                                        //   );
-                                        // } else if (!snapshot.hasData) {
-                                        //   return const Icon(
-                                        //     Icons.person,
-                                        //     size: 20,
-                                        //   );
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: Image.network(
+                                            snapshot.data!.toString(),
+                                            fit: BoxFit.contain,
+                                            width: 300,
+                                            height: 300,
+                                          ),
+                                        );
+                                      } else if (!snapshot.hasData) {
+                                        return const Icon(
+                                          Icons.person,
+                                          size: 20,
+                                        );
                                       } else {
                                         return Center(
                                             child: SpinKitCircle(
@@ -209,17 +206,21 @@ class _ManageTripsState extends State<ManageTrips> {
                                                               12),
                                                     ),
                                                     child: Column(children: [
-                                                      ClipRRect(
+                                                      SizedBox(
+                                                        height: 150,
+                                                        child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
                                                                       8.0),
-                                                          child: Image.asset(
-                                                              'images/BackgroundPics/alt1.jpg',
-                                                              height: 130,
-                                                              width: 250,
-                                                              fit: BoxFit
-                                                                  .cover)),
+                                                          child: Image.network(
+                                                            trips[index]
+                                                                .photo_url,
+                                                            fit: BoxFit.cover,
+                                                            width: 300,
+                                                          ),
+                                                        ),
+                                                      ),
                                                       SizedBox(height: 5),
                                                       Row(
                                                         children: [
@@ -247,9 +248,12 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                     style: TextStyle(fontSize: 19))),
                                                           ),
                                                           Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(3),
+                                                              padding: EdgeInsets
+                                                                  .fromLTRB(
+                                                                      3,
+                                                                      12,
+                                                                      3,
+                                                                      12),
                                                               decoration: BoxDecoration(
                                                                   borderRadius:
                                                                       BorderRadius
@@ -335,6 +339,8 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                           0.3)),
                                                               child: Text(
                                                                   trips[index].active.toString() == 'true' ? 'Active' : 'Not Active',
+                                                                  maxLines: 2,
+                                                                  overflow: TextOverflow.ellipsis,
                                                                   style: TextStyle(fontSize: 19))),
                                                         )
                                                       ]),
@@ -416,17 +422,23 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                 .circular(12),
                                                       ),
                                                       child: Column(children: [
-                                                        ClipRRect(
+                                                        SizedBox(
+                                                          height: 150,
+                                                          child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         8.0),
-                                                            child: Image.asset(
-                                                                'images/BackgroundPics/alt1.jpg',
-                                                                height: 130,
-                                                                width: 250,
-                                                                fit: BoxFit
-                                                                    .cover)),
+                                                            child:
+                                                                Image.network(
+                                                              trips[index]
+                                                                  .tripsInfo[0]
+                                                                  .photo_url,
+                                                              fit: BoxFit.cover,
+                                                              width: 300,
+                                                            ),
+                                                          ),
+                                                        ),
                                                         SizedBox(height: 5),
                                                         Row(
                                                           children: [
@@ -457,8 +469,8 @@ class _ManageTripsState extends State<ManageTrips> {
                                                             ),
                                                             Container(
                                                                 padding:
-                                                                    EdgeInsets
-                                                                        .all(3),
+                                                                    EdgeInsets.all(
+                                                                        3),
                                                                 decoration: BoxDecoration(
                                                                     borderRadius:
                                                                         BorderRadius
@@ -470,6 +482,10 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                             0.3)),
                                                                 child: Text(
                                                                     '${DateFormat("MMM").format(trips[index].tripsInfo[0].from)}${trips[index].tripsInfo[0].from.day} - ${DateFormat("MMM").format(trips[index].tripsInfo[0].to)}${trips[index].tripsInfo[0].to.day}',
+                                                                    maxLines: 2,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             19))),
@@ -641,7 +657,7 @@ class _onTapActivityState extends State<onTapActivity> {
               SizedBox(
                   height: 100,
                   child: FutureBuilder<List<Trips>?>(
-                      future: Trips.readTrips(user.uid, widget.trip_id),
+                      future: Trips.readTrips(widget.trip_id),
                       builder: (context, snapshot) {
                         if (snapshot.data?.length == 0) {
                           return const Center(child: Text('No data'));

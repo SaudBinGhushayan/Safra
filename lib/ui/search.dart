@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:math';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/comments.dart';
 import 'package:safra/objects/user.dart';
 
@@ -36,16 +38,6 @@ class _searchState extends State<search> {
     selectedValue = dropdownlist[0];
   }
 
-  // late Future<List<Places>?> searchData;
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-
-  //   searchData =
-  //       httpHandler().getPlaces(city, category, sortType, min_price, max_price);
-  // }
-
   late String city = '';
   late String category = '';
   final filter_1 = TextEditingController();
@@ -72,7 +64,7 @@ class _searchState extends State<search> {
   String active = 'true';
   String photoUrl = '';
   String username = '';
-  late String sortType = 'Relevance';
+  late String sortType = '';
   String td = '';
   late String min_price = '0';
   late String max_price = '5';
@@ -91,8 +83,7 @@ class _searchState extends State<search> {
   String? selectedValue = '';
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         height: 1400,
@@ -111,11 +102,13 @@ class _searchState extends State<search> {
                     final users = snapshot.data!;
                     username = users.username;
                     return Row(
+                      //menu icon
                       children: [
                         Container(
                             width: 33,
                             height: 33,
-                            margin: const EdgeInsets.fromLTRB(5, 4, 1, 1),
+                            padding: EdgeInsets.only(top: 0.1, right: 9),
+                            margin: const EdgeInsets.fromLTRB(5, 0, 1, 1),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
@@ -125,11 +118,14 @@ class _searchState extends State<search> {
                               iconSize: 20,
                               onPressed: menu,
                             )),
+                        const SizedBox(
+                          height: 90,
+                        ),
                         Container(
                           //profile icon
                           height: 50,
                           width: 140,
-                          margin: const EdgeInsets.fromLTRB(228, 5, 1, 1),
+                          margin: const EdgeInsets.fromLTRB(228, 7, 1, 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(40),
@@ -137,17 +133,55 @@ class _searchState extends State<search> {
                           child: Row(
                             children: [
                               Container(
-                                height: 550,
                                 width: 55,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
                                 ),
+                                child: FutureBuilder(
+                                    future: Storage.readImage(user.uid),
+                                    builder: (BuildContext context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: Image.network(
+                                            snapshot.data!.toString(),
+                                            fit: BoxFit.contain,
+                                            width: 300,
+                                            height: 300,
+                                          ),
+                                        );
+                                      } else if (!snapshot.hasData) {
+                                        return const Icon(
+                                          Icons.person,
+                                          size: 20,
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: SpinKitCircle(
+                                          size: 140,
+                                          itemBuilder: (context, index) {
+                                            final colors = [
+                                              Colors.blue,
+                                              Colors.cyan
+                                            ];
+                                            final color =
+                                                colors[index % colors.length];
+                                            return DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                    color: color));
+                                          },
+                                        ));
+                                      }
+                                    }),
                               ),
-                              Expanded(child: Text('from database'))
+                              Expanded(child: Text(users.username))
                             ],
                           ),
                         )
-                      ],
+                      ], //end1st row
                     );
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -157,7 +191,7 @@ class _searchState extends State<search> {
               height: 34,
             ),
             Container(
-              margin: const EdgeInsets.only(top: 16),
+              margin: const EdgeInsets.only(top: 5),
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular(40),
@@ -325,17 +359,23 @@ class _searchState extends State<search> {
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
+                      print(places.length);
 
                       return SizedBox(
                         height: 350,
                         child: ListView.builder(
                             itemCount: places.length,
                             itemBuilder: ((context, index) {
+                              print(places![index].name);
                               return Row(children: [
                                 Expanded(
                                     child: TextButton(
                                   onPressed: () async {
                                     // here photo function called ----------------------------------------------------------------
+                                    kill_links();
+                                    kill_prices();
+                                    kill_sortby();
+                                    kill_links();
                                     add_links(places![index].photo_url);
 
                                     td = await returen_translate(
@@ -345,14 +385,17 @@ class _searchState extends State<search> {
                                         builder: (context) =>
                                             new searchMaterial(
                                                 places: places![index],
-                                                td: td));
+                                                td: td,
+                                                Links: links));
                                     Navigator.of(context).push(route);
                                   },
                                   child: Container(
                                       alignment: Alignment.centerLeft,
                                       padding: EdgeInsets.only(left: 10),
                                       child: ListTile(
-                                        title: Text(places![index].name,
+                                        title: Text(places[index].name,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                             style:
                                                 const TextStyle(fontSize: 20)),
                                         trailing: Text(places[index].rating),
@@ -483,7 +526,7 @@ class _searchState extends State<search> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   void menu() {
@@ -615,6 +658,24 @@ class _searchState extends State<search> {
   //     return returen_translate(text);
   //   }
   // }
+
+  Future<String> returen_translate(String text) async {
+    final translator = GoogleTranslator();
+    var translation = await translator.translate(text, to: 'en');
+
+    int result = text.compareTo(translation.text);
+
+    if (result == 0) {
+      return 'Not Available';
+    } else {
+      return translation.text;
+    }
+  }
+
+  void kill_links() {
+    links = [];
+  }
+
   String compare_min(String text) {
     if (text == '') {
       return '0';
@@ -647,16 +708,12 @@ class _searchState extends State<search> {
       return '5';
   }
 
-  Future<String> returen_translate(String text) async {
-    final translator = GoogleTranslator();
-    var translation = await translator.translate(text, to: 'en');
+  void kill_prices() {
+    min_price = '0';
+    max_price = '5';
+  }
 
-    int result = text.compareTo(translation.text);
-
-    if (result == 0) {
-      return 'Not Available';
-    } else {
-      return translation.text;
-    }
+  void kill_sortby() {
+    sortType = 'Relevance';
   }
 }

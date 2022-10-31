@@ -119,6 +119,7 @@ class _travelHistory extends State<travelHistory> {
                                 } else if (!snapshot.hasData) {
                                   return const Icon(
                                     Icons.person,
+                                    color: Colors.black,
                                     size: 150,
                                   );
                                 } else {
@@ -357,7 +358,7 @@ class _travelHistory extends State<travelHistory> {
                                           children: const [
                                             Expanded(
                                                 child: Text(
-                                              'Trips Participated in ',
+                                              'You commented on  ',
                                               style: TextStyle(fontSize: 19),
                                             )),
                                           ],
@@ -391,7 +392,7 @@ class _travelHistory extends State<travelHistory> {
                                           children: const [
                                             Expanded(
                                                 child: Text(
-                                              'All Activities',
+                                              'You liked:  ',
                                               style: TextStyle(fontSize: 19),
                                             )),
                                           ],
@@ -400,12 +401,32 @@ class _travelHistory extends State<travelHistory> {
                                           height: 5,
                                         ),
                                         Row(
-                                          children: const [
-                                            Expanded(
-                                                child: Text(
-                                              'from database',
-                                              style: TextStyle(fontSize: 15),
-                                            )),
+                                          children: [
+                                            //TRIP LIKES
+                                            // FutureBuilder<List<TripsInfo>?>(
+                                            //     future: TripsInfo
+                                            //         .readTrips_Info_InManageTrips(
+                                            //             user.uid),
+                                            //     builder: (context, snapshot) {
+                                            //       if (snapshot.data?.length ==
+                                            //           0) {
+                                            //         return Center(
+                                            //             child: Text('No data'));
+                                            //       } else if (snapshot
+                                            //           .hasError) {
+                                            //         return Text(
+                                            //             'Something went wrong');
+                                            //       } else if (snapshot.hasData) {
+                                            //         final trips =
+                                            //             snapshot.data!;
+                                            //         return Text(
+                                            //             '${trips.length} Trips');
+                                            //       } else {
+                                            //         return Center(
+                                            //             child:
+                                            //                 CircularProgressIndicator());
+                                            //       }
+                                            //     })
                                           ],
                                         )
                                       ],
@@ -643,6 +664,10 @@ class _travelHistory extends State<travelHistory> {
           {required IconData icon, required VoidCallback callBack}) =>
       IconButton(
         onPressed: callBack,
-        icon: const Icon(Icons.edit, size: 30),
+        icon: const Icon(
+          Icons.edit,
+          size: 30,
+          color: Colors.blue,
+        ),
       );
 }

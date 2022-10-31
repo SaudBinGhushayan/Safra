@@ -4,7 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/storage.dart';
 import 'package:safra/backend/supabase.dart';
+import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
 import 'package:safra/ui/accountInformation.dart';
@@ -28,6 +31,7 @@ class _searchtripState extends State<searchtrip> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
   String trip_search = '';
+  String username = '';
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,45 +46,98 @@ class _searchtripState extends State<searchtrip> {
         )),
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                    width: 33,
-                    height: 33,
-                    margin: const EdgeInsets.fromLTRB(5, 23, 1, 1),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.menu),
-                      iconSize: 20,
-                      onPressed: menu,
-                    )),
-                Container(
-                  //profile icon
-                  height: 50,
-                  width: 140,
-                  margin: const EdgeInsets.fromLTRB(228, 25, 1, 1),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 550,
-                        width: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
+            FutureBuilder<Users?>(
+                future: Users.readUser(user.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final users = snapshot.data!;
+                    username = users.username;
+                    return Row(
+                      //menu icon
+                      children: [
+                        Container(
+                            width: 33,
+                            height: 33,
+                            padding: EdgeInsets.only(top: 0.1, right: 9),
+                            margin: const EdgeInsets.fromLTRB(5, 0, 1, 1),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.menu),
+                              iconSize: 20,
+                              onPressed: menu,
+                            )),
+                        const SizedBox(
+                          height: 90,
                         ),
-                      ),
-                      const Expanded(child: const Text('from database'))
-                    ],
-                  ),
-                )
-              ],
-            ),
+                        Container(
+                          //profile icon
+                          height: 50,
+                          width: 140,
+                          margin: const EdgeInsets.fromLTRB(228, 7, 1, 1),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 55,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: FutureBuilder(
+                                    future: Storage.readImage(user.uid),
+                                    builder: (BuildContext context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: Image.network(
+                                            snapshot.data!.toString(),
+                                            fit: BoxFit.contain,
+                                            width: 300,
+                                            height: 300,
+                                          ),
+                                        );
+                                      } else if (!snapshot.hasData) {
+                                        return const Icon(
+                                          Icons.person,
+                                          size: 20,
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: SpinKitCircle(
+                                          size: 140,
+                                          itemBuilder: (context, index) {
+                                            final colors = [
+                                              Colors.blue,
+                                              Colors.cyan
+                                            ];
+                                            final color =
+                                                colors[index % colors.length];
+                                            return DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                    color: color));
+                                          },
+                                        ));
+                                      }
+                                    }),
+                              ),
+                              Expanded(child: Text(users.username))
+                            ],
+                          ),
+                        )
+                      ], //end1st row
+                    );
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }),
             const SizedBox(
               height: 16,
             ),
@@ -88,7 +145,7 @@ class _searchtripState extends State<searchtrip> {
               height: 34,
             ),
             Container(
-              margin: const EdgeInsets.only(top: 14.7),
+              margin: const EdgeInsets.only(top: 5),
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular(40),

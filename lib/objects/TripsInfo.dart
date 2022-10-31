@@ -15,6 +15,7 @@ class TripsInfo {
     required this.country,
     required this.uid,
     required this.active,
+    required this.photo_url,
     required this.from,
     required this.to,
   });
@@ -24,12 +25,14 @@ class TripsInfo {
   String uid;
   String active;
   String country;
+  String photo_url;
   DateTime from;
   DateTime to;
 
   factory TripsInfo.fromJson(Map<String, dynamic> json) => TripsInfo(
         tripId: json["trip_id"],
         trip_name: json["trip_name"],
+        photo_url: json["photo_url"],
         country: json["country"],
         uid: json['uid'],
         active: json["active"],
@@ -40,6 +43,7 @@ class TripsInfo {
   Map<String, dynamic> toJson() => {
         "trip_id": tripId,
         "trip_name": trip_name,
+        "photo_url": photo_url,
         "country": country,
         "uid": uid,
         "active": active,

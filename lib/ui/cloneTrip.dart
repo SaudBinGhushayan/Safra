@@ -19,6 +19,7 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 class cloneTrip extends StatefulWidget {
   cloneTrip({Key? key, required this.trips}) : super(key: key);
   Map<String, dynamic> trips;
+
   @override
   State<cloneTrip> createState() => _cloneTripState();
 }
@@ -28,6 +29,7 @@ class _cloneTripState extends State<cloneTrip> {
   final comment = TextEditingController();
   String username = '';
   String gen_trip_id = (Random().nextDouble() * 256).toStringAsFixed(4);
+  List<String> links = [];
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +73,13 @@ class _cloneTripState extends State<cloneTrip> {
                 SizedBox(width: 200),
                 ElevatedButton(
                     onPressed: () async {
+                      add_links(widget.trips['photo_url']);
+
                       final valid = await Participate.validUserForTrip(
                           user.uid, widget.trips['trip_id']);
                       if (!valid) {
                         final trips_Info = TripsInfo(
+                            photo_url: links[0],
                             tripId: gen_trip_id,
                             active: 'false',
                             country: widget.trips['country'],
@@ -200,7 +205,7 @@ class _cloneTripState extends State<cloneTrip> {
                                   .client
                                   .from('trips_likes')
                                   .insert({
-                                'like_id': (Random().nextDouble() * 265)
+                                'like_id': (Random().nextDouble() * 256)
                                     .toStringAsFixed(4)
                                     .toString(),
                                 'trip_id': widget.trips['trip_id'],
@@ -438,6 +443,11 @@ class _cloneTripState extends State<cloneTrip> {
         ),
       ),
     ));
+  }
+
+  void add_links(String link) {
+    List<String> templink = link.split(',');
+    links.addAll(templink);
   }
 }
 

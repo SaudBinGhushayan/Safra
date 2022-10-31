@@ -216,7 +216,7 @@ class _dashboardnState extends State<dashboardn> {
                                                         Container(
                                                             margin: EdgeInsets
                                                                 .fromLTRB(3, 75,
-                                                                    50, 3),
+                                                                    50, 0),
                                                             padding:
                                                                 EdgeInsets.all(
                                                                     3),
@@ -251,7 +251,7 @@ class _dashboardnState extends State<dashboardn> {
                                                                           maxLines:
                                                                               2,
                                                                           overflow: TextOverflow
-                                                                              .clip,
+                                                                              .ellipsis,
                                                                           style:
                                                                               TextStyle(fontSize: 16)),
                                                                     ),
@@ -273,7 +273,7 @@ class _dashboardnState extends State<dashboardn> {
                                                                             2,
                                                                         overflow:
                                                                             TextOverflow
-                                                                                .clip,
+                                                                                .ellipsis,
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 16)),
@@ -327,8 +327,7 @@ class _dashboardnState extends State<dashboardn> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ManageTrips()));
+                                        builder: (context) => ManageTrips()));
                               },
                               child: Text('See all',
                                   style: TextStyle(fontSize: 15)),

@@ -12,10 +12,12 @@ import 'package:safra/objects/user.dart';
 import 'package:safra/ui/search.dart';
 
 class createTripUI extends StatefulWidget {
-  const createTripUI({Key? key, required this.places, required this.td})
+  const createTripUI(
+      {Key? key, required this.places, required this.td, required this.links})
       : super(key: key);
   final Places? places;
   final String td;
+  final String links;
   @override
   State<createTripUI> createState() => createTripUIState();
 }
@@ -31,6 +33,7 @@ class createTripUIState extends State<createTripUI> {
   String username = '';
   String participate = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
   String trip_id = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
+  String fsq_id = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +124,10 @@ class createTripUIState extends State<createTripUI> {
                               categories: widget.places!.categories,
                               translated_description: widget.td,
                               uid: user.uid,
-                              fsq_id: widget.places!.fsq_id,
+                              fsq_id: fsq_id,
                               participate_id: participate,
                               name: widget.places!.name,
+                              photourl: widget.links,
                               rating: widget.places!.rating,
                               tel: widget.places!.tel,
                               country: widget.places!.country,
