@@ -23,18 +23,18 @@ class TabWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      // SizedBox(
+      //     height: 200,
+      //     child: Container(
+      //         //////1st column
+      //         decoration: const BoxDecoration(
+      //             image: DecorationImage(
+      //       image: AssetImage('images/BackgroundPics/alt1.jpg'),
+      //       fit: BoxFit.cover,
+      //     )))),
+      // const SizedBox(height: 15),
       SizedBox(
-          height: 200,
-          child: Container(
-              //////1st column
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-            image: AssetImage('images/BackgroundPics/alt1.jpg'),
-            fit: BoxFit.cover,
-          )))),
-      const SizedBox(height: 15),
-      SizedBox(
-          height: 250,
+          height: 496,
           child: FutureBuilder<List<displayTripsInfo>?>(
               future: displayTripsInfo.displayNearestTrip(user.uid),
               builder: (context, snapshot) {
@@ -46,120 +46,146 @@ class TabWidget extends StatelessWidget {
                   final trip = snapshot.data![0];
                   trip_id = trip.tripsInfo.tripId;
                   return Container(
-                    margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
                     child: Column(children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(trip.tripsInfo.trip_name,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.w300)),
-                          ),
-                          buildButton(
-                              icon: Icons.edit,
-                              callBack: () async {
-                                final valid = await TripsInfo.validateLeader(
-                                    user.uid, trip.tripsInfo.tripId);
-                                if (valid) {
-                                  var route = new MaterialPageRoute(
-                                      builder: (context) => new editTripInfo(
-                                            trip_name: trip.tripsInfo.trip_name,
-                                            active: trip.tripsInfo.active,
-                                            trip_id: trip.tripsInfo.tripId,
-                                            country: trip.tripsInfo.country,
-                                            from: trip.tripsInfo.from,
-                                            to: trip.tripsInfo.to,
-                                          ));
-                                  Navigator.of(context).push(route);
-                                } else {
-                                  return snackBar.showSnackBarRed(
-                                      'Only leader can edit this trip');
-                                }
-                              }),
-                        ],
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(trip.tripsInfo.photo_url,
+                              height: 245,
+                              width: double.infinity,
+                              fit: BoxFit.cover)),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(trip.tripsInfo.trip_name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.w300)),
+                            ),
+                            buildButton(
+                                icon: Icons.edit,
+                                callBack: () async {
+                                  final valid = await TripsInfo.validateLeader(
+                                      user.uid, trip.tripsInfo.tripId);
+                                  if (valid) {
+                                    var route = new MaterialPageRoute(
+                                        builder: (context) => new editTripInfo(
+                                              trip_name:
+                                                  trip.tripsInfo.trip_name,
+                                              active: trip.tripsInfo.active,
+                                              trip_id: trip.tripsInfo.tripId,
+                                              country: trip.tripsInfo.country,
+                                              from: trip.tripsInfo.from,
+                                              to: trip.tripsInfo.to,
+                                            ));
+                                    Navigator.of(context).push(route);
+                                  } else {
+                                    return snackBar.showSnackBarRed(
+                                        'Only leader can edit this trip');
+                                  }
+                                }),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.date_range,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text(
-                            '${DateFormat("MMM").format(trip.tripsInfo.from)}${trip.tripsInfo.from.day} - ${DateFormat("MMM").format(trip.tripsInfo.to)}${trip.tripsInfo.to.day}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.date_range,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text(
+                              '${DateFormat("MMM").format(trip.tripsInfo.from)}${trip.tripsInfo.from.day} - ${DateFormat("MMM").format(trip.tripsInfo.to)}${trip.tripsInfo.to.day}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.pin_drop_outlined,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text(trip.tripsInfo.country,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.pin_drop_outlined,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text(trip.tripsInfo.country,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
                       FutureBuilder<Users?>(
                           future: Users.readUser(trip.tripsInfo.uid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               final users = snapshot.data!;
-                              return Row(children: [
-                                Icon(Icons.star_border,
-                                    size: 20,
-                                    color:
-                                        const Color.fromARGB(255, 50, 160, 233)
-                                            .withOpacity(0.9)),
-                                const SizedBox(width: 3),
-                                Text('Trip Leader: ${users.username}',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                    )),
-                              ]);
+                              return Container(
+                                margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                                child: Row(children: [
+                                  Icon(Icons.star_border,
+                                      size: 20,
+                                      color: const Color.fromARGB(
+                                              255, 50, 160, 233)
+                                          .withOpacity(0.9)),
+                                  const SizedBox(width: 3),
+                                  Text('Trip Leader: ${users.username}',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                      )),
+                                ]),
+                              );
                             } else {
                               return const Center(
                                   child: CircularProgressIndicator());
                             }
                           }),
                       const SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.check_box_outline_blank,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text(
-                            trip.tripsInfo.active == 'true'
-                                ? 'Status: Active'
-                                : 'Status Not Active',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.check_box_outline_blank,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text(
+                              trip.tripsInfo.active == 'true'
+                                  ? 'Status: Active'
+                                  : 'Status Not Active',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.key_outlined,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text("Trip id ${trip.tripsInfo.tripId}",
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.key_outlined,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text("Trip id ${trip.tripsInfo.tripId}",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                     ]),
                   );
                 } else {

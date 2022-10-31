@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
@@ -19,7 +20,9 @@ class mention extends StatefulWidget {
 }
 
 class _mentionState extends State<mention> {
+  final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
+  String username = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,50 +35,98 @@ class _mentionState extends State<mention> {
         )),
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                    width: 33,
-                    height: 33,
-                    padding: EdgeInsets.only(top: 0.1, right: 9),
-                    margin: const EdgeInsets.fromLTRB(5, 12, 1, 1),
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.menu),
-                      iconSize: 20,
-                      onPressed: menu,
-                    )),
-                const SizedBox(
-                  height: 90,
-                ),
-                Container(
-                  //profile icon
-                  height: 50,
-                  width: 140,
-                  margin: const EdgeInsets.fromLTRB(228, 19, 1, 1),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 550,
-                        width: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
+            FutureBuilder<Users?>(
+                future: Users.readUser(user.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final users = snapshot.data!;
+                    username = users.username;
+                    return Row(
+                      //menu icon
+                      children: [
+                        Container(
+                            width: 33,
+                            height: 33,
+                            padding: EdgeInsets.only(top: 0.1, right: 9),
+                            margin: const EdgeInsets.fromLTRB(5, 0, 1, 1),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.menu),
+                              iconSize: 20,
+                              onPressed: menu,
+                            )),
+                        const SizedBox(
+                          height: 90,
                         ),
-                      )
-                    ],
-                  ),
-
-                  // Expanded(child: Text(users.username))
-                ),
-              ],
-            ),
+                        Container(
+                          //profile icon
+                          height: 50,
+                          width: 140,
+                          margin: const EdgeInsets.fromLTRB(228, 7, 1, 1),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 55,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: FutureBuilder(
+                                    future: Storage.readImage(user.uid),
+                                    builder: (BuildContext context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: Image.network(
+                                            snapshot.data!.toString(),
+                                            fit: BoxFit.contain,
+                                            width: 300,
+                                            height: 300,
+                                          ),
+                                        );
+                                      } else if (!snapshot.hasData) {
+                                        return const Icon(
+                                          Icons.person,
+                                          size: 20,
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: SpinKitCircle(
+                                          size: 140,
+                                          itemBuilder: (context, index) {
+                                            final colors = [
+                                              Colors.blue,
+                                              Colors.cyan
+                                            ];
+                                            final color =
+                                                colors[index % colors.length];
+                                            return DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                    color: color));
+                                          },
+                                        ));
+                                      }
+                                    }),
+                              ),
+                              Expanded(child: Text(users.username))
+                            ],
+                          ),
+                        )
+                      ], //end1st row
+                    );
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }),
             SizedBox(
               height: 150,
             ),

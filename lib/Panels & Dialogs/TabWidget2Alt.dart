@@ -41,7 +41,7 @@ class _TabWidget2AltState extends State<TabWidget2Alt> {
               //////1st column
               decoration: const BoxDecoration(
                   image: DecorationImage(
-            image: AssetImage('images/BackgroundPics/alt1.jpg'),
+            image: AssetImage('images/BackgroundPics/alt7.jpg'),
             fit: BoxFit.cover,
           )))),
       SizedBox(
@@ -50,7 +50,7 @@ class _TabWidget2AltState extends State<TabWidget2Alt> {
             future: Participate.readParticipants(widget.trip_id),
             builder: (context, snapshot) {
               if (snapshot.data?.length == 0) {
-                return const Text('No data');
+                return const Text('Reload Page');
               } else if (snapshot.hasError) {
                 return const Text('Something went wrong');
               } else if (snapshot.hasData) {

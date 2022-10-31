@@ -119,6 +119,7 @@ class _travelHistory extends State<travelHistory> {
                                 } else if (!snapshot.hasData) {
                                   return const Icon(
                                     Icons.person,
+                                    color: Colors.black,
                                     size: 150,
                                   );
                                 } else {
@@ -643,6 +644,10 @@ class _travelHistory extends State<travelHistory> {
           {required IconData icon, required VoidCallback callBack}) =>
       IconButton(
         onPressed: callBack,
-        icon: const Icon(Icons.edit, size: 30),
+        icon: const Icon(
+          Icons.edit,
+          size: 30,
+          color: Colors.blue,
+        ),
       );
 }

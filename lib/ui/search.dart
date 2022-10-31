@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:math';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/storage.dart';
 import 'package:safra/objects/comments.dart';
 import 'package:safra/objects/user.dart';
 
@@ -91,8 +93,7 @@ class _searchState extends State<search> {
   String? selectedValue = '';
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
         height: 1400,
@@ -111,11 +112,13 @@ class _searchState extends State<search> {
                     final users = snapshot.data!;
                     username = users.username;
                     return Row(
+                      //menu icon
                       children: [
                         Container(
                             width: 33,
                             height: 33,
-                            margin: const EdgeInsets.fromLTRB(5, 4, 1, 1),
+                            padding: EdgeInsets.only(top: 0.1, right: 9),
+                            margin: const EdgeInsets.fromLTRB(5, 0, 1, 1),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
@@ -125,11 +128,14 @@ class _searchState extends State<search> {
                               iconSize: 20,
                               onPressed: menu,
                             )),
+                        const SizedBox(
+                          height: 90,
+                        ),
                         Container(
                           //profile icon
                           height: 50,
                           width: 140,
-                          margin: const EdgeInsets.fromLTRB(228, 5, 1, 1),
+                          margin: const EdgeInsets.fromLTRB(228, 7, 1, 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(40),
@@ -137,17 +143,55 @@ class _searchState extends State<search> {
                           child: Row(
                             children: [
                               Container(
-                                height: 550,
                                 width: 55,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(40),
                                 ),
+                                child: FutureBuilder(
+                                    future: Storage.readImage(user.uid),
+                                    builder: (BuildContext context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          child: Image.network(
+                                            snapshot.data!.toString(),
+                                            fit: BoxFit.contain,
+                                            width: 300,
+                                            height: 300,
+                                          ),
+                                        );
+                                      } else if (!snapshot.hasData) {
+                                        return const Icon(
+                                          Icons.person,
+                                          size: 20,
+                                        );
+                                      } else {
+                                        return Center(
+                                            child: SpinKitCircle(
+                                          size: 140,
+                                          itemBuilder: (context, index) {
+                                            final colors = [
+                                              Colors.blue,
+                                              Colors.cyan
+                                            ];
+                                            final color =
+                                                colors[index % colors.length];
+                                            return DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                    color: color));
+                                          },
+                                        ));
+                                      }
+                                    }),
                               ),
-                              Expanded(child: Text('from database'))
+                              Expanded(child: Text(users.username))
                             ],
                           ),
                         )
-                      ],
+                      ], //end1st row
                     );
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -157,7 +201,7 @@ class _searchState extends State<search> {
               height: 34,
             ),
             Container(
-              margin: const EdgeInsets.only(top: 16),
+              margin: const EdgeInsets.only(top: 5),
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular(40),
@@ -345,7 +389,8 @@ class _searchState extends State<search> {
                                         builder: (context) =>
                                             new searchMaterial(
                                                 places: places![index],
-                                                td: td));
+                                                td: td,
+                                                Links: links));
                                     Navigator.of(context).push(route);
                                   },
                                   child: Container(
@@ -483,7 +528,7 @@ class _searchState extends State<search> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   void menu() {

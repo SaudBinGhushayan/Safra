@@ -9,14 +9,16 @@ import 'package:safra/objects/Places.dart';
 import 'package:safra/objects/Trips.dart';
 import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/objects/comments.dart';
-import 'package:safra/ui/createTrip.dart';
+import 'package:safra/ui/createTripUI.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class searchMaterial extends StatefulWidget {
-  const searchMaterial({Key? key, required this.places, required this.td})
+  const searchMaterial(
+      {Key? key, required this.places, required this.td, required this.Links})
       : super(key: key);
   final Places? places;
   final String td;
+  final List<String> Links;
 
   @override
   State<searchMaterial> createState() => _searchMaterialState();
@@ -54,7 +56,6 @@ class _searchMaterialState extends State<searchMaterial> {
   String td = '';
   late String min_price = '0';
   late String max_price = '5';
-  List<String> links = [];
 
   final user = FirebaseAuth.instance.currentUser!;
   List<String> uids = [];
@@ -102,7 +103,7 @@ class _searchMaterialState extends State<searchMaterial> {
                           height: 300,
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: links.length,
+                              itemCount: widget.Links.length,
                               itemBuilder: ((context, index) {
                                 return Row(children: [
                                   Center(
@@ -110,7 +111,8 @@ class _searchMaterialState extends State<searchMaterial> {
                                     width: 300,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                          image: NetworkImage(links[index]),
+                                          image:
+                                              NetworkImage(widget.Links[index]),
                                           fit: BoxFit.cover),
                                       borderRadius: BorderRadius.circular(12),
                                       // gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: const [
@@ -715,8 +717,10 @@ class _searchMaterialState extends State<searchMaterial> {
                   'You have registered trips if you want to create a new trip press create again');
             } else {
               var route = new MaterialPageRoute(
-                  builder: (context) =>
-                      new createTripUI(places: widget.places!, td: widget.td));
+                  builder: (context) => new createTripUI(
+                      places: widget.places!,
+                      td: widget.td,
+                      links: widget.Links[0]));
               Navigator.of(context).push(route);
             }
           },
@@ -725,15 +729,6 @@ class _searchMaterialState extends State<searchMaterial> {
         ),
       ]),
     ));
-  }
-
-  void add_links(String link) {
-    List<String> templink = link.split(',');
-    links.addAll(templink);
-  }
-
-  void kill_links() {
-    links = [];
   }
 
   void kill_prices() {

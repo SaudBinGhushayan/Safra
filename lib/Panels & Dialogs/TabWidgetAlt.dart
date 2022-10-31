@@ -37,17 +37,7 @@ class _TabWidgetAltState extends State<TabWidgetAlt> {
   Widget build(BuildContext context) {
     return Column(children: [
       SizedBox(
-          height: 200,
-          child: Container(
-              //////1st column
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-            image: AssetImage('images/BackgroundPics/alt1.jpg'),
-            fit: BoxFit.cover,
-          )))),
-      const SizedBox(height: 15),
-      SizedBox(
-          height: 250,
+          height: 496,
           child: FutureBuilder<List<TripsInfo>?>(
               future: TripsInfo.onTapReadTripInfo(widget.trip_id),
               builder: (context, snapshot) {
@@ -59,122 +49,147 @@ class _TabWidgetAltState extends State<TabWidgetAlt> {
                   final trip = snapshot.data![0];
                   tripId = trip.tripId;
                   return Container(
-                    margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
                     child: Column(children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(trip.trip_name,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.w300)),
-                          ),
-                          buildButton(
-                              icon: Icons.edit,
-                              callBack: () async {
-                                final valid = await TripsInfo.validateLeader(
-                                    user.uid, trip.tripId);
-                                if (valid) {
-                                  var route = new MaterialPageRoute(
-                                      builder: (context) =>
-                                          new onTapeditTripInfo(
-                                            trip_name: trip.trip_name,
-                                            active: trip.active,
-                                            trip_id: trip.tripId,
-                                            country: trip.country,
-                                            from: trip.from,
-                                            to: trip.to,
-                                          ));
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.of(context).push(route);
-                                } else {
-                                  return snackBar.showSnackBarRed(
-                                      'Only leader can edit this trip');
-                                }
-                              }),
-                        ],
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(trip.photo_url,
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover)),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(trip.trip_name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 35,
+                                      fontWeight: FontWeight.w300)),
+                            ),
+                            buildButton(
+                                icon: Icons.edit,
+                                callBack: () async {
+                                  final valid = await TripsInfo.validateLeader(
+                                      user.uid, trip.tripId);
+                                  if (valid) {
+                                    var route = new MaterialPageRoute(
+                                        builder: (context) =>
+                                            new onTapeditTripInfo(
+                                              trip_name: trip.trip_name,
+                                              active: trip.active,
+                                              trip_id: trip.tripId,
+                                              country: trip.country,
+                                              from: trip.from,
+                                              to: trip.to,
+                                            ));
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.of(context).push(route);
+                                  } else {
+                                    return snackBar.showSnackBarRed(
+                                        'Only leader can edit this trip');
+                                  }
+                                }),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 13),
-                      Row(children: [
-                        Icon(Icons.date_range,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text(
-                            '${DateFormat("MMM").format(trip.from)}${trip.from.day} - ${DateFormat("MMM").format(trip.to)}${trip.to.day}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.date_range,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text(
+                              '${DateFormat("MMM").format(trip.from)}${trip.from.day} - ${DateFormat("MMM").format(trip.to)}${trip.to.day}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.pin_drop_outlined,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text(trip.country,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.pin_drop_outlined,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text(trip.country,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
                       FutureBuilder<Users?>(
                           future: Users.readUser(trip.uid),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               final users = snapshot.data!;
-                              return Row(children: [
-                                Icon(Icons.star_border,
-                                    size: 20,
-                                    color:
-                                        const Color.fromARGB(255, 50, 160, 233)
-                                            .withOpacity(0.9)),
-                                const SizedBox(width: 3),
-                                Text('Trip Leader: ${users.username}',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                    )),
-                              ]);
+                              return Container(
+                                margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                                child: Row(children: [
+                                  Icon(Icons.star_border,
+                                      size: 20,
+                                      color: const Color.fromARGB(
+                                              255, 50, 160, 233)
+                                          .withOpacity(0.9)),
+                                  const SizedBox(width: 3),
+                                  Text('Trip Leader: ${users.username}',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                      )),
+                                ]),
+                              );
                             } else {
                               return const Center(
                                   child: CircularProgressIndicator());
                             }
                           }),
                       const SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.check_box_outline_blank,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text(
-                            trip.active == 'true'
-                                ? 'Status: Active'
-                                : 'Status Not Active',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.check_box_outline_blank,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text(
+                              trip.active == 'true'
+                                  ? 'Status: Active'
+                                  : 'Status Not Active',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
-                      Row(children: [
-                        Icon(Icons.key_outlined,
-                            size: 20,
-                            color: const Color.fromARGB(255, 50, 160, 233)
-                                .withOpacity(0.9)),
-                        const SizedBox(width: 3),
-                        Text("Trip id ${trip.tripId}",
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            )),
-                      ]),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                        child: Row(children: [
+                          Icon(Icons.key_outlined,
+                              size: 20,
+                              color: const Color.fromARGB(255, 50, 160, 233)
+                                  .withOpacity(0.9)),
+                          const SizedBox(width: 3),
+                          Text("Trip id ${trip.tripId}",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              )),
+                        ]),
+                      ),
                     ]),
                   );
                 } else {

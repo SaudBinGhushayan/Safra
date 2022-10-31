@@ -15,12 +15,14 @@ export default function Participate({ Participate }) {
   const [ccountry, setcourntyforc] = useState('')
   const [cfrom, setfromforc] = useState('')
   const [cto, settoforc] = useState('')
+  const [cphotourl, setphotourlforc] = useState('')
   const [utripid, settripidforu] = useState('')
   const [utripname, settripnameforu] = useState('')
   const [uactive, setactiveforu] = useState('')
   const [ucountry, setcourntyforu] = useState('')
   const [ufrom, setfromforu] = useState('')
   const [uto, settoforu] = useState('')
+  const [uphotourl, setphotourlforu] = useState('')
   const [dtripid, settripidford] = useState('')
  
   const [formError, set_FormError] = useState(null)
@@ -29,11 +31,11 @@ export default function Participate({ Participate }) {
   const sendRecord = async (e) =>{
     e.preventDefault()
 
-    if(!ctripid || !ctripname || !cuid || !cactive || !ccountry || !cfrom || !cto){
+    if(!ctripid || !ctripname || !cuid || !cactive || !ccountry || !cfrom || !cto || cphotourl){
       set_FormError('Please fill in all fields correctly')
       return 
     }
-    const { data, error} = await supabase.from('trips_info').insert([{trip_id:ctripid, trip_name:ctripname, uid:cuid, active:cactive, country:ccountry, from: cfrom, to:cto}]).select('*')
+    const { data, error} = await supabase.from('trips_info').insert([{trip_id:ctripid, trip_name:ctripname, uid:cuid, active:cactive, country:ccountry, from: cfrom, to:cto, photo_url: cphotourl}]).select('*')
 
     if(error){
       console.log(error)
@@ -49,11 +51,11 @@ export default function Participate({ Participate }) {
   const updateRecord = async (e) =>{
     e.preventDefault()
 
-    if(!utripid || !utripname || !uactive || !ucountry || !ufrom || !uto){
+    if(!utripid || !utripname || !uactive || !ucountry || !ufrom || !uto || uphotourl){
       set_FormError('Please fill in all fields correctly')
       return 
     }
-    const { data, error} = await supabase.from('trips_info').update([{trip_id:utripid, trip_name:utripname, active:uactive, country:ucountry, from: ufrom, to:uto}]).select('*')
+    const { data, error} = await supabase.from('trips_info').update([{trip_id:utripid, trip_name:utripname, active:uactive, country:ucountry, from: ufrom, to:uto, photo_url:uphotourl}]).select('*')
     .eq('trip_id', utripid)
     .select('*')
     const { data1, error1} = await supabase.from('activities').update([{trip_name:utripname}]).select('*')
@@ -125,6 +127,8 @@ export default function Participate({ Participate }) {
                     <td>${data[i].country}</td>
                     <td>${data[i].from}</td>
                     <td>${data[i].to}</td>
+                    <td>${data[i].photo_url}</td>
+
 
 
           </tr>`
@@ -199,6 +203,13 @@ export default function Participate({ Participate }) {
             id="title"
             value={cto}
             onChange={(e)=> settoforc(e.target.value)}/>
+
+            <label>photo_url</label>
+            <input
+            type="text"
+            id="title"
+            value={cphotourl}
+            onChange={(e)=> setphotourlforc(e.target.value)}/>
             
             <button id='sendRecord'>Insert New Record</button>
             </form>
@@ -245,6 +256,13 @@ export default function Participate({ Participate }) {
             id="title"
             value={uto}
             onChange={(e)=> settoforu(e.target.value)}/>
+
+            <label>photo_url</label>
+            <input
+            type="text"
+            id="title"
+            value={uphotourl}
+            onChange={(e)=> setphotourlforu(e.target.value)}/>
             
             <button id='sendRecord'>update record</button>
             </form>
@@ -279,6 +297,8 @@ export default function Participate({ Participate }) {
         <th>country</th>
         <th>from</th>
         <th>to</th>
+        <th>photo_url</th>
+
 
 
        

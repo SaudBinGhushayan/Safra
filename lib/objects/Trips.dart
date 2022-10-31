@@ -108,13 +108,12 @@ class Trips {
     }
   }
 
-  static Future<List<Trips>?> readTrips(String uid, String trip_id) async {
+  static Future<List<Trips>?> readTrips(String trip_id) async {
     final response = await SupaBase_Manager()
         .client
         .from('activities')
         .select()
         .eq('trip_id', trip_id)
-        .eq('uid', uid)
         .execute();
     if (response.error == null) {
       var data = response.data.toString();
@@ -178,6 +177,7 @@ Future createTrip(
     required String trip_id,
     required DateTime from,
     required DateTime to,
+    required String photourl,
     required String trip_name,
     required String participate_id,
     required String photo_url,
@@ -203,6 +203,7 @@ Future createTrip(
   final trips_Info = TripsInfo(
       tripId: trip_id,
       active: active,
+      photo_url: photourl,
       country: country,
       uid: uid,
       from: from,
