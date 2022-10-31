@@ -7,6 +7,7 @@
 import requests
 import threading
 import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
 import flask
 from flask import Flask, request
@@ -203,7 +204,68 @@ def add_photos(array):
 # In[9]:
 
 
-def retrieve_places(a , c):
+default = 'https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2803&q=80,https://images.unsplash.com/photo-1614109355930-7640f99a50ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1335&q=80,https://images.unsplash.com/photo-1563589425593-c17204c56f56?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80'
+
+def sub_addPhoto(fsq_id):
+    links = ''
+    headers = {
+            "accept": "application/json",
+            "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
+                }
+    
+    url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=5&sort=POPULAR"
+    index = 0
+    try:
+        response = requests.get(url, headers=headers).json()
+
+        if response != []:
+
+            for element in response:
+                if index < len(response):
+                    links += response[index]['prefix']+'original'+response[index]['suffix']+','
+                    index+=1
+                else:
+                    links += response[index]['prefix']+'original'+response[index]['suffix']
+                    index+=1
+            return links
+    except: return default
+    else:
+        return default
+            
+        
+        
+    
+
+
+# In[ ]:
+
+
+
+
+
+# In[10]:
+
+
+def sortType(s):
+#     Relevance by default ---> Places api only accept full cap letters
+# #     ['Relevance', 'Rating', 'Popularity']
+
+    temp = 'RELEVANCE'
+    if s == 'Relevance':
+        temp = 'RELEVANCE'
+    elif s == 'Popularity':
+        temp = 'POPULARITY'
+    elif s == 'Rating':
+        temp = 'RATING'
+    return temp
+
+    
+
+
+# In[11]:
+
+
+def retrieve_places(a , c , s , min_price , max_price):
 
     """
     a : condition --- >  example : coffee , art gallery , etc ...
@@ -213,13 +275,36 @@ def retrieve_places(a , c):
     
     lat , long = get_latlong(c)
     if type(lat) != str:
+#         &min_price={min_price}&max_price={max_price}&
+        if min_price == '0' and max_price == '5':
+        
+            if a != '':
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=50&sort={s}"
 
-        if a != '':
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=3"
+            else:
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=50&sort={s}"
+        elif min_price !='0' and max_price == '5':
+            if a != '':
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&limit=50&sort={s}"
 
+            else:
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&limit=50&sort={s}"
+        elif min_price == '0' and max_price !='5':
+            
+            if a != '':
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&max_price={max_price}&limit=50&sort={s}"
+
+            else:
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&max_price={max_price}&limit=50&sort={s}"
+    
         else:
-            fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=3"
+            if a != '':
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
 
+            else:
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
+            
+            
 
         url = fields_url
 
@@ -334,9 +419,16 @@ def retrieve_places(a , c):
         lol : ---> list of links
         '''
         if 'fsq_id' in df.columns:
-            lol = add_photos(df['fsq_id'].to_list())
-
+            lol = []
+            with ThreadPoolExecutor() as executor:
+                results = executor.map(sub_addPhoto , df['fsq_id'].to_list())
+                for result in results:
+                    lol.append(result)
             df.insert(len(df.columns) , 'photo_url' , lol)
+        
+
+
+            
         
         data = df.to_json(orient = 'records')
         return df, data
@@ -345,7 +437,7 @@ def retrieve_places(a , c):
     
 
 
-# In[10]:
+# In[12]:
 
 
 '''
@@ -356,26 +448,20 @@ test field
 '''
 
 
-# In[11]:
-
-
-
-#df , data = retrieve_places('breakfast' , 'london')
-
-
-# In[12]:
-
-
-#df
-
-
 # In[13]:
 
 
-# temp
+
+# df , data = retrieve_places('' , 'london' , 'Relevance' , '0' , '5' )
 
 
 # In[14]:
+
+
+# df
+
+
+# In[ ]:
 
 
 app = Flask(__name__)
@@ -386,7 +472,13 @@ app = Flask(__name__)
 def index():
     userInputa = str(request.args['query2'])
     userInputb = str(request.args['query1'])
-    df, data_json = retrieve_places(userInputa , userInputb)
+    userInputc = str(request.args['sortby'])
+    userInputd = str(request.args['min_price'])
+    userInpute = str(request.args['max_price'])
+    
+    # sb ==> sorted by
+    sb = sortType(userInputc)
+    df, data_json = retrieve_places(userInputa , userInputb , sb , userInputd , userInpute)
 
     return data_json
 

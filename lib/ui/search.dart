@@ -1248,33 +1248,60 @@ class _searchState extends State<search> {
                                     overlay?.insert(entry!);
                                   },
                                   child: Container(
-                                      alignment: Alignment.centerLeft,
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: ListTile(
-                                        title: Text(places![index].name,
-                                            style:
-                                                const TextStyle(fontSize: 20)),
-                                        leading: Container(
-                                            width: 50,
-                                            height: 50,
-                                            child: CircleAvatar(
-                                              radius: 50,
-                                              child: ClipOval(
-                                                child: Image.network(
-                                                  places[index]
-                                                      .photo_url
-                                                      .substring(
-                                                          0,
-                                                          places[index]
-                                                              .photo_url
-                                                              .indexOf(',')),
-                                                  fit: BoxFit.fill,
-                                                  width: 50,
-                                                  height: 50,
-                                                ),
+                                    alignment: Alignment.centerLeft,
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: ListTile(
+                                      title: Text(places![index].name,
+                                          style: const TextStyle(fontSize: 20)),
+                                      leading: Container(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircleAvatar(
+                                            radius: 50,
+                                            child: ClipOval(
+                                              child: Image.network(
+                                                places[index]
+                                                    .photo_url
+                                                    .substring(
+                                                        0,
+                                                        places[index]
+                                                            .photo_url
+                                                            .indexOf(',')),
+                                                fit: BoxFit.fill,
+                                                width: 50,
+                                                height: 50,
                                               ),
-                                            )),
-                                      )),
+                                            ),
+                                          )),
+                                      trailing: Text(
+                                          {places[index].rating} ==
+                                                  'Not Available'
+                                              ? ' '
+                                              : '${places[index].rating}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: places[index].rating ==
+                                                      'Not Available'
+                                                  ? Colors.white
+                                                  : double.parse(places[index].rating) >
+                                                          8
+                                                      ? Colors.green
+                                                      : double.parse(places[index].rating) <
+                                                                  8 &&
+                                                              double.parse(places[index]
+                                                                      .rating) >
+                                                                  6
+                                                          ? Color.fromARGB(
+                                                              255, 164, 160, 24)
+                                                          : double.parse(places[index]
+                                                                      .rating) <
+                                                                  6
+                                                              ? Colors.red
+                                                              : Colors.red)),
+                                    ),
+                                  ),
                                   //===================================== end here ================================================
                                 )),
                               ]);
