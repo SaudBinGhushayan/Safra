@@ -38,16 +38,6 @@ class _searchState extends State<search> {
     selectedValue = dropdownlist[0];
   }
 
-  // late Future<List<Places>?> searchData;
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-
-  //   searchData =
-  //       httpHandler().getPlaces(city, category, sortType, min_price, max_price);
-  // }
-
   late String city = '';
   late String category = '';
   final filter_1 = TextEditingController();
@@ -74,7 +64,7 @@ class _searchState extends State<search> {
   String active = 'true';
   String photoUrl = '';
   String username = '';
-  late String sortType = 'Relevance';
+  late String sortType = '';
   String td = '';
   late String min_price = '0';
   late String max_price = '5';
@@ -369,17 +359,23 @@ class _searchState extends State<search> {
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
+                      print(places.length);
 
                       return SizedBox(
                         height: 350,
                         child: ListView.builder(
                             itemCount: places.length,
                             itemBuilder: ((context, index) {
+                              print(places![index].name);
                               return Row(children: [
                                 Expanded(
                                     child: TextButton(
                                   onPressed: () async {
                                     // here photo function called ----------------------------------------------------------------
+                                    kill_links();
+                                    kill_prices();
+                                    kill_sortby();
+                                    kill_links();
                                     add_links(places![index].photo_url);
 
                                     td = await returen_translate(
@@ -397,7 +393,9 @@ class _searchState extends State<search> {
                                       alignment: Alignment.centerLeft,
                                       padding: EdgeInsets.only(left: 10),
                                       child: ListTile(
-                                        title: Text(places![index].name,
+                                        title: Text(places[index].name,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                             style:
                                                 const TextStyle(fontSize: 20)),
                                         trailing: Text(places[index].rating),
@@ -660,6 +658,24 @@ class _searchState extends State<search> {
   //     return returen_translate(text);
   //   }
   // }
+
+  Future<String> returen_translate(String text) async {
+    final translator = GoogleTranslator();
+    var translation = await translator.translate(text, to: 'en');
+
+    int result = text.compareTo(translation.text);
+
+    if (result == 0) {
+      return 'Not Available';
+    } else {
+      return translation.text;
+    }
+  }
+
+  void kill_links() {
+    links = [];
+  }
+
   String compare_min(String text) {
     if (text == '') {
       return '0';
@@ -692,16 +708,12 @@ class _searchState extends State<search> {
       return '5';
   }
 
-  Future<String> returen_translate(String text) async {
-    final translator = GoogleTranslator();
-    var translation = await translator.translate(text, to: 'en');
+  void kill_prices() {
+    min_price = '0';
+    max_price = '5';
+  }
 
-    int result = text.compareTo(translation.text);
-
-    if (result == 0) {
-      return 'Not Available';
-    } else {
-      return translation.text;
-    }
+  void kill_sortby() {
+    sortType = 'Relevance';
   }
 }

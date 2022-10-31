@@ -211,7 +211,7 @@ def sub_addPhoto(fsq_id):
             "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
                 }
     
-    url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=5&sort=POPULAR"
+    url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=10&sort=POPULAR"
     index = 0
     try:
         response = requests.get(url, headers=headers).json()
@@ -219,7 +219,7 @@ def sub_addPhoto(fsq_id):
         if response != []:
 
             for element in response:
-                if index < len(response):
+                if index < len(response)-1:
                     links += response[index]['prefix']+'original'+response[index]['suffix']+','
                     index+=1
                 else:
@@ -233,12 +233,6 @@ def sub_addPhoto(fsq_id):
         
         
     
-
-
-# In[ ]:
-
-
-
 
 
 # In[10]:
@@ -456,10 +450,10 @@ test field
 # In[14]:
 
 
-# df
+# df['photo_url'][0]
 
 
-# In[ ]:
+# In[15]:
 
 
 app = Flask(__name__)
