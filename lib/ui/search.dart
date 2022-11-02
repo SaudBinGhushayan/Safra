@@ -359,7 +359,6 @@ class _searchState extends State<search> {
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
-                      print(places.length);
 
                       return SizedBox(
                         height: 350,
@@ -378,7 +377,7 @@ class _searchState extends State<search> {
                                     kill_links();
                                     add_links(places![index].photo_url);
 
-                                    td = await returen_translate(
+                                    td = await return_translate(
                                         places[index].description);
 
                                     var route = new MaterialPageRoute(
@@ -398,7 +397,33 @@ class _searchState extends State<search> {
                                             overflow: TextOverflow.ellipsis,
                                             style:
                                                 const TextStyle(fontSize: 20)),
-                                        trailing: Text(places[index].rating),
+                                        trailing: Text(
+                                            places[index].rating ==
+                                                    'Not Available'
+                                                ? ' '
+                                                : places[index].rating,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: places[index].rating ==
+                                                        'Not Available'
+                                                    ? Colors.white
+                                                    : double.parse(places[index]
+                                                                .rating) >
+                                                            8
+                                                        ? Colors.green
+                                                        : double.parse(places[index].rating) <
+                                                                    8 &&
+                                                                double.parse(
+                                                                        places[index]
+                                                                            .rating) >
+                                                                    6
+                                                            ? Color.fromARGB(
+                                                                255, 164, 160, 24)
+                                                            : double.parse(places[index].rating) < 6
+                                                                ? Colors.red
+                                                                : Colors.red)),
                                         leading: Container(
                                             width: 50,
                                             height: 50,
@@ -659,7 +684,7 @@ class _searchState extends State<search> {
   //   }
   // }
 
-  Future<String> returen_translate(String text) async {
+  Future<String> return_translate(String text) async {
     final translator = GoogleTranslator();
     var translation = await translator.translate(text, to: 'en');
 

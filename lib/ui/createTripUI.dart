@@ -82,6 +82,9 @@ class createTripUIState extends State<createTripUI> {
                       ),
                       TextButton.icon(
                           onPressed: () async {
+                            if (enterTripName.text == '') {
+                              enterTripName.text = 'happy trip';
+                            }
                             from_cont = await showDatePicker(
                                 context: context,
                                 initialDate: from_cont!,
