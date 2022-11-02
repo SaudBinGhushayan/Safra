@@ -72,7 +72,17 @@ class _ManageActivitiesState extends State<ManageActivities> {
                                 MaterialPageRoute(
                                     builder: (context) => const dashboardn()));
                           })),
-                  SizedBox(width: 300),
+                  SizedBox(width: 120),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    super.widget));
+                      },
+                      icon: Icon(Icons.replay_outlined, color: Colors.white)),
+                  SizedBox(width: 140),
                   buildButton(icon: Icons.edit, callBack: () async {})
                 ],
               ),

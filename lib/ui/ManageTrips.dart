@@ -71,11 +71,22 @@ class _ManageTripsState extends State<ManageTrips> {
                                           builder: (context) =>
                                               const dashboardn()));
                                 })),
+                        SizedBox(width: 120),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          super.widget));
+                            },
+                            icon: Icon(Icons.replay_outlined,
+                                color: Colors.white)),
                         Container(
                           //profile icon
                           height: 50,
                           width: 140,
-                          margin: const EdgeInsets.fromLTRB(220, 19, 1, 1),
+                          margin: const EdgeInsets.fromLTRB(50, 19, 1, 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(40),
@@ -649,8 +660,39 @@ class _onTapActivityState extends State<onTapActivity> {
                                 MaterialPageRoute(
                                     builder: (context) => const ManageTrips()));
                           })),
-                  SizedBox(width: 300),
-                  buildButton(icon: Icons.edit, callBack: () {})
+                  SizedBox(width: 50),
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12)),
+                      margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            await SupaBase_Manager()
+                                .client
+                                .from('participate')
+                                .delete()
+                                .match({'trip_id': widget.trip_id}).match(
+                                    {'uid': user.uid}).execute();
+
+                            snackBar.showSnackBarGreen('You Left this trip');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary:
+                                Color.fromARGB(232, 180, 0, 0).withOpacity(0.8),
+                            textStyle: const TextStyle(fontSize: 20),
+                          ),
+                          child: Row(
+                            children: const [
+                              SizedBox(width: 10),
+                              Icon(Icons.exit_to_app_outlined,
+                                  color: Color.fromARGB(255, 255, 245, 245),
+                                  size: 20),
+                              SizedBox(width: 5),
+                              Text("Leave Trip"),
+                            ],
+                          ))),
+                  SizedBox(width: 50),
+                  buildButton(icon: Icons.edit, callBack: () {}),
                 ],
               ),
               SizedBox(height: 250),

@@ -13,8 +13,8 @@ import flask
 from flask import Flask, request
 import geopy
 from geopy import Nominatim
-from langdetect import detect
 from textblob import TextBlob
+import pycountry
 
 
 # In[2]:
@@ -238,6 +238,21 @@ def sub_addPhoto(fsq_id):
 # In[10]:
 
 
+def rename_countries(array):
+    temp = []
+    for index in array:
+        
+        name = pycountry.countries.get(alpha_2 = index)
+        temp.append(name.name)
+    
+    return temp
+    
+    
+
+
+# In[11]:
+
+
 def sortType(s):
 #     Relevance by default ---> Places api only accept full cap letters
 # #     ['Relevance', 'Rating', 'Popularity']
@@ -254,7 +269,7 @@ def sortType(s):
     
 
 
-# In[11]:
+# In[12]:
 
 
 def retrieve_places(a , c , s , min_price , max_price):
@@ -264,6 +279,7 @@ def retrieve_places(a , c , s , min_price , max_price):
     c : city name
     """
     
+    ## website, formatted address in location , tastes, features, 
     
     lat , long = get_latlong(c)
     if type(lat) != str:
@@ -271,30 +287,30 @@ def retrieve_places(a , c , s , min_price , max_price):
         if min_price == '0' and max_price == '5':
         
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&limit=50&sort={s}"
         elif min_price !='0' and max_price == '5':
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&limit=50&sort={s}"
         elif min_price == '0' and max_price !='5':
             
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&max_price={max_price}&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&max_price={max_price}&limit=50&sort={s}"
     
         else:
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
             
             
 
@@ -313,7 +329,7 @@ def retrieve_places(a , c , s , min_price , max_price):
         df = pd.json_normalize(data['results'])
 
         #deleting unnecessary columns
-
+    # tastes , website , hours
         try:
             df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel'
                                            ,'location.country', 'location.region'
@@ -341,10 +357,9 @@ def retrieve_places(a , c , s , min_price , max_price):
 #         # renaming columns
         if 'location.country' in df.columns and 'location.region' in df.columns:
             df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
-    
         
 
-
+        
         # filling nan values
 
         df = df.fillna('Not Available')
@@ -390,13 +405,26 @@ def retrieve_places(a , c , s , min_price , max_price):
 #             trl = translate(array_r)
             
 #             df.insert(df.columns.get_loc('region')+1 , 'translated_region' , trl)
-
+        if 'country' in df.columns:
+            templist = df['country'].to_list()
+            templist = rename_countries(templist)
+            
+            df.drop(['country'] , inplace = True , axis = 1)
+            df.insert(len(df.columns), 'country' , templist)
+        
         if 'categories' in df.columns:
             templist = df['categories'].to_list()
             templist = extract_categories(templist)
             
             df.drop(['categories'] , inplace = True , axis = 1)
             df.insert(len(df.columns), 'categories' , templist)
+        
+#         if 'tastes' in df.columns:
+#             templist = df['tastes'].to_list()
+#             templist = extract_categories(templist)
+            
+#             df.drop(['tastes'] , inplace = True , axis = 1)
+#             df.insert(len(df.columns), 'tastes' , templist)
             
         try:
             # changing datatypes
@@ -429,7 +457,7 @@ def retrieve_places(a , c , s , min_price , max_price):
     
 
 
-# In[12]:
+# In[13]:
 
 
 '''
@@ -440,20 +468,20 @@ test field
 '''
 
 
-# In[13]:
+# In[16]:
 
 
 
-# df , data = retrieve_places('' , 'london' , 'Relevance' , '0' , '5' )
+# df , data = retrieve_places('' , 'riyadh' , 'Rating' , '0' , '5' )
 
 
-# In[14]:
+# In[18]:
 
 
-# df['photo_url'][0]
+# df['tastes']
 
 
-# In[15]:
+# In[ ]:
 
 
 app = Flask(__name__)

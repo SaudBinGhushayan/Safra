@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/objects/comments.dart';
 import 'package:safra/ui/createTripUI.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:translator/translator.dart';
 
 class searchMaterial extends StatefulWidget {
   const searchMaterial(
@@ -25,6 +27,8 @@ class searchMaterial extends StatefulWidget {
 }
 
 class _searchMaterialState extends State<searchMaterial> {
+  DateTime activity_date = DateTime.now();
+
   late String city = '';
   late String category = '';
   final filter_1 = TextEditingController();
@@ -95,7 +99,7 @@ class _searchMaterialState extends State<searchMaterial> {
                       const Padding(padding: EdgeInsets.only(left: 30)),
 
                       // this line was added by abdullah
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
 
@@ -115,227 +119,186 @@ class _searchMaterialState extends State<searchMaterial> {
                                               NetworkImage(widget.Links[index]),
                                           fit: BoxFit.cover),
                                       borderRadius: BorderRadius.circular(12),
-                                      // gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: const [
-                                      // Color.fromARGB(255, 129, 196, 228),
-                                      // Colors.cyanAccent
-                                      // ]),
                                     ),
                                   )),
                                   SizedBox(width: 3)
                                 ]);
                               }))),
 
-                      // image 'https://fastly.4sqi.net/img/general/original/1049719_PiLE0Meoa27AkuLvSaNwcvswnmYRa0vxLQkOrpgMlwk.jpg'
-                      // Image.network(
-                      //     links[0],
-                      //     fit: BoxFit
-                      //         .fill),
-                      SizedBox(
-                        height: 5,
-                      ),
-
                       Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              style: BorderStyle.solid,
-                              color: Color.fromARGB(255, 214, 214, 224)),
-                          // borderRadius:
-                          //     BorderRadius
-                          //         .all(
-                          //   Radius.circular(
-                          //       20),
-                          // ),
-                          // image: DecorationImage(
-                          //     fit: BoxFit
-                          //         .fill,
-                          //     image: AssetImage(
-                          //         'images/BackgroundPics/lightBackground.jpg'))
-                        ),
-                        width: 500,
-                        height: 151,
-
-                        // this row is for the top to containers for name , location, ratings and money
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                  gradient: RadialGradient(
-                                    colors: [
-                                      Colors.white,
-                                      Colors.white12,
-                                    ],
-                                    radius: 0.75,
-                                    focal: Alignment(0.7, -0.7),
-                                    tileMode: TileMode.clamp,
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Text(
+                                    widget.places!.name,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize:
+                                            widget.places!.name.length > 12
+                                                ? 15
+                                                : 25,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  border: Border.all(
-                                      style: BorderStyle.solid,
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 255)),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      topLeft: Radius.circular(20)),
-                                  // image: DecorationImage(fit: BoxFit.fill, image: AssetImage('images/BackgroundPics/WhiteBackground.jpg'), colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.9), BlendMode.modulate))
-                                ),
-                                width: 200,
-                                height: 150,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(height: 25),
-                                    GradientText(
-                                      '${widget.places!.name}',
-                                      colors: [
-                                        Colors.black,
-                                        Colors.black,
-                                        Colors.black
-                                      ],
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize:
-                                              widget.places!.name.length > 10
-                                                  ? 15
-                                                  : 25,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 25,
-                                    ),
-                                    Text(
-                                      '${widget.places!.region},  ${widget.places!.country} ',
-                                      style: TextStyle(
-                                          fontSize:
-                                              widget.places!.region.length > 12
-                                                  ? 15
-                                                  : 25,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
-                                    )
-                                  ],
-                                )),
-                            Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [
-                                      Colors.white12,
-                                      Colors.white,
-                                    ],
+                                  const Text(
+                                    ' -   ',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  border: Border.all(
-                                      style: BorderStyle.solid,
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 255)),
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(20),
-                                      bottomRight: Radius.circular(20)),
-                                  // image: DecorationImage(fit: BoxFit.fill, image: AssetImage('images/BackgroundPics/WhiteBackground.jpg'), colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.9), BlendMode.modulate))
-                                ),
-                                width: 209,
-                                height: 150,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(height: 25),
-                                    Text(
-                                      'Rating:',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Text(
-                                        '${widget.places!.rating}' == 'Not Available'
-                                            ? ' '
-                                            : '${widget.places!.rating}',
-                                        textAlign: TextAlign.center,
+                                  Text(
+                                    '${widget.places!.price == '1.0' ? '\$' : widget.places!.price == '2.0' ? '\$\$' : widget.places!.price == '3.0' ? '\$\$\$' : widget.places!.price == '4.0' ? '\$\$\$\$' : widget.places!.price == 'Not Available' ? ' ' : ''}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: widget.places!.price == '1.0'
+                                            ? Color.fromARGB(255, 67, 164, 70)
+                                            : widget.places!.price == '2.0'
+                                                ? Color.fromARGB(
+                                                    255, 91, 117, 29)
+                                                : widget.places!.price == '3.0'
+                                                    ? Colors.orange
+                                                    : widget.places!.price ==
+                                                            '4.0'
+                                                        ? Colors.red
+                                                        : widget.places!
+                                                                    .price ==
+                                                                'Not Available'
+                                                            ? Colors.white
+                                                            : Colors.white),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              Text(
+                                '${widget.places!.region},  ${widget.places!.country} ',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Rating:  ',
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: widget.places!.rating ==
-                                                    'Not Available'
-                                                ? Colors.white
-                                                : double.parse(widget.places!.rating) >
-                                                        8
-                                                    ? Colors.green
-                                                    : double.parse(widget
-                                                                    .places!
-                                                                    .rating) <
-                                                                8 &&
-                                                            double.parse(widget
-                                                                    .places!
-                                                                    .rating) >
-                                                                6
-                                                        ? Color.fromARGB(
-                                                            255, 164, 160, 24)
-                                                        : double.parse(widget
-                                                                    .places!
-                                                                    .rating) <
-                                                                6
-                                                            ? Colors.red
-                                                            : Colors.red)),
-                                    SizedBox(height: 25),
-                                    Text(
-                                      '${widget.places!.price == '1.0' ? '\$' : widget.places!.price == '2.0' ? '\$\$' : widget.places!.price == '3.0' ? '\$\$\$' : widget.places!.price == '4.0' ? '\$\$\$\$' : widget.places!.price == 'Not Available' ? ' ' : ''}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: widget.places!.price == '1.0'
-                                              ? Color.fromARGB(255, 67, 164, 70)
-                                              : widget.places!.price == '2.0'
-                                                  ? Color.fromARGB(
-                                                      255, 91, 117, 29)
-                                                  : widget.places!.price ==
-                                                          '3.0'
-                                                      ? Colors.orange
-                                                      : widget.places!.price ==
-                                                              '4.0'
-                                                          ? Colors.red
-                                                          : widget.places!
-                                                                      .price ==
-                                                                  'Not Available'
-                                                              ? Colors.white
-                                                              : Colors.white),
-                                    )
-                                  ],
-                                ))
-                          ],
-                        ),
+                                            fontSize: 18,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                          '${widget.places!.rating}' ==
+                                                  'Not Available'
+                                              ? ' '
+                                              : '${widget.places!.rating}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: widget.places!.rating ==
+                                                      'Not Available'
+                                                  ? Colors.white
+                                                  : double.parse(widget.places!.rating) >
+                                                          8
+                                                      ? Colors.green
+                                                      : double.parse(widget.places!.rating) <
+                                                                  8 &&
+                                                              double.parse(widget
+                                                                      .places!
+                                                                      .rating) >
+                                                                  6
+                                                          ? Color.fromARGB(
+                                                              255, 164, 160, 24)
+                                                          : double.parse(widget
+                                                                      .places!
+                                                                      .rating) <
+                                                                  6
+                                                              ? Colors.red
+                                                              : Colors.red)),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 50,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Tel:  ',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(widget.places!.tel,
+                                          style: const TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 50,
+                              ),
+                              Row(
+                                children: const [
+                                  Text(
+                                    'Open Hours: ',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '7:00 to 20:00',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              Row(
+                                children: [
+                                  const Text('Full address:',
+                                      style: const TextStyle(fontSize: 16)),
+                                  Text('',
+                                      style: const TextStyle(fontSize: 16)),
+                                ],
+                              )
+                            ]),
                       ),
-                      // SizedBox(
-                      //   height: 10,
-                      // ),
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
                       Container(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 3,
                           ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                style: BorderStyle.solid,
-                                color: Color.fromARGB(255, 214, 214, 224)),
-                            // borderRadius:
-                            //     BorderRadius
-                            //         .all(
-                            //   Radius.circular(
-                            //       20),
-                            // ),
-                            // image: DecorationImage(
-                            //     fit: BoxFit
-                            //         .fill,
-                            //     image: AssetImage(
-                            //         'images/BackgroundPics/lightBackground.jpg'))
-                          ),
                           width: 500,
-                          height: 700,
 
                           // this row is for the top to containers for name , location, ratings and money
                           child: Column(
@@ -344,56 +307,6 @@ class _searchMaterialState extends State<searchMaterial> {
                             //         .start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'About:',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                widget.places!.description,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                              ),
-
-                              // TextButton(onPressed: translate(places[index].description) , child: Text(
-                              //   'translation:',
-                              //   style: TextStyle(
-                              //       fontSize:
-                              //           10,
-                              //       fontStyle:
-                              //           FontStyle.italic,
-                              //       decoration: TextDecoration.underline,
-                              //       color: Colors.black),
-                              // ),),
-
-                              Text(
-                                td == 'Not Available'
-                                    ? ''
-                                    : ''
-                                        'translation:',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    fontStyle: FontStyle.italic,
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                td == 'Not Available' ? '' : td,
-                                // places[index]
-                                //     .translated_description,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                              ),
-
-                              SizedBox(
-                                height: 25,
-                              ),
-
                               Container(
                                 alignment: Alignment.center,
                                 width: 350,
@@ -401,7 +314,7 @@ class _searchMaterialState extends State<searchMaterial> {
                                 decoration: BoxDecoration(
                                     border:
                                         Border.all(style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.elliptical(200, 300),
                                     ),
                                     color: Colors.white38),
@@ -409,51 +322,54 @@ class _searchMaterialState extends State<searchMaterial> {
                                     widget.places!.categories
                                         .replaceAll(RegExp(','), ',\t'),
                                     textAlign: TextAlign.center,
-                                    colors: [
+                                    colors: const [
                                       Colors.black87,
                                       Colors.purple,
                                       Colors.blue
                                     ],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
                               ),
-                              SizedBox(
-                                height: 20,
+                              const SizedBox(
+                                height: 10,
                               ),
-                              Text(
-                                'More info:',
+                              const Text(
+                                'About:',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
-                                height: 10,
+                              const SizedBox(
+                                height: 5,
                               ),
-                              Text('Telephone: ${widget.places!.tel}',
-                                  style: const TextStyle(fontSize: 16)),
-
-                              SizedBox(
-                                height: 10,
+                              Text(
+                                widget.places!.description,
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 16),
                               ),
-                              Text('Open Hours: 7:00 to 20:00',
-                                  style: const TextStyle(fontSize: 16)),
-                              SizedBox(
-                                height: 10,
+                              Text(
+                                widget.td == 'Not Available'
+                                    ? ''
+                                    : ''
+                                        'translation:',
+                                style: const TextStyle(
+                                    fontSize: 10,
+                                    fontStyle: FontStyle.italic,
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.black),
                               ),
-                              Text('Full address: ---- , -- ,-------',
-                                  style: const TextStyle(fontSize: 16)),
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.start,
-                              //   crossAxisAlignment:
-                              //       CrossAxisAlignment.start,
-                              //   children: [
-                              //     Text(places[index]
-                              //         .categories)
-                              //   ],
-                              // )
+                              Text(
+                                widget.td == 'Not Available' ? '' : widget.td,
+                                // places[index]
+                                //     .translated_description,
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                              const SizedBox(
+                                height: 25,
+                              ),
                             ],
                           )
                           // name
@@ -469,6 +385,12 @@ class _searchMaterialState extends State<searchMaterial> {
                     ]))),
 
         const SizedBox(height: 40),
+
+        const Text('Registered Trips:'),
+
+        const SizedBox(
+          height: 5,
+        ),
         SizedBox(
           height: 200,
           child: FutureBuilder<List<TripsInfo>?>(
@@ -508,6 +430,7 @@ class _searchMaterialState extends State<searchMaterial> {
                                   valueListenable: ValueNotifier<bool>(false),
                                   builder: (context, value, child) {
                                     return Checkbox(
+                                      activeColor: Colors.blue,
                                       onChanged: (value) {
                                         setState(() {
                                           _value = value!;
@@ -628,69 +551,104 @@ class _searchMaterialState extends State<searchMaterial> {
           icon: const Icon(Icons.check_box),
           label: const Text('add comment'),
         ),
-        ElevatedButton.icon(
-          onPressed: () async {
-            final userHasTrips = await TripsInfo.userHasTrip(user.uid);
-            if (userHasTrips) {
-              active = "false";
-            }
 
-            setState(() {
-              fsq_id = fsq_id;
+        SizedBox(
+          child: Column(
+            children: [
+              Text('Book Activity:'),
+              const SizedBox(
+                height: 3,
+              ),
+              const SizedBox(
+                height: 3,
+              ),
+              ElevatedButton(
+                child: const Text(
+                  'Select prefered date',
+                  style: TextStyle(fontSize: 16),
+                ),
+                onPressed: () async {
+                  DateTime? newDate = await showDatePicker(
+                      context: context,
+                      initialDate: activity_date,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2050));
 
-              name = widget.places!.name;
+                  if (newDate == null) return;
+                  activity_date = newDate;
 
-              rating = widget.places!.rating;
+                  setState(() {
+                    activity_date = newDate;
+                  });
+                },
+              ),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final userHasTrips = await TripsInfo.userHasTrip(user.uid);
+                  if (userHasTrips) {
+                    active = "false";
+                  }
 
-              tel = widget.places!.tel;
+                  setState(() {
+                    fsq_id = fsq_id;
 
-              country = widget.places!.country;
+                    name = widget.places!.name;
 
-              region = widget.places!.region;
+                    rating = widget.places!.rating;
 
-              price = widget.places!.price;
+                    tel = widget.places!.tel;
 
-              description = widget.places!.description;
-              translated_description = td;
-              categories = widget.places!.categories;
-              photoUrl = widget.places!.photo_url;
-            });
+                    country = widget.places!.country;
 
-            final tripExist = await Trips.availableTrip(user.uid);
-            if (tripExist && _value == true) {
-              appendTrip(
-                  photo_url: photoUrl,
-                  categories: categories,
-                  translated_description: td,
-                  uid: user.uid,
-                  fsq_id: fsq_id,
-                  name: name,
-                  rating: rating,
-                  tel: tel,
-                  country: country,
-                  region: region,
-                  price: price,
-                  description: description,
-                  trip_id: tripid,
-                  trip_name: trip_name);
+                    region = widget.places!.region;
 
-              snackBar.showSnackBarGreen(
-                  'Activity Added to trip ${trip_name} Successfully');
+                    price = widget.places!.price;
 
-              setState(() {
-                _value = false;
-              });
-            } else if (noTrips) {
-              return snackBar.showSnackBarRed(
-                  'You dont have a registered trips yet please create a trip in schedule page');
-            } else if (_value == false) {
-              return snackBar.showSnackBarRed(
-                  'please select which trip to add your activity');
-            }
-          },
-          icon: const Icon(Icons.check_box),
-          label: const Text('book activity'),
+                    description = widget.places!.description;
+                    translated_description = td;
+                    categories = widget.places!.categories;
+                    photoUrl = widget.places!.photo_url;
+                  });
+
+                  final tripExist = await Trips.availableTrip(user.uid);
+                  if (tripExist && _value == true) {
+                    appendTrip(
+                        photo_url: photoUrl,
+                        categories: categories,
+                        translated_description: td,
+                        uid: user.uid,
+                        fsq_id: fsq_id,
+                        name: name,
+                        rating: rating,
+                        tel: tel,
+                        country: country,
+                        region: region,
+                        price: price,
+                        description: description,
+                        trip_id: tripid,
+                        trip_name: trip_name);
+
+                    snackBar.showSnackBarGreen(
+                        'Activity Added to trip ${trip_name} Successfully');
+
+                    setState(() {
+                      _value = false;
+                    });
+                  } else if (noTrips) {
+                    return snackBar.showSnackBarRed(
+                        'You dont have a registered trips yet please create a trip in schedule page');
+                  } else if (_value == false) {
+                    return snackBar.showSnackBarRed(
+                        'please select which trip to add your activity');
+                  }
+                },
+                icon: const Icon(Icons.check_box),
+                label: const Text('book activity'),
+              ),
+            ],
+          ),
         ),
+
         ElevatedButton.icon(
           onPressed: () async {
             setState(() {
@@ -738,5 +696,18 @@ class _searchMaterialState extends State<searchMaterial> {
 
   void kill_sortby() {
     sortType = 'Relevance';
+  }
+
+  Future<String> return_translate(String text) async {
+    final translator = GoogleTranslator();
+    var translation = await translator.translate(text, to: 'en');
+
+    int result = text.compareTo(translation.text);
+
+    if (result == 0) {
+      return 'Not Available';
+    } else {
+      return translation.text;
+    }
   }
 }

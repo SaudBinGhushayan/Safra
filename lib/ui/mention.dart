@@ -11,6 +11,7 @@ import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
+import 'package:safra/objects/displayMention.dart';
 
 class mention extends StatefulWidget {
   const mention({Key? key}) : super(key: key);
@@ -23,6 +24,11 @@ class _mentionState extends State<mention> {
   final user = FirebaseAuth.instance.currentUser!;
   OverlayEntry? entry;
   String username = '';
+  String comment_string = '';
+  int likes = 0;
+  int dislikes = 0;
+  String comment_id = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,6 +136,7 @@ class _mentionState extends State<mention> {
             SizedBox(
               height: 150,
             ),
+
             ListTile(
               leading: Text(
                 "Notifcation",
@@ -137,21 +144,45 @@ class _mentionState extends State<mention> {
               ),
             ),
 
-            SizedBox(
-              height: 350,
-              child: ListView.builder(
-                  itemCount: 10, //for example
-                  itemBuilder: ((context, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            "https://images.unsplash.com/photo-1659535915214-e7cbac112038?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"),
-                      ),
-                      title: Text(
-                          "saud ,abdulmalik,and 5 others reacted to your trips"),
+            FutureBuilder<List<displayMention>?>(
+                future: displayMention.readMention(user.uid),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    print(snapshot.data);
+                    List<displayMention>? l1 = snapshot.data;
+
+                    return SizedBox(
+                      child: ListView.builder(
+                          itemCount: l1?.length, //for example
+                          itemBuilder: ((context, index) {
+                            return ListTile(
+                              leading: Text(
+                                  '${l1![index].comment} ${l1[index].likes}'),
+                              title: Text(".."),
+                            );
+                          })),
                     );
-                  })),
-            ),
+                  } else {
+                    return SizedBox(
+                      child: Row(children: [Text('yet no ')]),
+                    );
+                  }
+                })),
+            // SizedBox(
+            //   height: 350,
+            //   child: ListView.builder(
+            //       itemCount: 10, //for example
+            //       itemBuilder: ((context, index) {
+            //         return ListTile(
+            //           leading: CircleAvatar(
+            //             backgroundImage: NetworkImage(
+            //                 "https://images.unsplash.com/photo-1659535915214-e7cbac112038?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"),
+            //           ),
+            //           title: Text(
+            //               "saud ,abdulmalik,and 5 others reacted to your trips"),
+            //         );
+            //       })),
+            // ),
             // SizedBox(
             //   height: 300,
             //   child: ListTile(
@@ -163,6 +194,10 @@ class _mentionState extends State<mention> {
             //         Text("saud ,abdulmalik,and 5 others reacted to your trips"),
             //   ),
             // ),
+
+            SizedBox(
+              height: 300,
+            ),
             Container(
               padding: EdgeInsets.only(top: 57),
               margin: const EdgeInsets.only(top: 6),
