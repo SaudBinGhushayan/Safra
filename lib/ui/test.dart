@@ -24,27 +24,16 @@
 //         body: Center(
 //             child: ElevatedButton(
 //                 onPressed: () async {
-//                   List<Trips> trips;
+//                   dynamic data;
 //                   final response = await SupaBase_Manager()
 //                       .client
-//                       .from('activities')
+//                       .from('participate')
 //                       .select()
-//                       .eq('name', 'Amorino Gelato Al Naturale')
-//                       .eq('trip_id', '1.1058e+2')
+//                       .eq('trip_id', '231.2704')
 //                       .execute();
-
-//                   if (response.data.isNotEmpty) {
-//                     var data = response.data.toString();
-//                     data = data.replaceAll('{', '{"');
-//                     data = data.replaceAll(': ', '": "');
-//                     data = data.replaceAll(', ', '", "');
-//                     data = data.replaceAll('}', '"}');
-//                     data = data.replaceAll('}",', '},');
-//                     data = data.replaceAll('"{', '{');
-//                     trips = TripsFromJson(data);
-//                     print(trips[0].fsq_id);
-//                   } else {
-//                     return null;
+//                   if (response.error == null) {
+//                     data = response.data[0] as Map<String, dynamic>;
+//                     print(data['active']);
 //                   }
 //                 },
 //                 child: Text('press'))));

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:safra/backend/snackBar.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/backend/supabase.dart';
 import 'package:safra/objects/TripsInfo.dart';
 import 'package:safra/objects/participate.dart';
 import 'package:safra/objects/user.dart';
@@ -151,12 +152,9 @@ class _travelHistory extends State<travelHistory> {
                             child:
                                 Column(mainAxisSize: MainAxisSize.min, children: [
                               //start of username,acoount information ,travel history,save,navigation bar
-                              Text(users.name,
-                                  style: const TextStyle(fontSize: 19)),
-                              (Text("@" + users.username,
-                                  style: const TextStyle(fontSize: 19))),
+
                               const SizedBox(
-                                height: 5,
+                                height: 40,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -251,7 +249,7 @@ class _travelHistory extends State<travelHistory> {
                                                   if (snapshot.data?.length ==
                                                       0) {
                                                     return const Text(
-                                                        'No data');
+                                                        '0 trips');
                                                   } else if (snapshot
                                                       .hasError) {
                                                     return const Text(
@@ -310,7 +308,7 @@ class _travelHistory extends State<travelHistory> {
                                                   if (snapshot.data?.length ==
                                                       0) {
                                                     return Center(
-                                                        child: Text('No data'));
+                                                        child: Text('0 trips'));
                                                   } else if (snapshot
                                                       .hasError) {
                                                     return Text(
@@ -402,31 +400,41 @@ class _travelHistory extends State<travelHistory> {
                                         ),
                                         Row(
                                           children: [
-                                            //TRIP LIKES
-                                            // FutureBuilder<List<TripsInfo>?>(
-                                            //     future: TripsInfo
-                                            //         .readTrips_Info_InManageTrips(
-                                            //             user.uid),
-                                            //     builder: (context, snapshot) {
-                                            //       if (snapshot.data?.length ==
-                                            //           0) {
-                                            //         return Center(
-                                            //             child: Text('No data'));
-                                            //       } else if (snapshot
-                                            //           .hasError) {
-                                            //         return Text(
-                                            //             'Something went wrong');
-                                            //       } else if (snapshot.hasData) {
-                                            //         final trips =
-                                            //             snapshot.data!;
-                                            //         return Text(
-                                            //             '${trips.length} Trips');
-                                            //       } else {
-                                            //         return Center(
-                                            //             child:
-                                            //                 CircularProgressIndicator());
-                                            //       }
-                                            //     })
+                                            StreamBuilder<
+                                                    List<Map<String, dynamic>>>(
+                                                stream: SupaBase_Manager()
+                                                    .client
+                                                    .from(
+                                                        'trips_likes:uid=eq.${user.uid}')
+                                                    .stream(
+                                                        ['like_id']).execute(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.data?.length ==
+                                                      0) {
+                                                    final likes =
+                                                        snapshot.data!;
+                                                    return Text('0 likes');
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    return const Text(
+                                                        'Something went wrong');
+                                                  } else if (snapshot.hasData) {
+                                                    final likes =
+                                                        snapshot.data![0];
+                                                    return Text(
+                                                        snapshot.data!.length
+                                                                .toString() +
+                                                            ' trips',
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.black));
+                                                  } else {
+                                                    return const Center(
+                                                        child:
+                                                            const CircularProgressIndicator());
+                                                  }
+                                                }),
                                           ],
                                         )
                                       ],

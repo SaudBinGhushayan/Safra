@@ -147,12 +147,9 @@ class _accountInformation extends State<accountInformation> {
                             child:
                                 Column(mainAxisSize: MainAxisSize.min, children: [
                               //start of username,acoount information ,travel history,save,navigation bar
-                              Text(users.name,
-                                  style: const TextStyle(fontSize: 19)),
-                              (Text("@" + users.username,
-                                  style: const TextStyle(fontSize: 19))),
+
                               const SizedBox(
-                                height: 5,
+                                height: 45,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -611,6 +608,7 @@ class _accountInformation extends State<accountInformation> {
   Widget buildButton(
           {required IconData icon, required VoidCallback callBack}) =>
       IconButton(
+        color: Colors.blue,
         onPressed: callBack,
         icon: const Icon(Icons.edit, size: 30),
       );

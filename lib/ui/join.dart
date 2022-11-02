@@ -34,9 +34,9 @@ class _joinState extends State<join> {
   // DateTime date = DateTime(2022, 12, 24);
   final tripId = TextEditingController();
   final participate_id = '${Random().nextDouble() * 256}';
-  final username = '';
-
+  String username = '';
   String active = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +48,7 @@ class _joinState extends State<join> {
                 return const Text('Something went wrong');
               } else if (snapshot.hasData) {
                 final users = snapshot.data!;
-
+                username = users.username;
                 return Scaffold(
                     resizeToAvoidBottomInset: false,
                     body: Container(
@@ -190,25 +190,24 @@ class _joinState extends State<join> {
                                       fontSize: 20,
                                     ),
                                   ),
-                                  onChanged: (value) {
-                                    FutureBuilder<List<TripsInfo>?>(
-                                        future: TripsInfo.onTapReadTripInfo(
-                                            tripId.text),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            final trip_info = snapshot.data!;
-                                            active = trip_info[0].active;
-                                            return Container();
-                                          } else {
-                                            return Container();
-                                          }
-                                        });
-                                  },
                                 ),
                               ),
                               const SizedBox(height: 40),
                               ElevatedButton(
                                   onPressed: () async {
+                                    final response = await SupaBase_Manager()
+                                        .client
+                                        .from('trips_info')
+                                        .select()
+                                        .eq('trip_id', tripId.text)
+                                        .execute();
+                                    if (response.error == null) {
+                                      var data = response.data[0]
+                                          as Map<String, dynamic>;
+                                      setState(() {
+                                        active = data['active'];
+                                      });
+                                    }
                                     final validTripId =
                                         await Participate.validTripId(
                                             tripId.text);
@@ -240,7 +239,6 @@ class _joinState extends State<join> {
                                           active: active,
                                           participate_id: participate_id,
                                           trip_id: tripId.text);
-
                                       snackBar.showSnackBarGreen(
                                           'Succeefully joined trip No.${tripId.text}');
                                       Navigator.push(

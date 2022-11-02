@@ -76,11 +76,22 @@ class _dashboardnState extends State<dashboardn> {
                           const SizedBox(
                             height: 90,
                           ),
+                          SizedBox(width: 130),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            super.widget));
+                              },
+                              icon: Icon(Icons.replay_outlined,
+                                  color: Colors.white)),
                           Container(
                             //profile icon
                             height: 50,
                             width: 140,
-                            margin: const EdgeInsets.fromLTRB(228, 19, 1, 1),
+                            margin: const EdgeInsets.fromLTRB(50, 19, 1, 1),
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               borderRadius: BorderRadius.circular(40),
@@ -184,7 +195,10 @@ class _dashboardnState extends State<dashboardn> {
                                   Trips.displayNearestTripActivities(user.uid),
                               builder: (context, snapshot) {
                                 if (snapshot.data?.length == 0) {
-                                  return Text('No data');
+                                  return Center(
+                                      child: Text('No data',
+                                          style:
+                                              TextStyle(color: Colors.blue)));
                                 } else if (snapshot.hasError) {
                                   return Text('Something went wrong');
                                 } else if (snapshot.hasData) {
@@ -347,7 +361,11 @@ class _dashboardnState extends State<dashboardn> {
                                 if (snapshot.hasError) {
                                   return Text('Something went wrong');
                                 } else if (snapshot.data == null) {
-                                  return Text('No data');
+                                  return Center(
+                                      child: Text(
+                                    'No data',
+                                    style: TextStyle(color: Colors.blue),
+                                  ));
                                 } else if (snapshot.hasData &&
                                     links.isNotEmpty) {
                                   final trip = snapshot.data![0];
