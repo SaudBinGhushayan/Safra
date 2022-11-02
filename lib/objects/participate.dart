@@ -123,6 +123,21 @@ class Participate {
       return participateFromJson(data);
     }
   }
+
+  static Future<String?> getActiveStatus(String trip_id) async {
+    var data;
+    final response = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select()
+        .eq('trip_id', trip_id)
+        .execute();
+    if (response.error == null) {
+      data = response.data[0] as Map<String, dynamic>;
+      print(data['active']);
+      return data['active'];
+    }
+  }
 }
 
 Future addMember(

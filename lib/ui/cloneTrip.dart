@@ -70,7 +70,16 @@ class _cloneTripState extends State<cloneTrip> {
                               MaterialPageRoute(
                                   builder: (context) => const searchtrip()));
                         })),
-                SizedBox(width: 200),
+                SizedBox(width: 120),
+                IconButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => super.widget));
+                    },
+                    icon: Icon(Icons.replay_outlined, color: Colors.black)),
+                SizedBox(width: 35),
                 ElevatedButton(
                     onPressed: () async {
                       add_links(widget.trips['photo_url']);
@@ -164,7 +173,7 @@ class _cloneTripState extends State<cloneTrip> {
               StreamBuilder<List<Map<String, dynamic>>>(
                   stream: SupaBase_Manager()
                       .client
-                      .from('trips_likes')
+                      .from('trips_likes:trip_id=eq.${widget.trips['trip_id']}')
                       .stream(['like_id']).execute(),
                   builder: (context, snapshot) {
                     if (snapshot.data?.length == 0) {
@@ -214,11 +223,13 @@ class _cloneTripState extends State<cloneTrip> {
                               }).execute();
                             },
                           ),
-                          Text(likes['like'].toString(),
+                          Text(snapshot.data!.length.toString(),
                               style: TextStyle(fontSize: 19)),
                           SizedBox(width: 5),
                           Text(
-                              likes['uid'] == user.uid
+                              likes['uid'] == user.uid &&
+                                      likes['trip_id'] ==
+                                          widget.trips['trip_id']
                                   ? 'You Liked This Trip!'
                                   : '',
                               style: TextStyle(

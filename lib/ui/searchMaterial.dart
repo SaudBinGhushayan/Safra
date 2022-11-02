@@ -508,6 +508,7 @@ class _searchMaterialState extends State<searchMaterial> {
                                   valueListenable: ValueNotifier<bool>(false),
                                   builder: (context, value, child) {
                                     return Checkbox(
+                                      activeColor: Colors.blue,
                                       onChanged: (value) {
                                         setState(() {
                                           _value = value!;
