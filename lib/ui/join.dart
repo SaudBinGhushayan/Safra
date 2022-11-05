@@ -36,6 +36,10 @@ class _joinState extends State<join> {
   final participate_id = '${Random().nextDouble() * 256}';
   String username = '';
   String active = '';
+  final usernameCont = TextEditingController();
+  String tusername = '';
+  bool humanActive = false;
+  bool MachineActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -147,8 +151,24 @@ class _joinState extends State<join> {
                           //Jointrip,tripid,..
                           child: Column(
                             children: [
+                              Theme(
+                                data: Theme.of(context).copyWith(
+                                    unselectedWidgetColor:
+                                        Colors.blue.withOpacity(0.1)),
+                                child: CheckboxListTile(
+                                  value: MachineActive,
+                                  onChanged: (newVal) {
+                                    setState(() {
+                                      MachineActive = newVal!;
+                                    });
+                                  },
+                                  tileColor: Colors.white,
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                ),
+                              ),
                               Container(
-                                  margin: const EdgeInsets.only(top: 200),
+                                  margin: const EdgeInsets.only(top: 143),
                                   child: const Text(
                                     'Join trip',
                                     style: TextStyle(
@@ -192,60 +212,79 @@ class _joinState extends State<join> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 40),
+                              const SizedBox(height: 10),
+                              CheckboxListTile(
+                                title: Text(
+                                  "Check Here",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                value: humanActive,
+                                onChanged: (newVal) {
+                                  setState(() {
+                                    humanActive = newVal!;
+                                  });
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
                               ElevatedButton(
                                   onPressed: () async {
-                                    final response = await SupaBase_Manager()
-                                        .client
-                                        .from('trips_info')
-                                        .select()
-                                        .eq('trip_id', tripId.text)
-                                        .execute();
-                                    if (response.error == null) {
-                                      var data = response.data[0]
-                                          as Map<String, dynamic>;
-                                      setState(() {
-                                        active = data['active'];
-                                      });
-                                    }
-                                    final validTripId =
-                                        await Participate.validTripId(
-                                            tripId.text);
-                                    final validUser =
-                                        await Participate.validUserForTrip(
-                                            user.uid, tripId.text);
-                                    if (!validTripId) {
-                                      return snackBar.showSnackBarRed(
-                                          'Sorry, Trip does not exist try to enter a valid trip id');
-                                    } else if (validUser) {
-                                      return snackBar.showSnackBarRed(
-                                          'You are already registered at this trip');
-                                    } else {
-                                      await SupaBase_Manager()
-                                          .client
-                                          .from('participate')
-                                          .update({'active': 'false'}).match({
-                                        'active': 'true'
-                                      }).match({'uid': user.uid}).execute();
-                                      await SupaBase_Manager()
+                                    if (humanActive && !MachineActive) {
+                                      final response = await SupaBase_Manager()
                                           .client
                                           .from('trips_info')
-                                          .update({'active': 'false'}).match({
-                                        'active': 'true'
-                                      }).match({'uid': user.uid}).execute();
-                                      addMember(
-                                          uid: user.uid,
-                                          username: username,
-                                          active: active,
-                                          participate_id: participate_id,
-                                          trip_id: tripId.text);
-                                      snackBar.showSnackBarGreen(
-                                          'Succeefully joined trip No.${tripId.text}');
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const dashboardn()));
+                                          .select()
+                                          .eq('trip_id', tripId.text)
+                                          .execute();
+                                      if (response.data.length != 0) {
+                                        var data = response.data[0]
+                                            as Map<String, dynamic>;
+                                        setState(() {
+                                          active = data['active'];
+                                        });
+                                      }
+                                      final validTripId =
+                                          await Participate.validTripId(
+                                              tripId.text);
+                                      final validUser =
+                                          await Participate.validUserForTrip(
+                                              user.uid, tripId.text);
+                                      if (!validTripId) {
+                                        return snackBar.showSnackBarRed(
+                                            'Sorry, Trip does not exist try to enter a valid trip id');
+                                      } else if (validUser) {
+                                        return snackBar.showSnackBarRed(
+                                            'You are already registered at this trip');
+                                      } else {
+                                        await SupaBase_Manager()
+                                            .client
+                                            .from('participate')
+                                            .update({'active': 'false'}).match({
+                                          'active': 'true'
+                                        }).match({'uid': user.uid}).execute();
+                                        await SupaBase_Manager()
+                                            .client
+                                            .from('trips_info')
+                                            .update({'active': 'false'}).match({
+                                          'active': 'true'
+                                        }).match({'uid': user.uid}).execute();
+                                        addMember(
+                                            uid: user.uid,
+                                            username: username,
+                                            active: active,
+                                            participate_id: participate_id,
+                                            trip_id: tripId.text);
+                                        snackBar.showSnackBarGreen(
+                                            'Succeefully joined trip No.${tripId.text}');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const dashboardn()));
+                                      }
+                                    } else {
+                                      snackBar.showSnackBarRed(
+                                          'Please Refresh the Page and Try Again');
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -256,7 +295,7 @@ class _joinState extends State<join> {
                                           160, 10, 160, 10)),
                                   child: const Text("Join")),
                               Container(
-                                margin: const EdgeInsets.only(top: 125),
+                                margin: const EdgeInsets.only(top: 100),
                                 height: 200,
                                 width: 500,
                                 decoration: const BoxDecoration(

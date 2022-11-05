@@ -236,6 +236,7 @@ class _onTapeditTripInfoState extends State<onTapeditTripInfo> {
   final user = FirebaseAuth.instance.currentUser!;
 
   String trip_id = '';
+  String Status = '';
 
   @override
   Widget build(BuildContext context) {
@@ -273,8 +274,10 @@ class _onTapeditTripInfoState extends State<onTapeditTripInfo> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    onTapActivity(trip_id: widget.trip_id)));
+                                builder: (context) => onTapActivity(
+                                      trip_id: widget.trip_id,
+                                      trip_name: widget.trip_name,
+                                    )));
                       })),
               SizedBox(height: MediaQuery.of(context).size.height / 200),
               const Text(
@@ -322,51 +325,65 @@ class _onTapeditTripInfoState extends State<onTapeditTripInfo> {
                           labelText: "Trip Name",
                           labelStyle: const TextStyle(color: Colors.grey)),
                     ),
-                    TextFormField(
-                        controller: activeCont,
-                        decoration: InputDecoration(
-                            icon: IconButton(
-                                icon: Icon(Icons.check_box,
-                                    size: 20,
-                                    color:
-                                        const Color.fromARGB(255, 50, 160, 233)
-                                            .withOpacity(0.9)),
-                                onPressed: () {}),
-                            suffixIcon: IconButton(
-                                icon: const Icon(Icons.check,
-                                    size: 30, color: Colors.green),
-                                onPressed: () async {
-                                  await SupaBase_Manager()
-                                      .client
-                                      .from('participate')
-                                      .update({'active': 'false'}).match(
-                                          {'active': 'true'}).execute();
-                                  await SupaBase_Manager()
-                                      .client
-                                      .from('trips_info')
-                                      .update({'active': 'false'}).match(
-                                          {'active': 'true'}).execute();
-                                  await SupaBase_Manager()
-                                      .client
-                                      .from('participate')
-                                      .update(
-                                          {'active': activeCont.text}).match({
-                                    'trip_id': widget.trip_id
-                                  }).execute();
-                                  await SupaBase_Manager()
-                                      .client
-                                      .from('trips_info')
-                                      .update(
-                                          {'active': activeCont.text}).match({
-                                    'trip_id': widget.trip_id
-                                  }).execute();
-                                  snackBar.showSnackBarGreen(
-                                      'Trip status updated successfully');
-                                }),
-                            hintText: widget.active,
-                            hintStyle: const TextStyle(color: Colors.grey),
-                            labelText: "Trip Status",
-                            labelStyle: const TextStyle(color: Colors.grey))),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(12, 3, 0, 3),
+                      child: Row(children: [
+                        Icon(Icons.check_box,
+                            size: 20,
+                            color: const Color.fromARGB(255, 50, 160, 233)
+                                .withOpacity(0.9)),
+                        SizedBox(width: 35),
+                        Text('Trip Status',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.withOpacity(0.9))),
+                        DropdownButton<String>(
+                            dropdownColor: Color.fromARGB(255, 130, 200, 247)
+                                .withOpacity(0.9),
+                            items: <String>['true', 'false'].map((String v) {
+                              return DropdownMenuItem<String>(
+                                  value: v, child: Text(v));
+                            }).toList(),
+                            onChanged: (newVal) {
+                              Status = newVal!;
+                            }),
+                        SizedBox(width: 135),
+                        IconButton(
+                            icon: const Icon(Icons.check,
+                                size: 30, color: Colors.green),
+                            onPressed: () async {
+                              await SupaBase_Manager()
+                                  .client
+                                  .from('participate')
+                                  .update({'active': 'false'}).match(
+                                      {'active': 'true'}).execute();
+                              await SupaBase_Manager()
+                                  .client
+                                  .from('trips_info')
+                                  .update({'active': 'false'}).match(
+                                      {'active': 'true'}).execute();
+                              await SupaBase_Manager()
+                                  .client
+                                  .from('participate')
+                                  .update({'active': Status}).match(
+                                      {'trip_id': widget.trip_id}).execute();
+                              await SupaBase_Manager()
+                                  .client
+                                  .from('trips_info')
+                                  .update({'active': Status}).match(
+                                      {'trip_id': widget.trip_id}).execute();
+                              snackBar.showSnackBarGreen(
+                                  'Trip status updated successfully');
+                            })
+                      ]),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.fromLTRB(65, 8, 4, 0),
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: Color.fromARGB(255, 75, 74, 74)
+                                        .withOpacity(0.5))))),
                     TextFormField(
                         controller: countryCont,
                         decoration: InputDecoration(
