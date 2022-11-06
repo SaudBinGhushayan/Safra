@@ -140,26 +140,48 @@ def extract_categories(array):
     
     so this method extract only name of category out of json
     """
-    templist = []
-    for element in array:
+#     templist = []
+#     for element in array:
         
-        category = ''
-        if element != []:
-            index = 0
-            for inner_element in element:
-                index+=1
+#         category = ''
+#         if element != []:
+#             index = 0
+#             for inner_element in element:
+#                 index+=1
 
-                if index < len(element):
-                    category += inner_element['name']+','
+#                 if index < len(element):
+#                     category += inner_element['name']+','
 
-                else:
-                    category += inner_element['name']
-            templist.append(category)
-        else:
-            category+= 'Not Available'
-            templist.append(category)
-    return templist
+#                 else:
+#                     category += inner_element['name']
+#             templist.append(category)
+#         else:
+#             category+= 'Not Available'
+#             templist.append(category)
+#     return templist
                 
+
+def extract_category(element):
+    
+    category = ''
+    index = 0
+    if len(element) > 0:
+        for inner_element in element:
+
+            if index < len(element)-1:
+                category+= inner_element['name'] + '--'
+                index+=1
+            else:
+                category+= inner_element['name']
+                index+=1
+    else: 
+        category = 'Not Available'
+        return category
+    
+    category.replace(',' , ' ')
+    return category
+        
+        
 
 
 # In[8]:
@@ -238,19 +260,49 @@ def sub_addPhoto(fsq_id):
 # In[10]:
 
 
-def rename_countries(array):
-    temp = []
-    for index in array:
+# def rename_countries(array):
+#     temp = []
+#     for index in array:
         
-        name = pycountry.countries.get(alpha_2 = index)
-        temp.append(name.name)
+#         name = pycountry.countries.get(alpha_2 = index)
+#         temp.append(name.name)
     
-    return temp
+#     return temp
+
+def rename_country(regex):
+    
+    
+    index = pycountry.countries.get(alpha_2 = regex)
+    
+    
+    return index.name
     
     
 
 
 # In[11]:
+
+
+def extract_tastes(l1):
+    
+    if len(l1) > 0 and l1 != 'Not Available':
+        t = ''
+        index = 0
+        for taste in l1:
+            
+            if index < len(l1)-1:
+                t+= taste+'--'
+                index+=1
+            else:
+                t+= taste
+                index+=1
+        return t
+    else:
+        return 'Not Available'
+    
+
+
+# In[12]:
 
 
 def sortType(s):
@@ -269,7 +321,7 @@ def sortType(s):
     
 
 
-# In[12]:
+# In[13]:
 
 
 def retrieve_places(a , c , s , min_price , max_price):
@@ -287,30 +339,30 @@ def retrieve_places(a , c , s , min_price , max_price):
         if min_price == '0' and max_price == '5':
         
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&ll={lat}%2C{long}&&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&limit=50&sort={s}"
         elif min_price !='0' and max_price == '5':
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=50&sort={s}"
         elif min_price == '0' and max_price !='5':
             
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&max_price={max_price}&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&max_price={max_price}&limit=50&sort={s}"
     
         else:
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Cwebsite%2Chours%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
             
             
 
@@ -332,7 +384,8 @@ def retrieve_places(a , c , s , min_price , max_price):
     # tastes , website , hours
         try:
             df.drop(df.columns.difference(['fsq_id', 'name', 'price', 'rating', 'tel'
-                                           ,'location.country', 'location.region'
+                                           ,'location.country', 'location.region',
+                                           'location.formatted_address', 'hours.display','tastes'
                                            , 'description' , 'categories']),axis = 1,inplace=True)
 
         except: df = df
@@ -342,7 +395,7 @@ def retrieve_places(a , c , s , min_price , max_price):
         """
         in this phase we add empty columns if columns are not available already
         
-        ============== remember to change range when changing number of retrieved rows ==============
+        ============== remember to change range when changing number of retrieved rows =======================
         """
         if 'price' not in df.columns:
             df.insert(len(df.columns) , 'price' , ['Not Available' for i in range(df.shape[0])] )
@@ -357,6 +410,12 @@ def retrieve_places(a , c , s , min_price , max_price):
 #         # renaming columns
         if 'location.country' in df.columns and 'location.region' in df.columns:
             df.rename(columns = {'location.country':'country' , 'location.region':'region'}, inplace = True)
+            if 'location.formatted_address' in df.columns:
+                df.rename(columns = {'location.formatted_address':'address'}, inplace = True)
+        
+        if 'hours.display' in df.columns:
+            df.rename(columns = {'hours.display':'open_hours'} , inplace = True)
+
         
 
         
@@ -371,6 +430,16 @@ def retrieve_places(a , c , s , min_price , max_price):
         if 'description' in df.columns:
             
             df['description'] = [i.replace(',' , '') for i in df['description']]
+        
+        if 'open_hours' in df.columns:
+            
+            df['open_hours'] = [i.replace(',' , '-') for i in df['open_hours']]
+            df['open_hours'] = [i.replace(';' , '\n') for i in df['open_hours']]
+
+        
+        if 'address' in df.columns:
+            
+            df['address'] = [i.replace(',' , '-') for i in df['address']]
             # extracting
 #             array = df['description'].to_list()
 
@@ -405,26 +474,20 @@ def retrieve_places(a , c , s , min_price , max_price):
 #             trl = translate(array_r)
             
 #             df.insert(df.columns.get_loc('region')+1 , 'translated_region' , trl)
-        if 'country' in df.columns:
-            templist = df['country'].to_list()
-            templist = rename_countries(templist)
+#         if 'country' in df.columns:
+#             templist = df['country'].to_list()
+#             templist = rename_countries(templist)
             
-            df.drop(['country'] , inplace = True , axis = 1)
-            df.insert(len(df.columns), 'country' , templist)
+#             df.drop(['country'] , inplace = True , axis = 1)
+#             df.insert(len(df.columns), 'country' , templist)
         
-        if 'categories' in df.columns:
-            templist = df['categories'].to_list()
-            templist = extract_categories(templist)
-            
-            df.drop(['categories'] , inplace = True , axis = 1)
-            df.insert(len(df.columns), 'categories' , templist)
-        
-#         if 'tastes' in df.columns:
-#             templist = df['tastes'].to_list()
+#         if 'categories' in df.columns:
+#             templist = df['categories'].to_list()
 #             templist = extract_categories(templist)
             
-#             df.drop(['tastes'] , inplace = True , axis = 1)
-#             df.insert(len(df.columns), 'tastes' , templist)
+#             df.drop(['categories'] , inplace = True , axis = 1)
+#             df.insert(len(df.columns), 'categories' , templist)
+        
             
         try:
             # changing datatypes
@@ -445,10 +508,54 @@ def retrieve_places(a , c , s , min_price , max_price):
                 for result in results:
                     lol.append(result)
             df.insert(len(df.columns) , 'photo_url' , lol)
-        
-
-
             
+            
+        if 'tastes' in df.columns:
+            
+            
+            lol = []
+            
+            with ThreadPoolExecutor() as executor:
+                results = executor.map(extract_tastes, df['tastes'].to_list())
+                
+                for result in results:
+                    lol.append(result)
+            
+            df.drop(['tastes'] , inplace = True , axis = 1)
+
+            df.insert(len(df.columns) , 'tastes' , lol)
+        
+        if 'country' in df.columns:
+
+
+            lol = []
+
+            with ThreadPoolExecutor() as executor:
+                results = executor.map(rename_country, df['country'].to_list())
+
+                for result in results:
+                    lol.append(result)
+
+            df.drop(['country'] , inplace = True , axis = 1)
+
+            df.insert(len(df.columns) , 'country' , lol)
+        
+        if 'categories' in df.columns:
+            
+            
+            lol = []
+            with ThreadPoolExecutor() as executor:
+                results = executor.map(extract_category, df['categories'].to_list())
+                
+                for result in results:
+                    lol.append(result)
+            
+            df.drop(['categories'] , inplace = True , axis = 1)
+
+            df.insert(len(df.columns) , 'categories' , lol)
+        
+        df = df.fillna('Not Available')
+
         
         data = df.to_json(orient = 'records')
         return df, data
@@ -457,7 +564,7 @@ def retrieve_places(a , c , s , min_price , max_price):
     
 
 
-# In[13]:
+# In[14]:
 
 
 '''
@@ -468,20 +575,20 @@ test field
 '''
 
 
+# In[15]:
+
+
+
+# df , rendex = retrieve_places('' , 'madrid' , 'Relevance' , '0' , '5' )
+
+
 # In[16]:
 
 
-
-# df , data = retrieve_places('' , 'riyadh' , 'Rating' , '0' , '5' )
-
-
-# In[18]:
+# df
 
 
-# df['tastes']
-
-
-# In[ ]:
+# In[17]:
 
 
 app = Flask(__name__)
@@ -496,10 +603,9 @@ def index():
     userInputd = str(request.args['min_price'])
     userInpute = str(request.args['max_price'])
     
-    # sb ==> sorted by
+
     sb = sortType(userInputc)
     df, data_json = retrieve_places(userInputa , userInputb , sb , userInputd , userInpute)
-
     return data_json
 
 

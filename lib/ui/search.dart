@@ -38,8 +38,8 @@ class _searchState extends State<search> {
     selectedValue = dropdownlist[0];
   }
 
-  String city = '';
-  String category = '';
+  late String city = '';
+  late String category = '';
   final filter_1 = TextEditingController();
 
 // this is for min price
@@ -64,11 +64,12 @@ class _searchState extends State<search> {
   String active = 'true';
   String photoUrl = '';
   String username = '';
-  String sortType = '';
+  late String sortType = '';
   String td = '';
-  String min_price = '0';
-  String max_price = '5';
+  late String min_price = '0';
+  late String max_price = '5';
   List<String> links = [];
+  List<String> tastes_list = [];
 
   final user = FirebaseAuth.instance.currentUser!;
   var isloaded = false;
@@ -120,23 +121,12 @@ class _searchState extends State<search> {
                             )),
                         const SizedBox(
                           height: 90,
-                          width: 130,
                         ),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          super.widget));
-                            },
-                            icon: Icon(Icons.replay_outlined,
-                                color: Colors.white)),
                         Container(
                           //profile icon
                           height: 50,
                           width: 140,
-                          margin: const EdgeInsets.fromLTRB(50, 7, 1, 1),
+                          margin: const EdgeInsets.fromLTRB(228, 7, 1, 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(40),
@@ -367,45 +357,45 @@ class _searchState extends State<search> {
                       city, category, sortType, min_price, max_price),
 
                   builder: (context, snapshot) {
-                    print(snapshot.error);
-                    print(snapshot.data);
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
+
                       return SizedBox(
                         height: 350,
                         child: ListView.builder(
                             itemCount: places.length,
                             itemBuilder: ((context, index) {
-                              print(places![index].name);
                               return Row(children: [
                                 Expanded(
                                     child: TextButton(
                                   onPressed: () async {
                                     // here photo function called ----------------------------------------------------------------
+                                    add_taste(places![index].tastes);
+
                                     kill_links();
                                     kill_prices();
                                     kill_sortby();
-                                    kill_category();
-                                    kill_city_name();
-                                    add_links(places![index].photo_url);
-
+                                    add_links(places[index].photo_url);
                                     td = await return_translate(
                                         places[index].description);
 
                                     var route = new MaterialPageRoute(
                                         builder: (context) =>
                                             new searchMaterial(
-                                                places: places![index],
-                                                td: td,
-                                                Links: links));
+                                              places: places![index],
+                                              td: td,
+                                              Links: links,
+                                              tastes_list: tastes_list,
+                                            ));
+
                                     Navigator.of(context).push(route);
                                   },
                                   child: Container(
                                       alignment: Alignment.centerLeft,
                                       padding: EdgeInsets.only(left: 10),
                                       child: ListTile(
-                                        title: Text(places[index].name,
+                                        title: Text(places![index].name,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style:
@@ -752,14 +742,13 @@ class _searchState extends State<search> {
   }
 
   void kill_sortby() {
-    sortType = '';
+    sortType = 'Relevance';
   }
 
-  void kill_city_name() {
-    city = '';
-  }
-
-  void kill_category() {
-    category = '';
+  void add_taste(String temp) {
+    if (temp.length == 0) {
+      tastes_list.add('No Charactaristics available');
+    }
+    tastes_list.addAll(temp.split('--'));
   }
 }
