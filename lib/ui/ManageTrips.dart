@@ -193,6 +193,9 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                 trip_id:
                                                                     trips[index]
                                                                         .tripId,
+                                                                trip_name: trips[
+                                                                        index]
+                                                                    .trip_name,
                                                               ));
                                                   Navigator.of(context)
                                                       .push(route);
@@ -409,7 +412,12 @@ class _ManageTripsState extends State<ManageTrips> {
                                                                         index]
                                                                     .tripsInfo[
                                                                         0]
-                                                                    .tripId));
+                                                                    .tripId,
+                                                                trip_name: trips[
+                                                                        index]
+                                                                    .tripsInfo[
+                                                                        0]
+                                                                    .trip_name));
                                                     Navigator.of(context)
                                                         .push(route);
                                                   },
@@ -603,8 +611,11 @@ class _ManageTripsState extends State<ManageTrips> {
 }
 
 class onTapActivity extends StatefulWidget {
-  const onTapActivity({Key? key, required this.trip_id}) : super(key: key);
+  const onTapActivity(
+      {Key? key, required this.trip_id, required this.trip_name})
+      : super(key: key);
   final String trip_id;
+  final String trip_name;
 
   @override
   State<onTapActivity> createState() => _onTapActivityState();
@@ -745,7 +756,9 @@ class _onTapActivityState extends State<onTapActivity> {
               TabWidgetAlt(
                   scrollController: scrollController, trip_id: widget.trip_id),
               TabWidget2Alt(
-                  scrollController: scrollController, trip_id: widget.trip_id)
+                  scrollController: scrollController,
+                  trip_id: widget.trip_id,
+                  trip_name: widget.trip_name)
             ])));
   }
 

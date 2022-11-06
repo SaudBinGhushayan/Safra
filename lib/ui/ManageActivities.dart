@@ -15,15 +15,16 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:timelines/timelines.dart';
 
 class ManageActivities extends StatefulWidget {
-  const ManageActivities({Key? key}) : super(key: key);
-
-  @override
+  const ManageActivities(
+      {Key? key, required this.trip_id, required this.trip_name})
+      : super(key: key);
+  final String trip_id;
+  final String trip_name;
   State<ManageActivities> createState() => _ManageActivitiesState();
 }
 
 class _ManageActivitiesState extends State<ManageActivities> {
   final user = FirebaseAuth.instance.currentUser!;
-  String trip_id = '';
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +79,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    super.widget));
+                                builder: (BuildContext context) => widget));
                       },
                       icon: Icon(Icons.replay_outlined, color: Colors.white)),
                   SizedBox(width: 140),
@@ -98,7 +98,7 @@ class _ManageActivitiesState extends State<ManageActivities> {
                           return const Text('Something went wrong');
                         } else if (snapshot.hasData) {
                           final trips = snapshot.data!;
-                          trip_id = trips[0].trip_name;
+
                           return Scaffold(
                               body: Container(
                                   child: SizedBox(
@@ -134,7 +134,10 @@ class _ManageActivitiesState extends State<ManageActivities> {
             appBar: buildTabBar(),
             body: TabBarView(children: [
               TabWidget(scrollController: scrollController),
-              TabWidget2(scrollController: scrollController, trip_id: trip_id)
+              TabWidget2(
+                  scrollController: scrollController,
+                  trip_id: widget.trip_id,
+                  trip_name: widget.trip_name)
             ])));
   }
 

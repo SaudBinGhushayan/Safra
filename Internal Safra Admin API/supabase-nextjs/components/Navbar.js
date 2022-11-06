@@ -41,6 +41,11 @@ const Nav = () =>{
 <Link href='/trips_likes'>Trips_Likes</Link>
                 </li>
             </ul>
+            <ul>
+                <li>
+<Link href='/mention'>Mention</Link>
+                </li>
+            </ul>
             
 
         </nav>

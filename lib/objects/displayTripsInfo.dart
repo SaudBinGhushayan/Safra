@@ -26,6 +26,7 @@ class displayTripsInfo {
         "trips_info": tripsInfo.toJson(),
       };
   static Future<List<displayTripsInfo>?> displayNearestTrip(String uid) async {
+    await Future.delayed(Duration(seconds: 1));
     final response = await SupaBase_Manager()
         .client
         .from('participate')

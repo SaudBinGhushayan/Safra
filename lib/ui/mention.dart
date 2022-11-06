@@ -1,7 +1,13 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:safra/backend/snackBar.dart';
 import 'package:safra/backend/storage.dart';
+import 'package:safra/backend/supabase.dart';
+import 'package:safra/objects/mentionClass.dart';
+import 'package:safra/objects/participate.dart';
 import 'package:safra/objects/user.dart';
 import 'package:safra/ui/ContactUs.dart';
 import 'package:safra/ui/FAQ.dart';
@@ -11,7 +17,6 @@ import 'package:safra/ui/homePage.dart';
 import 'package:safra/ui/schedule1.dart';
 import 'package:safra/ui/search.dart';
 import 'package:safra/ui/stngs.dart';
-import 'package:safra/objects/displayMention.dart';
 
 class mention extends StatefulWidget {
   const mention({Key? key}) : super(key: key);
@@ -28,6 +33,7 @@ class _mentionState extends State<mention> {
   int likes = 0;
   int dislikes = 0;
   String comment_id = '';
+  String participate_id = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
 
   @override
   Widget build(BuildContext context) {
@@ -133,74 +139,113 @@ class _mentionState extends State<mention> {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
-            SizedBox(
-              height: 150,
-            ),
-
-            ListTile(
-              leading: Text(
-                "Notifcation",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Container(
+              margin: EdgeInsets.fromLTRB(15, 170, 240, 5),
+              child: Text(
+                "Notifcations",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-
-            FutureBuilder<List<displayMention>?>(
-                future: displayMention.readMention(user.uid),
-                builder: ((context, snapshot) {
-                  if (snapshot.hasData) {
-                    print(snapshot.data);
-                    List<displayMention>? l1 = snapshot.data;
-
-                    return SizedBox(
-                      child: ListView.builder(
-                          itemCount: l1?.length, //for example
-                          itemBuilder: ((context, index) {
-                            return ListTile(
-                              leading: Text(
-                                  '${l1![index].comment} ${l1[index].likes}'),
-                              title: Text(".."),
-                            );
-                          })),
-                    );
-                  } else {
-                    return SizedBox(
-                      child: Row(children: [Text('yet no ')]),
-                    );
-                  }
-                })),
-            // SizedBox(
-            //   height: 350,
-            //   child: ListView.builder(
-            //       itemCount: 10, //for example
-            //       itemBuilder: ((context, index) {
-            //         return ListTile(
-            //           leading: CircleAvatar(
-            //             backgroundImage: NetworkImage(
-            //                 "https://images.unsplash.com/photo-1659535915214-e7cbac112038?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"),
-            //           ),
-            //           title: Text(
-            //               "saud ,abdulmalik,and 5 others reacted to your trips"),
-            //         );
-            //       })),
-            // ),
-            // SizedBox(
-            //   height: 300,
-            //   child: ListTile(
-            //     leading: CircleAvatar(
-            //       backgroundImage: NetworkImage(
-            //           "https://images.unsplash.com/photo-1659535915214-e7cbac112038?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"),
-            //     ),
-            //     title:
-            //         Text("saud ,abdulmalik,and 5 others reacted to your trips"),
-            //   ),
-            // ),
-
-            SizedBox(
-              height: 300,
+            Container(
+              margin: EdgeInsets.fromLTRB(15, 5, 240, 5),
+              child: Text(
+                "Trip Requests",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue),
+              ),
             ),
+            SizedBox(
+                height: 196,
+                child: FutureBuilder<List<Mention>?>(
+                    future: Mention.readRequests(user.uid),
+                    builder: (context, snapshot) {
+                      if (snapshot.data?.length == 0) {
+                        return Center(
+                            child: Text('No Requests',
+                                style: TextStyle(color: Colors.blue)));
+                      } else if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      } else if (snapshot.hasData) {
+                        final requests = snapshot.data!;
+                        return SizedBox(
+                            height: 100,
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                itemCount: requests.length,
+                                itemBuilder: ((context, index) {
+                                  return Column(
+                                    children: [
+                                      Row(children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                left: 10, top: 10),
+                                            child: Text(requests[index].message,
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 16)),
+                                          ),
+                                        ),
+                                      ]),
+                                      Container(
+                                        margin: EdgeInsets.only(right: 200),
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () async {
+                                                  addMember(
+                                                      uid: user.uid,
+                                                      username: username,
+                                                      active: 'true',
+                                                      participate_id:
+                                                          participate_id,
+                                                      trip_id: requests[index]
+                                                          .trip_id);
+                                                  snackBar.showSnackBarGreen(
+                                                      'member added successfully');
+                                                  await SupaBase_Manager()
+                                                      .client
+                                                      .from('mention')
+                                                      .delete()
+                                                      .match({
+                                                    'mention_id':
+                                                        requests[index]
+                                                            .mentionId
+                                                  }).execute();
+                                                },
+                                                icon: Icon(Icons.check,
+                                                    color: Colors.green)),
+                                            IconButton(
+                                                onPressed: () async {
+                                                  await SupaBase_Manager()
+                                                      .client
+                                                      .from('mention')
+                                                      .delete()
+                                                      .match({
+                                                    'mention_id':
+                                                        requests[index]
+                                                            .mentionId
+                                                  }).execute();
+                                                  snackBar.showSnackBarGreen(
+                                                      'Request from ${requests[index].susername} has been removed');
+                                                },
+                                                icon: Icon(Icons.delete_forever,
+                                                    color: Colors.red))
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                })));
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    })),
             Container(
               padding: EdgeInsets.only(top: 57),
-              margin: const EdgeInsets.only(top: 6),
+              margin: const EdgeInsets.only(top: 100),
               height: 200,
               width: 500,
               decoration: const BoxDecoration(

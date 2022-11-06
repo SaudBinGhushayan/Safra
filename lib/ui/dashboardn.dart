@@ -34,7 +34,8 @@ class dashboardn extends StatefulWidget {
 class _dashboardnState extends State<dashboardn> {
   final user = FirebaseAuth.instance.currentUser!;
   List<String> links = [];
-
+  String trip_id = '';
+  String trip_name = '';
   OverlayEntry? entry;
 
   @override
@@ -159,6 +160,25 @@ class _dashboardnState extends State<dashboardn> {
                       //               builder: (context) => test()));
                       //     },
                       //     child: Text('Testing area')),
+                      SizedBox(
+                        height: 0,
+                        child: FutureBuilder<List<Trips>?>(
+                            future:
+                                Trips.displayNearestTripActivities(user.uid),
+                            builder: (context, snapshot) {
+                              if (snapshot.data?.length == 0) {
+                                return Container();
+                              } else if (snapshot.hasData) {
+                                final info = snapshot.data![0];
+                                trip_id = info.trip_id;
+                                trip_name = info.trip_name;
+
+                                return Container();
+                              } else {
+                                return Container();
+                              }
+                            }),
+                      ),
                       Row(
                         //2ndrow
                         children: [
@@ -175,12 +195,15 @@ class _dashboardnState extends State<dashboardn> {
                                 ),
                                 SizedBox(width: 100),
                                 TextButton.icon(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  ManageActivities()));
+                                                  ManageActivities(
+                                                    trip_id: trip_id,
+                                                    trip_name: trip_name,
+                                                  )));
                                     },
                                     label: Text('Manage'),
                                     icon: Icon(Icons.manage_history))
@@ -215,7 +238,7 @@ class _dashboardnState extends State<dashboardn> {
                                                   child: Container(
                                                       margin: EdgeInsets.only(
                                                           left: 10),
-                                                      width: 196,
+                                                      width: 220,
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -279,7 +302,7 @@ class _dashboardnState extends State<dashboardn> {
                                                                         color: Colors
                                                                             .blue,
                                                                         size:
-                                                                            14),
+                                                                            10),
                                                                     Text(
                                                                         trips[index]
                                                                             .country,
