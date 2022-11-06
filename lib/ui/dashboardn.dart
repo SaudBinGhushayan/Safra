@@ -249,11 +249,13 @@ class _dashboardnState extends State<dashboardn> {
                                                             fit: BoxFit.cover),
                                                       ),
                                                       child: Column(children: [
-                                                        SizedBox(height: 50),
+                                                        SizedBox(
+                                                          height: 50,
+                                                        ),
                                                         Container(
                                                             margin: EdgeInsets
-                                                                .fromLTRB(3, 75,
-                                                                    50, 0),
+                                                                .fromLTRB(3,
+                                                                    100, 3, 0),
                                                             padding:
                                                                 EdgeInsets.all(
                                                                     3),
@@ -286,11 +288,11 @@ class _dashboardnState extends State<dashboardn> {
                                                                           trips[index]
                                                                               .name,
                                                                           maxLines:
-                                                                              2,
+                                                                              1,
                                                                           overflow: TextOverflow
                                                                               .ellipsis,
                                                                           style:
-                                                                              TextStyle(fontSize: 16)),
+                                                                              TextStyle(fontSize: 10)),
                                                                     ),
                                                                   ],
                                                                 ),
@@ -307,13 +309,13 @@ class _dashboardnState extends State<dashboardn> {
                                                                         trips[index]
                                                                             .country,
                                                                         maxLines:
-                                                                            2,
+                                                                            1,
                                                                         overflow:
                                                                             TextOverflow
                                                                                 .ellipsis,
                                                                         style: TextStyle(
                                                                             fontSize:
-                                                                                16)),
+                                                                                12)),
                                                                     SizedBox(
                                                                         width:
                                                                             40),
