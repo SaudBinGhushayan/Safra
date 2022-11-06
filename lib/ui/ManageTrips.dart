@@ -385,7 +385,8 @@ class _ManageTripsState extends State<ManageTrips> {
                           height: 250,
                           child: FutureBuilder<List<DisplayTripsInfo>?>(
                               future:
-                                  DisplayTripsInfo.registeredTrips(user.uid),
+                                  DisplayTripsInfo.registeredTripsforMembers(
+                                      user.uid),
                               builder: (context, snapshot) {
                                 if (snapshot.data?.length == 0) {
                                   return Text('No data');

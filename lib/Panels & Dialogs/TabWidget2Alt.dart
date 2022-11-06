@@ -249,7 +249,7 @@ class _AddMembersState extends State<AddMembers> {
                           var users = snapshots.data!.docs[index].data()
                               as Map<String, dynamic>;
 
-                          if (users['username']
+                          if (users['name']
                               .toString()
                               .toLowerCase()
                               .startsWith(username.toLowerCase())) {
@@ -263,7 +263,7 @@ class _AddMembersState extends State<AddMembers> {
                                     color: Color.fromARGB(255, 79, 101, 116)),
                               ),
                               subtitle: Text(
-                                users['email'],
+                                users['username'],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(

@@ -303,17 +303,17 @@ class _dashboardnState extends State<dashboardn> {
                                                                             .blue,
                                                                         size:
                                                                             10),
-                                                                    Text(
-                                                                        trips[index]
-                                                                            .country,
-                                                                        maxLines:
-                                                                            2,
-                                                                        overflow:
-                                                                            TextOverflow
-                                                                                .ellipsis,
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                16)),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                          trips[index]
+                                                                              .country,
+                                                                          maxLines:
+                                                                              2,
+                                                                          overflow: TextOverflow
+                                                                              .ellipsis,
+                                                                          style:
+                                                                              TextStyle(fontSize: 16)),
+                                                                    ),
                                                                     SizedBox(
                                                                         width:
                                                                             40),

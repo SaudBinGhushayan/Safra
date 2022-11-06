@@ -38,8 +38,8 @@ class _searchState extends State<search> {
     selectedValue = dropdownlist[0];
   }
 
-  late String city = '';
-  late String category = '';
+  String city = '';
+  String category = '';
   final filter_1 = TextEditingController();
 
 // this is for min price
@@ -64,10 +64,10 @@ class _searchState extends State<search> {
   String active = 'true';
   String photoUrl = '';
   String username = '';
-  late String sortType = '';
+  String sortType = '';
   String td = '';
-  late String min_price = '0';
-  late String max_price = '5';
+  String min_price = '0';
+  String max_price = '5';
   List<String> links = [];
 
   final user = FirebaseAuth.instance.currentUser!;
@@ -120,12 +120,23 @@ class _searchState extends State<search> {
                             )),
                         const SizedBox(
                           height: 90,
+                          width: 130,
                         ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          super.widget));
+                            },
+                            icon: Icon(Icons.replay_outlined,
+                                color: Colors.white)),
                         Container(
                           //profile icon
                           height: 50,
                           width: 140,
-                          margin: const EdgeInsets.fromLTRB(228, 7, 1, 1),
+                          margin: const EdgeInsets.fromLTRB(50, 7, 1, 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(40),
@@ -356,10 +367,11 @@ class _searchState extends State<search> {
                       city, category, sortType, min_price, max_price),
 
                   builder: (context, snapshot) {
+                    print(snapshot.error);
+                    print(snapshot.data);
                     if (snapshot.hasData) {
                       List<Places>? places;
                       places = snapshot.data!;
-
                       return SizedBox(
                         height: 350,
                         child: ListView.builder(
@@ -374,7 +386,8 @@ class _searchState extends State<search> {
                                     kill_links();
                                     kill_prices();
                                     kill_sortby();
-                                    kill_links();
+                                    kill_category();
+                                    kill_city_name();
                                     add_links(places![index].photo_url);
 
                                     td = await return_translate(
@@ -739,6 +752,14 @@ class _searchState extends State<search> {
   }
 
   void kill_sortby() {
-    sortType = 'Relevance';
+    sortType = '';
+  }
+
+  void kill_city_name() {
+    city = '';
+  }
+
+  void kill_category() {
+    category = '';
   }
 }

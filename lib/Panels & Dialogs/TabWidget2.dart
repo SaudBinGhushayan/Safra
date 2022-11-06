@@ -244,7 +244,7 @@ class _AddMembersState extends State<AddMembers> {
                           var users = snapshots.data!.docs[index].data()
                               as Map<String, dynamic>;
 
-                          if (users['username']
+                          if (users['name']
                               .toString()
                               .toLowerCase()
                               .startsWith(username.toLowerCase())) {
@@ -258,7 +258,7 @@ class _AddMembersState extends State<AddMembers> {
                                     color: Color.fromARGB(255, 79, 101, 116)),
                               ),
                               subtitle: Text(
-                                users['email'],
+                                users['username'],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -272,8 +272,6 @@ class _AddMembersState extends State<AddMembers> {
                                   icon: const Icon(Icons.add,
                                       size: 30, color: Colors.green),
                                   onPressed: () async {
-                                    print(widget.trip_id);
-
                                     final inUser = await Participate.inMember(
                                         widget.trip_name, users['username']);
                                     if (!inUser) {

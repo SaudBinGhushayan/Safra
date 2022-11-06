@@ -43,4 +43,28 @@ class DisplayTripsInfo {
       return DisplayTripsInfoFromJson(data);
     }
   }
+
+  static Future<List<DisplayTripsInfo>?> registeredTripsforMembers(
+      String uid) async {
+    await Future.delayed(Duration(seconds: 1));
+
+    final response = await SupaBase_Manager()
+        .client
+        .from('participate')
+        .select('trips_info(*)')
+        .eq('uid', uid)
+        .execute();
+    if (response.data.isNotEmpty) {
+      var data = response.data.toString();
+      data = data.replaceAll('{', '{"');
+      data = data.replaceAll(' {"', ' [{"');
+      data = data.replaceAll(': ', '": "');
+      data = data.replaceAll(', ', '", "');
+      data = data.replaceAll('"[{', '[{');
+      data = data.replaceAll('}}"', '"}]}');
+      data = data.replaceAll(', [{"', ', {"');
+      data = data.replaceAll('}}]', '"}]}]');
+      return DisplayTripsInfoFromJson(data);
+    }
+  }
 }
