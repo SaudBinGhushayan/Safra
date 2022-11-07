@@ -307,6 +307,8 @@ class _cloneTripState extends State<cloneTrip> {
                                         user.uid, activities[index].name);
                                     if (valid) {
                                       final trips = Trips(
+                                          activity_date:
+                                              DateTime.parse('2020-01-12'),
                                           uid: user.uid,
                                           fsq_id: (Random().nextDouble() * 256)
                                               .toStringAsFixed(4),
@@ -861,17 +863,7 @@ class _onTabActivityCloneState extends State<onTabActivityClone> {
                           )
                           // name
                           ),
-                      const SizedBox(height: 15),
-
-                      // HERE WILL BE LOCATION OF PLACE .. MUST MODIFY API FEATURES
-                      // Text(
-                      //   ''
-                      // ),
-
-                      const SizedBox(height: 20),
                     ]))),
-
-        const SizedBox(height: 40),
 
         //// comment code =========================================================
         SizedBox(

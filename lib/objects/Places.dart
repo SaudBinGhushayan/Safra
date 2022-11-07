@@ -11,18 +11,20 @@ String placesToJson(List<Places> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Places {
-  Places({
-    required this.fsq_id,
-    required this.name,
-    required this.rating,
-    required this.tel,
-    required this.country,
-    required this.region,
-    required this.price,
-    required this.description,
-    required this.categories,
-    required this.photo_url,
-  });
+  Places(
+      {required this.fsq_id,
+      required this.name,
+      required this.rating,
+      required this.tel,
+      required this.country,
+      required this.region,
+      required this.price,
+      required this.description,
+      required this.categories,
+      required this.photo_url,
+      required this.address,
+      required this.open_hours,
+      required this.tastes});
 
   String fsq_id;
   String name;
@@ -34,6 +36,9 @@ class Places {
   String description;
   String categories;
   String photo_url;
+  String address;
+  String open_hours;
+  String tastes;
 
   factory Places.fromJson(Map<String, dynamic> json) => Places(
         fsq_id: json["fsq_id"],
@@ -46,6 +51,9 @@ class Places {
         region: json["region"],
         price: json["price"],
         description: json["description"],
+        open_hours: json["open_hours"],
+        address: json["address"],
+        tastes: json["tastes"],
       );
 
   get length => null;
@@ -61,5 +69,8 @@ class Places {
         "region": region,
         "price": price,
         "description": description,
+        "open_hours": open_hours,
+        "address": address,
+        "tastes": tastes
       };
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -110,8 +111,14 @@ class _ManageActivitiesState extends State<ManageActivities> {
                                               ContentsAlign.alternating,
                                           contentsBuilder: (context, index) =>
                                               Padding(
-                                            padding: const EdgeInsets.all(0),
+                                            padding: const EdgeInsets.all(5),
                                             child: Text(trips[index].name),
+                                          ),
+                                          oppositeContentsBuilder:
+                                              (context, index) => Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                                '${DateFormat("MMM").format(trips[index].activity_date)}${trips[index].activity_date.day}'),
                                           ),
                                           itemCount: trips.length,
                                         ),

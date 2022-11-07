@@ -69,6 +69,7 @@ class _searchState extends State<search> {
   late String min_price = '0';
   late String max_price = '5';
   List<String> links = [];
+  List<String> tastes_list = [];
 
   final user = FirebaseAuth.instance.currentUser!;
   var isloaded = false;
@@ -365,34 +366,36 @@ class _searchState extends State<search> {
                         child: ListView.builder(
                             itemCount: places.length,
                             itemBuilder: ((context, index) {
-                              print(places![index].name);
                               return Row(children: [
                                 Expanded(
                                     child: TextButton(
                                   onPressed: () async {
                                     // here photo function called ----------------------------------------------------------------
+                                    add_taste(places![index].tastes);
+
                                     kill_links();
                                     kill_prices();
                                     kill_sortby();
-                                    kill_links();
-                                    add_links(places![index].photo_url);
-
+                                    add_links(places[index].photo_url);
                                     td = await return_translate(
                                         places[index].description);
 
                                     var route = new MaterialPageRoute(
                                         builder: (context) =>
                                             new searchMaterial(
-                                                places: places![index],
-                                                td: td,
-                                                Links: links));
+                                              places: places![index],
+                                              td: td,
+                                              Links: links,
+                                              tastes_list: tastes_list,
+                                            ));
+
                                     Navigator.of(context).push(route);
                                   },
                                   child: Container(
                                       alignment: Alignment.centerLeft,
                                       padding: EdgeInsets.only(left: 10),
                                       child: ListTile(
-                                        title: Text(places[index].name,
+                                        title: Text(places![index].name,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style:
@@ -740,5 +743,12 @@ class _searchState extends State<search> {
 
   void kill_sortby() {
     sortType = 'Relevance';
+  }
+
+  void add_taste(String temp) {
+    if (temp.length == 0) {
+      tastes_list.add('No Charactaristics available');
+    }
+    tastes_list.addAll(temp.split('--'));
   }
 }

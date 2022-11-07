@@ -136,6 +136,7 @@ class createTripUIState extends State<createTripUI> {
                               country: widget.places!.country,
                               region: widget.places!.region,
                               price: widget.places!.price,
+                              activity_date: from_cont!,
                               description: widget.places!.description,
                               active: active,
                               trip_id: trip_id,

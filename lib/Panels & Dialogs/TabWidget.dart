@@ -50,7 +50,7 @@ class TabWidget extends StatelessWidget {
                       ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(trip.tripsInfo.photo_url,
-                              height: 245,
+                              height: 230,
                               width: double.infinity,
                               fit: BoxFit.cover)),
                       Container(
@@ -125,32 +125,32 @@ class TabWidget extends StatelessWidget {
                         ]),
                       ),
                       const SizedBox(height: 10),
-                      // FutureBuilder<Users?>(
-                      //     future: Users.readUser(trip.tripsInfo.uid),
-                      //     builder: (context, snapshot) {
-                      //       if (snapshot.hasData) {
-                      //         final users = snapshot.data!;
-                      //         return Container(
-                      //           margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
-                      //           child: Row(children: [
-                      //             Icon(Icons.star_border,
-                      //                 size: 20,
-                      //                 color: const Color.fromARGB(
-                      //                         255, 50, 160, 233)
-                      //                     .withOpacity(0.9)),
-                      //             const SizedBox(width: 3),
-                      //             Text('Trip Leader: ${users.username}',
-                      //                 style: const TextStyle(
-                      //                   color: Colors.black,
-                      //                   fontSize: 20,
-                      //                 )),
-                      //           ]),
-                      //         );
-                      //       } else {
-                      //         return const Center(
-                      //             child: CircularProgressIndicator());
-                      //       }
-                      //     }),
+                      FutureBuilder<Users?>(
+                          future: Users.readUser(trip.tripsInfo.uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final users = snapshot.data!;
+                              return Container(
+                                margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
+                                child: Row(children: [
+                                  Icon(Icons.star_border,
+                                      size: 20,
+                                      color: const Color.fromARGB(
+                                              255, 50, 160, 233)
+                                          .withOpacity(0.9)),
+                                  const SizedBox(width: 3),
+                                  Text('Trip Leader: ${users.username}',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                      )),
+                                ]),
+                              );
+                            } else {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                          }),
                       const SizedBox(height: 10),
                       Container(
                         margin: const EdgeInsets.fromLTRB(20, 0, 3, 0),
@@ -350,13 +350,15 @@ class _editTripInfoState extends State<editTripInfo> {
                               await SupaBase_Manager()
                                   .client
                                   .from('participate')
-                                  .update({'active': 'false'}).match(
-                                      {'active': 'true'}).execute();
+                                  .update({'active': 'false'}).match({
+                                'active': 'true'
+                              }).match({'uid': user.uid}).execute();
                               await SupaBase_Manager()
                                   .client
                                   .from('trips_info')
-                                  .update({'active': 'false'}).match(
-                                      {'active': 'true'}).execute();
+                                  .update({'active': 'false'}).match({
+                                'active': 'true'
+                              }).match({'uid': user.uid}).execute();
                               await SupaBase_Manager()
                                   .client
                                   .from('participate')

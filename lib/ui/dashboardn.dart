@@ -232,6 +232,7 @@ class _dashboardnState extends State<dashboardn> {
                                           scrollDirection: Axis.horizontal,
                                           itemCount: trips.length,
                                           itemBuilder: ((context, index) {
+                                            kill_links();
                                             add_links(trips[index].photo_url);
                                             return Row(children: [
                                               Center(
@@ -245,7 +246,7 @@ class _dashboardnState extends State<dashboardn> {
                                                                 .circular(12),
                                                         image: DecorationImage(
                                                             image: NetworkImage(
-                                                                links[index]),
+                                                                links[0]),
                                                             fit: BoxFit.cover),
                                                       ),
                                                       child: Column(children: [
@@ -303,20 +304,20 @@ class _dashboardnState extends State<dashboardn> {
                                                                             .blue,
                                                                         size:
                                                                             10),
-                                                                    Text(
-                                                                        trips[index]
-                                                                            .country,
-                                                                        maxLines:
-                                                                            2,
-                                                                        overflow:
-                                                                            TextOverflow
-                                                                                .ellipsis,
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                16)),
+                                                                    Expanded(
+                                                                      child: Text(
+                                                                          trips[index]
+                                                                              .country,
+                                                                          maxLines:
+                                                                              2,
+                                                                          overflow: TextOverflow
+                                                                              .ellipsis,
+                                                                          style:
+                                                                              TextStyle(fontSize: 16)),
+                                                                    ),
                                                                     SizedBox(
                                                                         width:
-                                                                            40),
+                                                                            25),
                                                                     Icon(
                                                                         Icons
                                                                             .date_range,
@@ -325,9 +326,9 @@ class _dashboardnState extends State<dashboardn> {
                                                                         size:
                                                                             14),
                                                                     Text(
-                                                                        '12 jun',
+                                                                        '${DateFormat("MMM").format(trips[index].activity_date)}${trips[index].activity_date.day}',
                                                                         maxLines:
-                                                                            2,
+                                                                            1,
                                                                         overflow:
                                                                             TextOverflow
                                                                                 .clip,
@@ -692,5 +693,9 @@ class _dashboardnState extends State<dashboardn> {
   void add_links(String link) {
     List<String> templink = link.split(',');
     links.addAll(templink);
+  }
+
+  void kill_links() {
+    links = [];
   }
 }

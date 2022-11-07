@@ -34,6 +34,7 @@ class _mentionState extends State<mention> {
   int dislikes = 0;
   String comment_id = '';
   String participate_id = '${(Random().nextDouble() * 256).toStringAsFixed(4)}';
+  String active = '';
 
   @override
   Widget build(BuildContext context) {
@@ -195,10 +196,48 @@ class _mentionState extends State<mention> {
                                           children: [
                                             IconButton(
                                                 onPressed: () async {
+                                                  final response =
+                                                      await SupaBase_Manager()
+                                                          .client
+                                                          .from('trips_info')
+                                                          .select()
+                                                          .eq(
+                                                              'trip_id',
+                                                              requests[index]
+                                                                  .trip_id)
+                                                          .execute();
+                                                  if (response.data.length !=
+                                                      0) {
+                                                    var data = response.data[0]
+                                                        as Map<String, dynamic>;
+                                                    setState(() {
+                                                      active = data['active'];
+                                                    });
+                                                  }
+                                                  await SupaBase_Manager()
+                                                      .client
+                                                      .from('participate')
+                                                      .update({
+                                                    'active': 'false'
+                                                  }).match({
+                                                    'active': 'true'
+                                                  }).match({
+                                                    'uid': user.uid
+                                                  }).execute();
+                                                  await SupaBase_Manager()
+                                                      .client
+                                                      .from('trips_info')
+                                                      .update({
+                                                    'active': 'false'
+                                                  }).match({
+                                                    'active': 'true'
+                                                  }).match({
+                                                    'uid': user.uid
+                                                  }).execute();
                                                   addMember(
                                                       uid: user.uid,
                                                       username: username,
-                                                      active: 'true',
+                                                      active: active,
                                                       participate_id:
                                                           participate_id,
                                                       trip_id: requests[index]

@@ -12,6 +12,7 @@ class httpHandler {
 
     if (response.statusCode == 200) {
       var json = response.body;
+
       return placesFromJson(json);
     }
   }

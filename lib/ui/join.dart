@@ -243,12 +243,14 @@ class _joinState extends State<join> {
                                           active = data['active'];
                                         });
                                       }
+
                                       final validTripId =
                                           await Participate.validTripId(
                                               tripId.text);
                                       final validUser =
                                           await Participate.validUserForTrip(
                                               user.uid, tripId.text);
+
                                       if (!validTripId) {
                                         return snackBar.showSnackBarRed(
                                             'Sorry, Trip does not exist try to enter a valid trip id');
@@ -268,6 +270,7 @@ class _joinState extends State<join> {
                                             .update({'active': 'false'}).match({
                                           'active': 'true'
                                         }).match({'uid': user.uid}).execute();
+
                                         addMember(
                                             uid: user.uid,
                                             username: username,

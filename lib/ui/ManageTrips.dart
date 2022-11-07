@@ -174,7 +174,9 @@ class _ManageTripsState extends State<ManageTrips> {
                                   return Center(child: Text('No data'));
                                 } else if (snapshot.hasError) {
                                   return Text('Something went wrong');
-                                } else if (snapshot.hasData) {
+                                } else if (snapshot.hasData &&
+                                    snapshot.connectionState ==
+                                        ConnectionState.done) {
                                   final trips = snapshot.data!;
                                   return SizedBox(
                                       height: 100,
@@ -189,7 +191,7 @@ class _ManageTripsState extends State<ManageTrips> {
                                                   var route =
                                                       new MaterialPageRoute(
                                                           builder: (context) =>
-                                                              new onTapActivity(
+                                                              new onTapActivityForLeader(
                                                                 trip_id:
                                                                     trips[index]
                                                                         .tripId,
@@ -265,9 +267,9 @@ class _ManageTripsState extends State<ManageTrips> {
                                                               padding: EdgeInsets
                                                                   .fromLTRB(
                                                                       3,
-                                                                      12,
+                                                                      15,
                                                                       3,
-                                                                      12),
+                                                                      15),
                                                               decoration: BoxDecoration(
                                                                   borderRadius:
                                                                       BorderRadius
@@ -385,7 +387,8 @@ class _ManageTripsState extends State<ManageTrips> {
                           height: 250,
                           child: FutureBuilder<List<DisplayTripsInfo>?>(
                               future:
-                                  DisplayTripsInfo.registeredTrips(user.uid),
+                                  DisplayTripsInfo.registeredTripsforMembers(
+                                      user.uid),
                               builder: (context, snapshot) {
                                 if (snapshot.data?.length == 0) {
                                   return Text('No data');
@@ -488,13 +491,16 @@ class _ManageTripsState extends State<ManageTrips> {
                                                             ),
                                                             Container(
                                                                 padding:
-                                                                    EdgeInsets.all(
-                                                                        3),
+                                                                    EdgeInsets
+                                                                        .fromLTRB(
+                                                                            3,
+                                                                            15,
+                                                                            3,
+                                                                            15),
                                                                 decoration: BoxDecoration(
                                                                     borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                8),
+                                                                        BorderRadius.circular(
+                                                                            8),
                                                                     color: Colors
                                                                         .blue
                                                                         .withOpacity(
@@ -706,6 +712,42 @@ class _onTapActivityState extends State<onTapActivity> {
                   buildButton(icon: Icons.edit, callBack: () {}),
                 ],
               ),
+              Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                  margin: EdgeInsets.fromLTRB(110, 5, 110, 5),
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        await SupaBase_Manager()
+                            .client
+                            .from('participate')
+                            .update({'active': 'false'}).match({
+                          'active': 'true'
+                        }).match({'uid': user.uid}).execute();
+                        await SupaBase_Manager()
+                            .client
+                            .from('participate')
+                            .update({'active': 'true'}).match({
+                          'active': 'false'
+                        }).match({'uid': user.uid}).match(
+                                {'trip_id': widget.trip_id}).execute();
+
+                        snackBar.showSnackBarGreen('This trip is active now');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        textStyle: const TextStyle(fontSize: 20),
+                      ),
+                      child: Row(
+                        children: const [
+                          SizedBox(width: 10),
+                          Icon(Icons.check,
+                              color: Color.fromARGB(255, 255, 245, 245),
+                              size: 20),
+                          SizedBox(width: 5),
+                          Text("Set Active"),
+                        ],
+                      ))),
               SizedBox(height: 250),
               SizedBox(
                   height: 100,
@@ -731,8 +773,164 @@ class _onTapActivityState extends State<onTapActivity> {
                                               ContentsAlign.alternating,
                                           contentsBuilder: (context, index) =>
                                               Padding(
-                                            padding: const EdgeInsets.all(.0),
+                                            padding: const EdgeInsets.all(5),
                                             child: Text(trips[index].name),
+                                          ),
+                                          oppositeContentsBuilder:
+                                              (context, index) => Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                                '${DateFormat("MMM").format(trips[index].activity_date)}${trips[index].activity_date.day}'),
+                                          ),
+                                          itemCount: trips.length,
+                                        ),
+                                      ))));
+                        } else {
+                          return const Center(
+                              child: const CircularProgressIndicator());
+                        }
+                      })),
+            ])),
+        borderRadius: radius,
+      ),
+    );
+  }
+
+  Widget buildSlidingPanel({required ScrollController scrollController}) {
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: buildTabBar(),
+            body: TabBarView(children: [
+              TabWidgetAlt(
+                  scrollController: scrollController, trip_id: widget.trip_id),
+              TabWidget2Alt(
+                  scrollController: scrollController,
+                  trip_id: widget.trip_id,
+                  trip_name: widget.trip_name)
+            ])));
+  }
+
+  Widget buildButton(
+          {required IconData icon, required VoidCallback callBack}) =>
+      IconButton(
+        onPressed: callBack,
+        icon: const Icon(
+          Icons.edit,
+          size: 25,
+          color: Colors.white,
+        ),
+      );
+  PreferredSizeWidget buildTabBar() => PreferredSize(
+      preferredSize: Size.fromHeight(80),
+      child: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Icon(Icons.drag_handle),
+        centerTitle: true,
+        bottom: const TabBar(tabs: [
+          Tab(child: Text('Trips Info')),
+          const Tab(child: Text('Members'))
+        ]),
+      ));
+}
+
+class onTapActivityForLeader extends StatefulWidget {
+  const onTapActivityForLeader(
+      {Key? key, required this.trip_id, required this.trip_name})
+      : super(key: key);
+  final String trip_id;
+  final String trip_name;
+
+  @override
+  State<onTapActivityForLeader> createState() => _onTapActivityForLeaderState();
+}
+
+class _onTapActivityForLeaderState extends State<onTapActivityForLeader> {
+  final user = FirebaseAuth.instance.currentUser!;
+
+  @override
+  Widget build(BuildContext context) {
+    BorderRadiusGeometry radius = const BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: const Radius.circular(24.0),
+    );
+
+    return Scaffold(
+      body: SlidingUpPanel(
+        maxHeight: 600,
+        panelBuilder: (scrollController) =>
+            buildSlidingPanel(scrollController: scrollController),
+        collapsed: Container(
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 0, 85, 155),
+              borderRadius: radius),
+          child: const Center(
+            child: Text(
+              "View your trip info",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        body: Container(
+            //////1st column
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('images/BackgroundPics/background.png'),
+              fit: BoxFit.cover,
+            )),
+            child: Column(children: [
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Container(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ManageTrips()));
+                          })),
+                  SizedBox(width: 260),
+                  buildButton(icon: Icons.edit, callBack: () {}),
+                ],
+              ),
+              SizedBox(height: 250),
+              SizedBox(
+                  height: 100,
+                  child: FutureBuilder<List<Trips>?>(
+                      future: Trips.readTrips(widget.trip_id),
+                      builder: (context, snapshot) {
+                        if (snapshot.data?.length == 0) {
+                          return const Center(child: Text('No data'));
+                        } else if (snapshot.hasError) {
+                          return const Text('Something went wrong');
+                        } else if (snapshot.hasData) {
+                          final trips = snapshot.data!;
+                          return Scaffold(
+                              body: Container(
+                                  margin: const EdgeInsets.all(20),
+                                  child: SizedBox(
+                                      height: 500,
+                                      child: Timeline.tileBuilder(
+                                        scrollDirection: Axis.horizontal,
+                                        builder: TimelineTileBuilder.fromStyle(
+                                          contentsAlign:
+                                              ContentsAlign.alternating,
+                                          contentsBuilder: (context, index) =>
+                                              Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(trips[index].name),
+                                          ),
+                                          oppositeContentsBuilder:
+                                              (context, index) => Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                                '${DateFormat("MMM").format(trips[index].activity_date)}${trips[index].activity_date.day}'),
                                           ),
                                           itemCount: trips.length,
                                         ),

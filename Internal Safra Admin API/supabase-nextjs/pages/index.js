@@ -1,5 +1,9 @@
 import { Auth, ThemeMinimal, ThemeSupa } from '@supabase/auth-ui-react'
 import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+import grid from '../styles/Home.module.css'
+
+
+
 import Account from '../components/Account'
 
 const Home = () => {
@@ -8,7 +12,7 @@ const Home = () => {
 
   return (
     <div className="container" style={{ padding: '0px 0 50px 0' }}>
-     
+
       {!session ? (
         <Auth
           supabaseClient={supabase}

@@ -16,11 +16,16 @@ import 'package:translator/translator.dart';
 
 class searchMaterial extends StatefulWidget {
   const searchMaterial(
-      {Key? key, required this.places, required this.td, required this.Links})
+      {Key? key,
+      required this.places,
+      required this.td,
+      required this.Links,
+      required this.tastes_list})
       : super(key: key);
   final Places? places;
   final String td;
   final List<String> Links;
+  final List<String> tastes_list;
 
   @override
   State<searchMaterial> createState() => _searchMaterialState();
@@ -60,7 +65,7 @@ class _searchMaterialState extends State<searchMaterial> {
   String td = '';
   late String min_price = '0';
   late String max_price = '5';
-
+  List<String> tastes_list = [];
   final user = FirebaseAuth.instance.currentUser!;
   List<String> uids = [];
   var isloaded = false;
@@ -73,7 +78,7 @@ class _searchMaterialState extends State<searchMaterial> {
   var enterTripName = TextEditingController();
   var from_cont = TextEditingController();
   var to_cont = TextEditingController();
-  DateTime from = DateTime.parse('2020-01-12');
+  DateTime? from = DateTime.parse('2020-01-12');
   DateTime to = DateTime.parse('2020-01-12');
   @override
   Widget build(BuildContext context) {
@@ -140,9 +145,9 @@ class _searchMaterialState extends State<searchMaterial> {
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize:
-                                            widget.places!.name.length > 12
+                                            widget.places!.name.length > 24
                                                 ? 15
-                                                : 25,
+                                                : 26,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const Text(
@@ -257,40 +262,143 @@ class _searchMaterialState extends State<searchMaterial> {
                                 ],
                               ),
                               const SizedBox(
-                                height: 50,
+                                height: 35,
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    border: Border.all(style: BorderStyle.none),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.elliptical(200, 300),
+                                    ),
+                                    color: Colors.white38),
+                                child: GradientText(
+                                    widget.places!.categories
+                                        .replaceAll(RegExp('--'), ',\t'),
+                                    textAlign: TextAlign.center,
+                                    colors: const [
+                                      Colors.black87,
+                                      Colors.purple,
+                                      Colors.pink
+                                    ],
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text('features',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold)),
+                                  // const Text(
+                                  //   'scroll to the right',
+                                  //   style: TextStyle(fontSize: 8),
+                                  // ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  SizedBox(
+                                      height: 50,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.tastes_list.length,
+                                          itemBuilder: ((context, index) {
+                                            return Row(children: [
+                                              Center(
+                                                  child: Container(
+                                                width: 80,
+                                                height: 45,
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        style:
+                                                            BorderStyle.none),
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.elliptical(
+                                                          65, 100),
+                                                    ),
+                                                    color: Colors.white70),
+                                                alignment: Alignment.center,
+                                                child: GradientText(
+                                                  widget.tastes_list[index]
+                                                              .toString() !=
+                                                          'Not Available'
+                                                      ? widget
+                                                          .tastes_list[index]
+                                                      : '',
+                                                  textAlign: TextAlign.center,
+                                                  colors: const [
+                                                    Colors.blue,
+                                                    Colors.purple,
+                                                    Colors.pink
+                                                  ],
+                                                ),
+                                              )),
+                                              const SizedBox(width: 3)
+                                            ]);
+                                          }))),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
                               ),
                               Row(
-                                children: const [
-                                  Text(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
                                     'Open Hours: ',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         decoration: TextDecoration.underline,
                                         fontWeight: FontWeight.bold),
                                   ),
+                                  const SizedBox(
+                                    width: 15,
+                                  ),
                                   Text(
-                                    '7:00 to 20:00',
-                                    style: TextStyle(
-                                      fontSize: 18,
+                                    widget.places!.open_hours,
+                                    style: const TextStyle(
+                                      fontSize: 14,
                                     ),
                                   ),
                                 ],
                               ),
                               const SizedBox(
-                                height: 25,
+                                height: 10,
                               ),
-                              Row(
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Full address:',
-                                      style: const TextStyle(fontSize: 16)),
-                                  Text('',
-                                      style: const TextStyle(fontSize: 16)),
+                                  const Text('Address: ',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold)),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Container(
+                                    child: Text(
+                                      widget.places!.address,
+                                      style: const TextStyle(fontSize: 14),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )
                                 ],
                               )
                             ]),
                       ),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
 
@@ -307,36 +415,17 @@ class _searchMaterialState extends State<searchMaterial> {
                             //         .start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: 350,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(style: BorderStyle.solid),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.elliptical(200, 300),
-                                    ),
-                                    color: Colors.white38),
-                                child: GradientText(
-                                    widget.places!.categories
-                                        .replaceAll(RegExp('-'), ',\t'),
-                                    textAlign: TextAlign.center,
-                                    colors: const [
-                                      Colors.black87,
-                                      Colors.purple,
-                                      Colors.blue
-                                    ],
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
+                              const SizedBox(
+                                height: 15,
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
-                              const Text(
-                                'About:',
-                                style: TextStyle(
+                              Text(
+                                widget.places!.description != 'Not Available'
+                                    ? 'About:'
+                                    : ' ',
+                                style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold),
@@ -345,7 +434,9 @@ class _searchMaterialState extends State<searchMaterial> {
                                 height: 5,
                               ),
                               Text(
-                                widget.places!.description,
+                                widget.places!.description != 'Not Available'
+                                    ? widget.places!.description
+                                    : ' ',
                                 style: const TextStyle(
                                     color: Colors.black, fontSize: 16),
                               ),
@@ -384,82 +475,31 @@ class _searchMaterialState extends State<searchMaterial> {
                       const SizedBox(height: 20),
                     ]))),
 
-        const SizedBox(height: 40),
-
-        const Text('Registered Trips:'),
-
+        const Text(
+          'Comments',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(
           height: 5,
         ),
-        SizedBox(
-          height: 200,
-          child: FutureBuilder<List<TripsInfo>?>(
-            future: TripsInfo.readTrips_Info(user.uid),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('something went wrong');
-              } else if (snapshot.data?.length == 0) {
-                noTrips = true;
-                return Text('no trips registerd');
-              } else if (snapshot.hasData) {
-                List<TripsInfo> data = snapshot.data!;
-                return SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                            margin: EdgeInsets.fromLTRB(20, 0, 20, 4),
-                            alignment: Alignment.centerLeft,
-                            child: Row(children: [
-                              Expanded(
-                                  child: Text(data[index].trip_name,
-                                      style: TextStyle(fontSize: 21))),
-                              SizedBox(width: 20),
-                              Expanded(
-                                  child: Text(
-                                      '${data[index].from.year}/${data[index].from.month}/${data[index].from.day}'
-                                          .toString(),
-                                      style: TextStyle(fontSize: 18))),
-                              SizedBox(width: 10),
-                              Expanded(
-                                  child: Text(
-                                      '${data[index].to.year}/${data[index].to.month}/${data[index].to.day}',
-                                      style: TextStyle(fontSize: 18))),
-                              ValueListenableBuilder<bool>(
-                                  valueListenable: ValueNotifier<bool>(false),
-                                  builder: (context, value, child) {
-                                    return Checkbox(
-                                      activeColor: Colors.blue,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _value = value!;
-                                          trip_name = data[index].trip_name;
-                                          tripid = data[index].tripId;
-                                        });
-                                      },
-                                      value: value,
-                                    );
-                                  })
-                            ]));
-                      },
-                    ));
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-        ),
-        //// comment code =========================================================
-        SizedBox(
+        Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border:
+                  Border.all(style: BorderStyle.solid, color: Colors.blueGrey),
+              borderRadius: const BorderRadius.all(
+                Radius.elliptical(90, 250),
+              ),
+              color: Colors.white38),
           height: 200,
           child: FutureBuilder<List<Comments>?>(
             future: Comments.readComments(widget.places!.fsq_id),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Text('something went wrong');
+                return const Text('something went wrong');
               } else if (snapshot.data?.length == 0) {
-                return Text('no comments');
+                return const Text('Be first who adds a comment ;)');
               } else if (snapshot.hasData) {
                 List<Comments> comments = snapshot.data!;
                 return SizedBox(
@@ -470,64 +510,78 @@ class _searchMaterialState extends State<searchMaterial> {
                         return Container(
                             margin: EdgeInsets.fromLTRB(20, 0, 20, 4),
                             alignment: Alignment.centerLeft,
-                            child: Row(children: [
-                              Expanded(
-                                  child: Text(comments[index].comment,
-                                      style: TextStyle(fontSize: 21))),
-                              SizedBox(width: 20),
-                              Text(comments[index].likes.toString(),
-                                  style: TextStyle(fontSize: 18)),
-                              IconButton(
-                                  onPressed: () async {
-                                    final interaction =
-                                        await Comments.increment_likes(
-                                            comments[index].comment_id,
-                                            comments[index].likes);
-                                    if (interaction) {
-                                      snackBar.showSnackBarGreen(
-                                          'Comment added successfully');
-                                    } else {
-                                      snackBar.showSnackBarRed(
-                                          'Something went wrong');
-                                    }
-                                  },
-                                  icon: Icon(Icons.thumb_up)),
-                              SizedBox(width: 10),
-                              Text(comments[index].dislikes.toString(),
-                                  style: TextStyle(fontSize: 18)),
-                              IconButton(
-                                  onPressed: () async {
-                                    final interaction =
-                                        await Comments.increment_dislikes(
-                                            comments[index].comment_id,
-                                            comments[index].dislikes);
-                                    if (interaction) {
-                                      snackBar.showSnackBarGreen(
-                                          'disliked successfully');
-                                    } else {
-                                      snackBar.showSnackBarRed(
-                                          'Something went wrong');
-                                    }
-                                  },
-                                  icon: Icon(Icons.thumb_down)),
-                            ]));
+                            child: Column(
+                              children: [
+                                Row(children: [
+                                  Expanded(
+                                      child: Text(comments[index].comment,
+                                          style: TextStyle(fontSize: 21))),
+                                  SizedBox(width: 20),
+                                  Text(comments[index].likes.toString(),
+                                      style: TextStyle(fontSize: 18)),
+                                  IconButton(
+                                      onPressed: () async {
+                                        final interaction =
+                                            await Comments.increment_likes(
+                                                comments[index].comment_id,
+                                                comments[index].likes);
+                                        if (interaction) {
+                                          snackBar.showSnackBarGreen(
+                                              'Comment added successfully');
+                                        } else {
+                                          snackBar.showSnackBarRed(
+                                              'Something went wrong');
+                                        }
+                                      },
+                                      icon: Icon(Icons.thumb_up)),
+                                  SizedBox(width: 10),
+                                  Text(comments[index].dislikes.toString(),
+                                      style: TextStyle(fontSize: 18)),
+                                  IconButton(
+                                      onPressed: () async {
+                                        final interaction =
+                                            await Comments.increment_dislikes(
+                                                comments[index].comment_id,
+                                                comments[index].dislikes);
+                                        if (interaction) {
+                                          snackBar.showSnackBarGreen(
+                                              'disliked successfully');
+                                        } else {
+                                          snackBar.showSnackBarRed(
+                                              'Something went wrong');
+                                        }
+                                      },
+                                      icon: Icon(Icons.thumb_down)),
+                                ]),
+                                Container(
+                                    decoration: BoxDecoration(
+                                  border: Border.all(
+                                      style: BorderStyle.solid,
+                                      color: Colors.blue),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.elliptical(90, 250),
+                                  ),
+                                ))
+                              ],
+                            ));
                       },
                     ));
               } else {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
             },
           ),
+        ), // / comment button
+        const SizedBox(
+          height: 5,
         ),
-
-        // / comment button
         TextField(
             controller: comment,
             style: const TextStyle(),
             decoration: InputDecoration(
                 border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(40),
+                    Radius.circular(90),
                   ),
                 ),
                 hintText: 'add a comment',
@@ -551,6 +605,102 @@ class _searchMaterialState extends State<searchMaterial> {
           icon: const Icon(Icons.check_box),
           label: const Text('add comment'),
         ),
+        const SizedBox(height: 40),
+
+        const Text(
+          'Registered Trips:',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+
+        const SizedBox(
+          height: 5,
+        ),
+        Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                border: Border.all(
+                    style: BorderStyle.solid, color: Colors.blueGrey),
+                borderRadius: const BorderRadius.all(
+                  Radius.elliptical(90, 250),
+                ),
+                color: Colors.white38),
+            height: 220,
+            child: Column(
+              children: [
+                FutureBuilder<List<TripsInfo>?>(
+                  future: TripsInfo.readTrips_Info(user.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('something went wrong');
+                    } else if (snapshot.data?.length == 0) {
+                      noTrips = true;
+                      return const Text('no trips registerd');
+                    } else if (snapshot.hasData) {
+                      List<TripsInfo> data = snapshot.data!;
+                      return SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.fromLTRB(20, 0, 20, 4),
+                                alignment: Alignment.centerLeft,
+                                child: Row(children: [
+                                  Expanded(
+                                      child: Text(data[index].trip_name,
+                                          style: TextStyle(fontSize: 21))),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                      child: Text(
+                                          '${data[index].from.year}/${data[index].from.month}/${data[index].from.day}'
+                                              .toString(),
+                                          style: TextStyle(fontSize: 18))),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                      child: Text(
+                                          '${data[index].to.year}/${data[index].to.month}/${data[index].to.day}',
+                                          style: TextStyle(fontSize: 18))),
+                                  ValueListenableBuilder<bool>(
+                                      valueListenable:
+                                          ValueNotifier<bool>(false),
+                                      builder: (context, value, child) {
+                                        // return
+                                        // Radio(
+                                        //   value: 1,
+                                        //   groupValue: value,
+                                        //   onChanged: (value) {
+                                        //     setState(() {
+                                        //       value = value!;
+                                        //       trip_name = data[index].trip_name;
+                                        //       tripid = data[index].tripId;
+                                        //     });
+                                        //   },
+                                        // );
+                                        return Checkbox(
+                                          activeColor: Colors.blue,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = value!;
+                                              trip_name = data[index].trip_name;
+                                              tripid = data[index].tripId;
+                                            });
+                                          },
+                                          value: value,
+                                        );
+                                      })
+                                ]),
+                              );
+                            },
+                          ));
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ],
+            )),
+        //// comment code =========================================================
 
         SizedBox(
           child: Column(
@@ -568,18 +718,15 @@ class _searchMaterialState extends State<searchMaterial> {
                   style: TextStyle(fontSize: 16),
                 ),
                 onPressed: () async {
-                  DateTime? newDate = await showDatePicker(
+                  from = await showDatePicker(
                       context: context,
                       initialDate: activity_date,
-                      firstDate: DateTime.now(),
+                      firstDate: DateTime(2022),
                       lastDate: DateTime(2050));
 
-                  if (newDate == null) return;
-                  activity_date = newDate;
-
-                  setState(() {
-                    activity_date = newDate;
-                  });
+                  if (from == null) {
+                    return;
+                  }
                 },
               ),
               ElevatedButton.icon(
@@ -619,6 +766,7 @@ class _searchMaterialState extends State<searchMaterial> {
                         uid: user.uid,
                         fsq_id: fsq_id,
                         name: name,
+                        activity_date: from!,
                         rating: rating,
                         tel: tel,
                         country: country,

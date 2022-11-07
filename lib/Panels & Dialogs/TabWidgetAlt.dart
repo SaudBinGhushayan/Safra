@@ -355,13 +355,15 @@ class _onTapeditTripInfoState extends State<onTapeditTripInfo> {
                               await SupaBase_Manager()
                                   .client
                                   .from('participate')
-                                  .update({'active': 'false'}).match(
-                                      {'active': 'true'}).execute();
+                                  .update({'active': 'false'}).match({
+                                'active': 'true'
+                              }).match({'uid': user.uid}).execute();
                               await SupaBase_Manager()
                                   .client
                                   .from('trips_info')
-                                  .update({'active': 'false'}).match(
-                                      {'active': 'true'}).execute();
+                                  .update({'active': 'false'}).match({
+                                'active': 'true'
+                              }).match({'uid': user.uid}).execute();
                               await SupaBase_Manager()
                                   .client
                                   .from('participate')
