@@ -147,13 +147,16 @@ def extract_categories(array):
         if element != []:
             index = 0
             for inner_element in element:
-                index+=1
 
-                if index < len(element):
-                    category += inner_element['name']+','
+                if index < len(element)-1:
+                    category += inner_element['name']+'-'
+                    index+=1
+
 
                 else:
                     category += inner_element['name']
+                    index+=1
+
             templist.append(category)
         else:
             category+= 'Not Available'

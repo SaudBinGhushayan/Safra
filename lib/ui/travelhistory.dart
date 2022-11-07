@@ -231,7 +231,7 @@ class _travelHistory extends State<travelHistory> {
                                           children: const [
                                             Expanded(
                                                 child: Text(
-                                              'Active Trips',
+                                              'trip active',
                                               style: TextStyle(fontSize: 19),
                                             )),
                                           ],

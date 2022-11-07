@@ -712,6 +712,7 @@ class _onTapActivityState extends State<onTapActivity> {
                   child: FutureBuilder<List<Trips>?>(
                       future: Trips.readTrips(widget.trip_id),
                       builder: (context, snapshot) {
+                        print(snapshot.error);
                         if (snapshot.data?.length == 0) {
                           return const Center(child: Text('No data'));
                         } else if (snapshot.hasError) {

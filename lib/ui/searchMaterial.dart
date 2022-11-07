@@ -320,7 +320,7 @@ class _searchMaterialState extends State<searchMaterial> {
                                     color: Colors.white38),
                                 child: GradientText(
                                     widget.places!.categories
-                                        .replaceAll(RegExp(','), ',\t'),
+                                        .replaceAll(RegExp('-'), ',\t'),
                                     textAlign: TextAlign.center,
                                     colors: const [
                                       Colors.black87,
