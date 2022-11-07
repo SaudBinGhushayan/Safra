@@ -20,7 +20,7 @@ import pycountry
 # In[2]:
 
 
-key = 'fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w='
+key = 'fsq3gnjDKSAUpKDth6dQU0ed3dHa0oRXeGtqnX06ipZ1vgw='
 
 # this method helps us get long and lat of certain city
 
@@ -31,7 +31,7 @@ def get_latlong(b):
     
         city = b
 
-        geolocator = Nominatim(user_agent = 'Safra')
+        geolocator = Nominatim(user_agent = 'Safra1')
     
         loc = geolocator.geocode(city)
          
@@ -233,7 +233,7 @@ def sub_addPhoto(fsq_id):
             "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
                 }
     
-    url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=10&sort=POPULAR"
+    url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=5&sort=POPULAR"
     index = 0
     try:
         response = requests.get(url, headers=headers).json()
@@ -321,7 +321,7 @@ def sortType(s):
     
 
 
-# In[13]:
+# In[16]:
 
 
 def retrieve_places(a , c , s , min_price , max_price):
@@ -334,36 +334,65 @@ def retrieve_places(a , c , s , min_price , max_price):
     ## website, formatted address in location , tastes, features, 
     
     lat , long = get_latlong(c)
-    if type(lat) != str:
-#         &min_price={min_price}&max_price={max_price}&
+#     if type(lat) != str:
+# #         &min_price={min_price}&max_price={max_price}&
+#         if min_price == '0' and max_price == '5':
+        
+#             if a != '':
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&ll={lat}%2C{long}&&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&limit=15&sort={s}"
+
+#             else:
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&limit=15&sort={s}"
+#         elif min_price !='0' and max_price == '5':
+#             if a != '':
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=15&sort={s}"
+
+#             else:
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=15&sort={s}"
+#         elif min_price == '0' and max_price !='5':
+            
+#             if a != '':
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&max_price={max_price}&limit=15&sort={s}"
+
+#             else:
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&max_price={max_price}&limit=15&sort={s}"
+    
+#         else:
+#             if a != '':
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=15&sort={s}"
+
+#             else:
+#                 fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=15&sort={s}"
+    if lat != 'No results found':
+        
+        
         if min_price == '0' and max_price == '5':
         
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&ll={lat}%2C{long}&&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&limit=15&sort={s}&near={c}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&limit=15&sort={s}&near={c}"
         elif min_price !='0' and max_price == '5':
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=15&sort={s}&near={c}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&limit=15&sort={s}&near={c}"
         elif min_price == '0' and max_price !='5':
             
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Ccategories%2Chours%2Ctastes&max_price={max_price}&limit=15&sort={s}&near={c}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&max_price={max_price}&limit=15&sort={s}&near={c}"
     
         else:
             if a != '':
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
+                fields_url = f"https://api.foursquare.com/v3/places/search?query={a}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=15&sort={s}&near={c}"
 
             else:
-                fields_url = f"https://api.foursquare.com/v3/places/search?ll={lat}%2C{long}&fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=50&sort={s}"
-            
+                fields_url = f"https://api.foursquare.com/v3/places/search?fields=fsq_id%2Cname%2Ctel%2Cprice%2Crating%2Cdescription%2Clocation%2Chours%2Ccategories%2Ctastes&min_price={min_price}&max_price={max_price}&limit=15&sort={s}&near={c}"
             
 
         url = fields_url
@@ -375,6 +404,7 @@ def retrieve_places(a , c , s , min_price , max_price):
         }
 
         response = requests.get(url, headers=headers)
+        
 
         data = response.json()
 
@@ -554,7 +584,6 @@ def retrieve_places(a , c , s , min_price , max_price):
 
             df.insert(len(df.columns) , 'categories' , lol)
         
-        df = df.fillna('Not Available')
 
         
         data = df.to_json(orient = 'records')
@@ -564,7 +593,7 @@ def retrieve_places(a , c , s , min_price , max_price):
     
 
 
-# In[14]:
+# In[17]:
 
 
 '''
@@ -575,17 +604,16 @@ test field
 '''
 
 
-# In[15]:
+# In[21]:
 
 
-
-# df , rendex = retrieve_places('' , 'madrid' , 'Relevance' , '0' , '5' )
-
-
-# In[16]:
+# index , regex = retrieve_places('' , 'london' , 'Relevance' , '0' , '5' )
 
 
-# df
+# In[22]:
+
+
+# index
 
 
 # In[17]:
@@ -594,7 +622,7 @@ test field
 app = Flask(__name__)
 
 
-@app.route('/api' , methods = ['GET' , 'POST'])
+@app.route('/api' , methods = ['GET'])
 
 def index():
     userInputa = str(request.args['query2'])
@@ -603,10 +631,14 @@ def index():
     userInputd = str(request.args['min_price'])
     userInpute = str(request.args['max_price'])
     
-
+#     if userInputb == '':
+#         return regex
     sb = sortType(userInputc)
     df, data_json = retrieve_places(userInputa , userInputb , sb , userInputd , userInpute)
+    
+    
     return data_json
+
 
 
 if __name__ == "__main__":
