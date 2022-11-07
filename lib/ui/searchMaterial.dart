@@ -497,9 +497,9 @@ class _searchMaterialState extends State<searchMaterial> {
             future: Comments.readComments(widget.places!.fsq_id),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Text('something went wrong');
+                return const Text('something went wrong');
               } else if (snapshot.data?.length == 0) {
-                return Text('Be first who adds a comment ;)');
+                return const Text('Be first who adds a comment ;)');
               } else if (snapshot.hasData) {
                 List<Comments> comments = snapshot.data!;
                 return SizedBox(
@@ -632,10 +632,10 @@ class _searchMaterialState extends State<searchMaterial> {
                   future: TripsInfo.readTrips_Info(user.uid),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('something went wrong');
+                      return const Text('something went wrong');
                     } else if (snapshot.data?.length == 0) {
                       noTrips = true;
-                      return Text('no trips registerd');
+                      return const Text('no trips registerd');
                     } else if (snapshot.hasData) {
                       List<TripsInfo> data = snapshot.data!;
                       return SizedBox(
@@ -665,6 +665,18 @@ class _searchMaterialState extends State<searchMaterial> {
                                       valueListenable:
                                           ValueNotifier<bool>(false),
                                       builder: (context, value, child) {
+                                        // return
+                                        // Radio(
+                                        //   value: 1,
+                                        //   groupValue: value,
+                                        //   onChanged: (value) {
+                                        //     setState(() {
+                                        //       value = value!;
+                                        //       trip_name = data[index].trip_name;
+                                        //       tripid = data[index].tripId;
+                                        //     });
+                                        //   },
+                                        // );
                                         return Checkbox(
                                           activeColor: Colors.blue,
                                           onChanged: (value) {
