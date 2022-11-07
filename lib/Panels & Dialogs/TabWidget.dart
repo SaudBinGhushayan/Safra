@@ -347,24 +347,18 @@ class _editTripInfoState extends State<editTripInfo> {
                             icon: const Icon(Icons.check,
                                 size: 30, color: Colors.green),
                             onPressed: () async {
-                              final userHasTrips =
-                                  await TripsInfo.userHasTrip(user.uid);
-                              if (userHasTrips) {
-                                return snackBar.showSnackBarRed(
-                                    'You have active trip to join this trip change the trip status');
-                              }
                               await SupaBase_Manager()
                                   .client
                                   .from('participate')
                                   .update({'active': 'false'}).match({
                                 'active': 'true'
-                              }).match({'trip_id': widget.trip_id}).execute();
+                              }).match({'uid': user.uid}).execute();
                               await SupaBase_Manager()
                                   .client
                                   .from('trips_info')
                                   .update({'active': 'false'}).match({
                                 'active': 'true'
-                              }).match({'trip_id': widget.trip_id}).execute();
+                              }).match({'uid': user.uid}).execute();
                               await SupaBase_Manager()
                                   .client
                                   .from('participate')

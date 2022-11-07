@@ -78,7 +78,7 @@ class _searchMaterialState extends State<searchMaterial> {
   var enterTripName = TextEditingController();
   var from_cont = TextEditingController();
   var to_cont = TextEditingController();
-  DateTime from = DateTime.parse('2020-01-12');
+  DateTime? from = DateTime.parse('2020-01-12');
   DateTime to = DateTime.parse('2020-01-12');
   @override
   Widget build(BuildContext context) {
@@ -706,18 +706,15 @@ class _searchMaterialState extends State<searchMaterial> {
                   style: TextStyle(fontSize: 16),
                 ),
                 onPressed: () async {
-                  DateTime? newDate = await showDatePicker(
+                  from = await showDatePicker(
                       context: context,
                       initialDate: activity_date,
-                      firstDate: DateTime.now(),
+                      firstDate: DateTime(2022),
                       lastDate: DateTime(2050));
 
-                  if (newDate == null) return;
-                  activity_date = newDate;
-
-                  setState(() {
-                    activity_date = newDate;
-                  });
+                  if (from == null) {
+                    return;
+                  }
                 },
               ),
               ElevatedButton.icon(
@@ -757,6 +754,7 @@ class _searchMaterialState extends State<searchMaterial> {
                         uid: user.uid,
                         fsq_id: fsq_id,
                         name: name,
+                        activity_date: from!,
                         rating: rating,
                         tel: tel,
                         country: country,

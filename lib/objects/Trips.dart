@@ -13,22 +13,22 @@ List<Trips> TripsFromJson(String str) =>
     List<Trips>.from(json.decode(str).map((x) => Trips.fromJson(x)));
 
 class Trips {
-  Trips({
-    required this.uid,
-    required this.fsq_id,
-    required this.name,
-    required this.rating,
-    required this.tel,
-    required this.country,
-    required this.region,
-    required this.price,
-    required this.description,
-    required this.trip_id,
-    required this.trip_name,
-    required this.categories,
-    required this.photo_url,
-    required this.translated_description,
-  });
+  Trips(
+      {required this.uid,
+      required this.fsq_id,
+      required this.name,
+      required this.rating,
+      required this.tel,
+      required this.country,
+      required this.region,
+      required this.price,
+      required this.description,
+      required this.trip_id,
+      required this.trip_name,
+      required this.categories,
+      required this.photo_url,
+      required this.translated_description,
+      required this.activity_date});
 
   String uid;
   String trip_name;
@@ -44,6 +44,7 @@ class Trips {
   String translated_description;
   String categories;
   String photo_url;
+  DateTime activity_date;
 
   factory Trips.fromJson(Map<String, dynamic> json) => Trips(
         trip_name: json["trip_name"],
@@ -52,6 +53,7 @@ class Trips {
         categories: json["categories"],
         photo_url: json["photo_url"],
         fsq_id: json['fsq_id'],
+        activity_date: DateTime.parse(json["activity_date"]),
         trip_id: json["trip_id"],
         name: json['name'],
         country: json['country'],
@@ -64,6 +66,8 @@ class Trips {
 
   Map<String, dynamic> toJson() => {
         "trip_name": trip_name,
+        "activity_date":
+            "${activity_date.year.toString().padLeft(4, '0')}-${activity_date.month.toString().padLeft(2, '0')}-${activity_date.day.toString().padLeft(2, '0')}",
         "uid": uid,
         "translated_description": translated_description,
         "categories": categories,
@@ -183,10 +187,12 @@ Future createTrip(
     required String photo_url,
     required String translated_description,
     required String categories,
+    required DateTime activity_date,
     required String username}) async {
   final trips = Trips(
       uid: uid,
       fsq_id: fsq_id,
+      activity_date: activity_date,
       photo_url: photo_url,
       categories: categories,
       translated_description: translated_description,
@@ -239,6 +245,7 @@ Future appendTrip(
     required String rating,
     required String tel,
     required String country,
+    required DateTime activity_date,
     required String region,
     required String price,
     required String description,
@@ -255,6 +262,7 @@ Future appendTrip(
       translated_description: translated_description,
       fsq_id: fsq_id,
       name: name,
+      activity_date: activity_date,
       rating: rating,
       tel: tel,
       country: country,
