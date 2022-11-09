@@ -20,7 +20,7 @@ import pycountry
 # In[2]:
 
 
-key = 'fsq3gnjDKSAUpKDth6dQU0ed3dHa0oRXeGtqnX06ipZ1vgw='
+key = '***'
 
 # this method helps us get long and lat of certain city
 
@@ -191,7 +191,7 @@ default = 'https://images.unsplash.com/photo-1517816743773-6e0fd518b4a6?ixlib=rb
 def add_photos(array):
     headers = {
             "accept": "application/json",
-            "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
+            "Authorization": "***"
                 }
     # list of links
     lol = []
