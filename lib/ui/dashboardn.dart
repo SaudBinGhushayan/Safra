@@ -411,7 +411,6 @@ class _dashboardnState extends State<dashboardn> {
                                           child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(8.0),
-                                              child: Image.network(links[0],
                                                   height: 50,
                                                   width: 70,
                                                   fit: BoxFit.cover)),
