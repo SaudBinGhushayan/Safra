@@ -230,7 +230,7 @@ def sub_addPhoto(fsq_id):
     links = ''
     headers = {
             "accept": "application/json",
-            "Authorization": "fsq3bR9nCSrR/WbzD82rlvh990Q70wuc8BuuRs0Ypm6fx+w="
+            "Authorization": key
                 }
     
     url = f"https://api.foursquare.com/v3/places/{fsq_id}/photos?limit=5&sort=POPULAR"
