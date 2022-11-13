@@ -39,7 +39,13 @@ Application from the first version until last version explaining the changes tha
 # Test Cases:
 ![image](https://user-images.githubusercontent.com/82407781/200851257-9c2fe913-9b61-4878-9fca-ef7c89f0b5df.png)
 
-# About
+# About Us
 - We are three students from King Saud University and this is our Graduation Project submitted in 11/8/2022 
+
+# About the Data
+- We used Foursquare Places API to power the search functions in this project
+
+# About the Data Handling 
+- We created a RESTful API to integrate the python code with flutter application 
 
 # For more detailed documentation you can find it in Safra Report
